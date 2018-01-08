@@ -13,6 +13,7 @@ class SystemRole(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
     details_table_name = db.Column(db.String(255), nullable=False)
+    system_users = db.relationship('SystemUser', backref='system_role', lazy='dynamic')
 
 
 class SystemUser(UserMixin, db.Model):
