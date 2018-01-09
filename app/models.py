@@ -69,6 +69,12 @@ class Parent(db.Model):
     home_phone = db.Column(db.String(255), nullable=True)
     parent_of_students = db.relationship('ParentOfStudent', backref='parent', lazy='dynamic')
 
+    @property
+    def children(self):
+        return Student.query \
+            .join(ParentOfStudent, ParentOfStudent.parent_id == Student.id) \
+            .filter(ParentOfStudent.parent_id == self.id)
+
 
 class Student(db.Model):
     __tablename__ = 'students'
@@ -86,6 +92,18 @@ class Student(db.Model):
     student_in_groups = db.relationship('StudentInGroup', backref='student', lazy='dynamic')
     attendings = db.relationship('Attending', backref='student', lazy='dynamic')
     parent_of_students = db.relationship('ParentOfStudent', backref='student', lazy='dynamic')
+
+    @property
+    def children(self):
+        return Parent.query \
+            .join(ParentOfStudent, ParentOfStudent.parent_id == Parent.id) \
+            .filter(ParentOfStudent.student_id == self.id)
+
+    @property
+    def groups(self):
+        return Group.query \
+            .join(StudentInGroup, StudentInGroup.group_id == Group.id) \
+            .filter(StudentInGroup.student_id == self.id)
 
 
 class ParentOfStudent(db.Model):
@@ -128,6 +146,12 @@ class Group(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
     student_in_groups = db.relationship('StudentInGroup', backref='group', lazy='dynamic')
     lessons = db.relationship('Lesson', backref='group', lazy='dynamic')
+
+    @property
+    def students(self):
+        return Student.query \
+            .join(StudentInGroup, StudentInGroup.student_id == Student.id) \
+            .filter(StudentInGroup.group_id == self.id)
 
 
 class StudentInGroup(db.Model):
