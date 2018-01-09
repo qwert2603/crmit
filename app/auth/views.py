@@ -33,27 +33,10 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         user = SystemUser(username=form.username.data, email=form.email.data,
-                    password=form.password.data, role=SystemUser.query.get(1))
+                    password=form.password.data, role=SystemRole.query.get(1))
         db.session.add(user)
         db.session.commit()
         flash('and now u r going to login.')
         return redirect(url_for('.login'))
     return render_template('auth/register.html', form=form)
 
-
-@auth.route('/secret')
-@login_required
-def secret():
-    return 'for authed only.'
-
-
-@auth.route('/private')
-@login_required
-def private():
-    return 'for authed only. (private)'
-
-
-@auth.before_app_request
-def before_request():
-    if current_user.is_authenticated:
-        current_user.ping()

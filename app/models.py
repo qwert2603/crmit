@@ -1,3 +1,4 @@
+from datetime import datetime
 from flask_login import AnonymousUserMixin, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
@@ -5,7 +6,7 @@ from app import db
 
 class AnonUser(AnonymousUserMixin):
     id = -1
-    role = None
+    system_role = None
 
 
 class SystemRole(db.Model):
@@ -22,6 +23,7 @@ class SystemUser(UserMixin, db.Model):
     login = db.Column(db.String(255), nullable=False, unique=True)
     password_hash = db.Column(db.String(255), nullable=False, unique=True)
     system_role_id = db.Column(db.Integer, db.ForeignKey('system_roles.id'), nullable=False)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     master = db.relationship('Master', backref='system_user', uselist=False)
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)
     student = db.relationship('Student', backref='system_user', uselist=False)

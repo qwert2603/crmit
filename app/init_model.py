@@ -1,11 +1,15 @@
 from app import db
-from app.models import SystemRole, SystemUser, Master, Teacher, Section, Group
+from app.models import SystemRole, SystemUser, Master, Teacher, Section, Group, Student
+
+role_master_name = 'руководитель'
+role_teacher_name = 'преподаватель'
+role_student_name = 'ученик'
 
 
 def create_system_roles():
-    role_master = SystemRole(name='руководитель', details_table_name='masters')
-    role_teacher = SystemRole(name='преподаватель', details_table_name='teachers')
-    role_student = SystemRole(name='ученик', details_table_name='students')
+    role_master = SystemRole(name=role_master_name, details_table_name=Master.__tablename__)
+    role_teacher = SystemRole(name=role_teacher_name, details_table_name=Teacher.__tablename__)
+    role_student = SystemRole(name=role_student_name, details_table_name=Student.__tablename__)
     roles = [role_master, role_teacher, role_student]
     for role in roles:
         db.session.add(role)
