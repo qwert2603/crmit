@@ -1,5 +1,5 @@
 from app import db
-from app.models import SystemRole, SystemUser
+from app.models import SystemRole, SystemUser, Master
 
 
 def create_system_roles():
@@ -11,5 +11,8 @@ def create_system_roles():
     ]
     for role in roles:
         db.session.add(role)
-    db.session.add(SystemUser(login='qwert2603', password='1918', system_role=role_master))
+    system_user = SystemUser(login='qwert2603', password='1918', system_role=role_master)
+    master = Master(fio='Алекс', system_user=system_user)
+    db.session.add(system_user)
+    db.session.add(master)
     db.session.commit()

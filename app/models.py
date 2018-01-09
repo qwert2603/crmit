@@ -22,6 +22,15 @@ class SystemUser(UserMixin, db.Model):
     login = db.Column(db.String(255), nullable=False, unique=True)
     password_hash = db.Column(db.String(255), nullable=False, unique=True)
     system_role_id = db.Column(db.Integer, db.ForeignKey('system_roles.id'), nullable=False)
+    master = db.relationship('Master', backref='system_user', uselist=False)
+    teacher = db.relationship('Teacher', backref='system_user', uselist=False)
+    student = db.relationship('Student', backref='system_user', uselist=False)
+
+    @property
+    def details(self):
+        if self.system_role.details_table_name == Master.__tablename__: return self.master
+        if self.system_role.details_table_name == Teacher.__tablename__: return self.teacher
+        if self.system_role.details_table_name == Student.__tablename__: return self.student
 
     @property
     def password(self):
@@ -39,12 +48,14 @@ class School(db.Model):
     __tablename__ = 'schools'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
+    students = db.relationship('Student', backref='school', lazy='dynamic')
 
 
 class Citizenship(db.Model):
     __tablename__ = 'citizenships'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
+    students = db.relationship('Student', backref='citizenship', lazy='dynamic')
 
 
 class Parent(db.Model):
@@ -56,6 +67,7 @@ class Parent(db.Model):
     passport = db.Column(db.String(255), nullable=False, unique=True)
     address = db.Column(db.String(255), nullable=False)
     home_phone = db.Column(db.String(255), nullable=True)
+    parent_of_students = db.relationship('ParentOfStudent', backref='parent', lazy='dynamic')
 
 
 class Student(db.Model):
@@ -69,10 +81,18 @@ class Student(db.Model):
     additional_info = db.Column(db.Text, nullable=True)
     known_from = db.Column(db.Text, nullable=True)
     school_id = db.Column(db.Integer, db.ForeignKey('schools.id'), nullable=False)
-    mother_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=True)
-    father_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=True)
     citizenship_id = db.Column(db.Integer, db.ForeignKey('citizenships.id'), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, unique=True)
+    student_in_groups = db.relationship('StudentInGroup', backref='student', lazy='dynamic')
+    attendings = db.relationship('Attending', backref='student', lazy='dynamic')
+    parent_of_students = db.relationship('ParentOfStudent', backref='student', lazy='dynamic')
+
+
+class ParentOfStudent(db.Model):
+    __tablename__ = 'parent_of_students'
+    id = db.Column(db.Integer, primary_key=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=False)
 
 
 class Master(db.Model):
@@ -87,6 +107,8 @@ class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fio = db.Column(db.String(255), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, unique=True)
+    groups = db.relationship('Group', backref='teacher', lazy='dynamic')
+    lessons = db.relationship('Lesson', backref='teacher', lazy='dynamic')
 
 
 class Section(db.Model):
@@ -94,6 +116,8 @@ class Section(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(255), nullable=False, unique=True)
     price = db.Column(db.Integer, nullable=False)
+    groups = db.relationship('Group', backref='section', lazy='dynamic')
+    section_preferences = db.relationship('SectionPreference', backref='section', lazy='dynamic')
 
 
 class Group(db.Model):
@@ -102,6 +126,8 @@ class Group(db.Model):
     name = db.Column(db.String(255), nullable=False, unique=True)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
+    student_in_groups = db.relationship('StudentInGroup', backref='group', lazy='dynamic')
+    lessons = db.relationship('Lesson', backref='group', lazy='dynamic')
 
 
 class StudentInGroup(db.Model):
@@ -112,6 +138,7 @@ class StudentInGroup(db.Model):
     discount = db.Column(db.Integer, nullable=True)
     enter_date = db.Column(db.Date, nullable=False)
     exit_date = db.Column(db.Date, nullable=True)
+    payments = db.relationship('Payment', backref='student_in_group', lazy='dynamic')
 
 
 class Payment(db.Model):
@@ -130,6 +157,7 @@ class Lesson(db.Model):
     date = db.Column(db.Date, nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
+    attendings = db.relationship('Attending', backref='lesson', lazy='dynamic')
 
 
 class Attending(db.Model):
@@ -145,6 +173,8 @@ class Candidate(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fio = db.Column(db.String(255), nullable=False)
     shift = db.Column(db.Integer, nullable=False)
+    section_preferences = db.relationship('SectionPreference', backref='candidate', lazy='dynamic')
+    day_preferences = db.relationship('DayPreference', backref='candidate', lazy='dynamic')
 
 
 class SectionPreference(db.Model):
