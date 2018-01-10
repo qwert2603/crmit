@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, flash
 
 from app import db
-from app.decorators import check_master
+from app.decorators import check_master, check_master_or_teacher
 from app.models import Citizenship, Section, Parent, School, Group
 from app.structure import structure
 from app.structure.forms import CitizenshipForm, SectionForm, ParentForm, SchoolForm, GroupForm
@@ -41,7 +41,7 @@ def add_school():
 
 
 @structure.route('/parent', methods=['GET', 'POST'])
-@check_master
+@check_master_or_teacher
 def add_parent():
     form = ParentForm()
     if form.validate_on_submit():
