@@ -1,16 +1,17 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, ValidationError, IntegerField, SelectField
+from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField
 from wtforms.validators import Length, DataRequired, Email, Regexp
-from models import Group, Section, Citizenship, School, Parent
+from app.models import Group, Section, Citizenship, School, Parent, Teacher
 
 
 class ParentForm(FlaskForm):
-    fio = StringField('фио', validators=[Length(1, 255), Regexp('^[а-яА-Я]*$', 0, 'только русские буквы')])
+    fio = StringField('фио', validators=[Length(1, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
     phone = StringField('телефон', validators=[Length(1, 32)])
     email = StringField('email', validators=[DataRequired(), Email()])
     passport = StringField('паспорт', validators=[Length(1, 255)])
     address = StringField('адрес', validators=[Length(1, 255)])
     home_phone = StringField('домашний телефон', validators=[Length(0, 32)])
+    submit = SubmitField('создать')
 
     def validate_passport(self, field):
         if Parent.query.filter_by(passport=field.data).first():
@@ -19,6 +20,7 @@ class ParentForm(FlaskForm):
 
 class SchoolForm(FlaskForm):
     name = StringField('название школы', validators=[Length(1, 255)])
+    submit = SubmitField('создать')
 
     def validate_name(self, field):
         if School.query.filter_by(name=field.data).first():
@@ -27,6 +29,7 @@ class SchoolForm(FlaskForm):
 
 class CitizenshipForm(FlaskForm):
     name = StringField('гражданство', validators=[Length(1, 255)])
+    submit = SubmitField('создать')
 
     def validate_name(self, field):
         if Citizenship.query.filter_by(name=field.data).first():
@@ -36,6 +39,7 @@ class CitizenshipForm(FlaskForm):
 class SectionForm(FlaskForm):
     name = StringField('название секции', validators=[Length(1, 255)])
     price = IntegerField('цена за месяц', validators=[DataRequired()])
+    submit = SubmitField('создать')
 
     def validate_name(self, field):
         if Section.query.filter_by(name=field.data).first():
@@ -43,15 +47,21 @@ class SectionForm(FlaskForm):
 
     def validate_price(self, field):
         if field.data <= 0:
-            raise ValidationError('цена должна быть больше 0!')
-        if field.data > 10000:
+            raise ValidationError('цена должна быть положительной!')
+        if field.data > 4000:
             raise ValidationError('цена слишком БОЛЬШАЯ!')
 
 
 class GroupForm(FlaskForm):
-    section = SelectField('секция', validators=[DataRequired()])
+    section = SelectField('секция', coerce=int, validators=[DataRequired()])
     name = StringField('название', validators=[Length(1, 255)])
-    teacher = SelectField('преподаватель', validators=[DataRequired()])
+    teacher = SelectField('преподаватель', coerce=int, validators=[DataRequired()])
+    submit = SubmitField('создать')
+
+    def __init__(self, *args, **kwargs):
+        super(GroupForm, self).__init__(*args, *kwargs)
+        self.section.choices = [(section.id, section.name) for section in Section.query.order_by(Section.name).all()]
+        self.teacher.choices = [(teacher.id, teacher.fio) for teacher in Teacher.query.order_by(Teacher.fio).all()]
 
     def validate_name(self, field):
         if Group.query.filter_by(name=field.data).first():
