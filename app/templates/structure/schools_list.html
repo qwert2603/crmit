@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+{% from 'structure/_macros.html' import render_school %}
+
+{% block title %}список школ{% endblock %}
+
+{% block page_content %}
+    <a href="{{ url_for('structure.add_school') }}" class="btn btn-default">добавить школу</a>
+
+    {% for school in schools %}
+        {{ render_school(school) }}
+    {% endfor %}
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'structure.schools_list') }}
+    </div>
+{% endblock %}

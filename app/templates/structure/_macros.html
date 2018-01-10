@@ -1,0 +1,40 @@
+{% macro render_citizenship(citizenship) %}
+    <h3>гражданство {{ citizenship.name }}</h3>
+    <a href="{{ url_for('structure.edit_citizenship',id=citizenship.id) }}" class="btn btn-default">редактировать</a>
+    <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}" class="btn btn-danger">удалить</a>
+{% endmacro %}
+
+
+{% macro render_section(section) %}
+    <h3>секция {{ section.name }}</h3>
+    <h4>цена в месяц: {{ section.price }}</h4>
+    <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-default">редактировать</a>
+    <a href="{{ url_for('structure.delete_section',id=section.id) }}" class="btn btn-danger">удалить</a>
+{% endmacro %}
+
+
+{% macro render_school(school) %}
+    <h3>{{ school.name }}</h3>
+    <a href="{{ url_for('structure.edit_school',id=school.id) }}" class="btn btn-default">редактировать</a>
+    <a href="{{ url_for('structure.delete_school',id=school.id) }}" class="btn btn-danger">удалить</a>
+{% endmacro %}
+
+
+{% macro render_parent(parent) %}
+    <h3>{{ parent.fio }}</h3>
+    <h4>телефон: {{ parent.phone }}</h4>
+    <h4>email: {{ parent.email }}</h4>
+    <h4>адрес: {{ parent.address }}</h4>
+    {% if parent.home_phone %}<h4>домашний телефон: {{ parent.home_phone }}</h4>{% endif %}
+    <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default">редактировать</a>
+    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}" class="btn btn-danger">удалить</a>
+{% endmacro %}
+
+
+{% macro render_group(group) %}
+    <h3>группа {{ group.name }}</h3>
+    <h4>секция: {{ group.section.name }}</h4>
+    <h4>преподаватель: {{ group.teacher.fio }}</h4>
+    <a href="{{ url_for('structure.edit_group',id=group.id) }}" class="btn btn-default">редактировать</a>
+    <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>
+{% endmacro %}

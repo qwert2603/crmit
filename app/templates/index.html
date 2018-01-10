@@ -26,6 +26,13 @@
                 <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">добавить группу</a>
             </div>
         {% endif %}
+        {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
+            <a href="{{ url_for('structure.groups_list') }}" class="label label-info">группы</a>
+            <a href="{{ url_for('structure.schools_list') }}" class="label label-primary">школы</a>
+            <a href="{{ url_for('structure.citizenships_list') }}" class="label label-warning">гражданства</a>
+            <a href="{{ url_for('structure.parents_list') }}" class="label label-danger">родители</a>
+            <a href="{{ url_for('structure.sections_list') }}" class="label label-success">секции</a>
+        {% endif %}
     {% else %}
         <i>вы не авторизованы</i>
         <a href="{{ url_for('auth.login') }}" class="btn btn-default">войти</a>

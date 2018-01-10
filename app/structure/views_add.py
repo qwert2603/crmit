@@ -1,4 +1,5 @@
 from flask import render_template, redirect, url_for, flash
+from flask_login import login_required
 
 from app import db
 from app.decorators import check_master, check_master_or_teacher
@@ -8,6 +9,7 @@ from app.structure.forms import CitizenshipForm, SectionForm, ParentForm, School
 
 
 @structure.route('/citizenship', methods=['GET', 'POST'])
+@login_required
 @check_master
 def add_citizenship():
     form = CitizenshipForm()
@@ -19,6 +21,7 @@ def add_citizenship():
 
 
 @structure.route('/section', methods=['GET', 'POST'])
+@login_required
 @check_master
 def add_section():
     form = SectionForm()
@@ -30,6 +33,7 @@ def add_section():
 
 
 @structure.route('/school', methods=['GET', 'POST'])
+@login_required
 @check_master
 def add_school():
     form = SchoolForm()
@@ -41,6 +45,7 @@ def add_school():
 
 
 @structure.route('/parent', methods=['GET', 'POST'])
+@login_required
 @check_master_or_teacher
 def add_parent():
     form = ParentForm()
@@ -53,6 +58,7 @@ def add_parent():
 
 
 @structure.route('/group', methods=['GET', 'POST'])
+@login_required
 @check_master
 def add_group():
     form = GroupForm()

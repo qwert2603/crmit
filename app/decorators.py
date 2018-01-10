@@ -8,7 +8,7 @@ def check_system_role(system_role_names):
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if not current_user.system_role.name in system_role_names:
+            if not current_user.is_authenticated or current_user.system_role.name not in system_role_names:
                 abort(403)
             return f(*args, **kwargs)
 

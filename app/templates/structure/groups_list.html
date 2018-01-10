@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+{% from 'structure/_macros.html' import render_group %}
+
+{% block title %}список групп{% endblock %}
+
+{% block page_content %}
+    <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">добавить группу</a>
+
+    {% for group in groups %}
+        {{ render_group(group) }}
+    {% endfor %}
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'structure.groups_list') }}
+    </div>
+{% endblock %}

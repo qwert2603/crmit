@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+{% from 'structure/_macros.html' import render_section %}
+
+{% block title %}список секций{% endblock %}
+
+{% block page_content %}
+    <a href="{{ url_for('structure.add_section') }}" class="btn btn-default">добавить секцию</a>
+
+    {% for section in sections %}
+        {{ render_section(section) }}
+    {% endfor %}
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'structure.sections_list') }}
+    </div>
+{% endblock %}

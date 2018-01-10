@@ -1,4 +1,5 @@
 from flask import render_template, redirect, url_for, flash
+from flask_login import login_required
 
 from app.decorators import check_master, check_master_or_teacher
 from app.models import Citizenship, Section, Parent, School, Group
@@ -7,6 +8,7 @@ from app.structure.forms import CitizenshipForm, SectionForm, ParentForm, School
 
 
 @structure.route('/section/<int:id>', methods=['GET', 'POST'])
+@login_required
 @check_master
 def edit_section(id):
     section = Section.query.get_or_404(id)
@@ -23,6 +25,7 @@ def edit_section(id):
 
 
 @structure.route('/citizenship/<int:id>', methods=['GET', 'POST'])
+@login_required
 @check_master
 def edit_citizenship(id):
     citizenship = Citizenship.query.get_or_404(id)
@@ -37,6 +40,7 @@ def edit_citizenship(id):
 
 
 @structure.route('/school/<int:id>', methods=['GET', 'POST'])
+@login_required
 @check_master
 def edit_school(id):
     school = School.query.get_or_404(id)
@@ -51,6 +55,7 @@ def edit_school(id):
 
 
 @structure.route('/parent/<int:id>', methods=['GET', 'POST'])
+@login_required
 @check_master_or_teacher
 def edit_parent(id):
     parent = Parent.query.get_or_404(id)
@@ -75,6 +80,7 @@ def edit_parent(id):
 
 
 @structure.route('/group/<int:id>', methods=['GET', 'POST'])
+@login_required
 @check_master
 def edit_group(id):
     group = Group.query.get_or_404(id)

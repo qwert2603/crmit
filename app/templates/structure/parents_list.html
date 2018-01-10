@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+{% from 'structure/_macros.html' import render_parent %}
+
+{% block title %}список родителей{% endblock %}
+
+{% block page_content %}
+    <a href="{{ url_for('structure.add_parent') }}" class="btn btn-default">добавить родителя</a>
+
+    {% for parent in parents %}
+        {{ render_parent(parent) }}
+    {% else %}
+        <p><i>нет родителей</i></p>
+    {% endfor %}
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'structure.parents_list') }}
+    </div>
+{% endblock %}
