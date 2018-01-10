@@ -3,7 +3,8 @@
 {% block page_content %}
 
     {% if current_user.is_authenticated %}
-        <b>добро пожаловать, {{ current_user.login }} ({{ current_user.details.fio }})</b>
+        <h3>добро пожаловать, {{ current_user.login }} ({{ current_user.details.fio }})</h3>
+        <h4>вы - {{ current_user.system_role.name }}</h4>
         <div class="btn-block">
             <a href="{{ url_for('auth.change_password') }}" class="btn btn-default">изменить пароль</a>
         </div>
