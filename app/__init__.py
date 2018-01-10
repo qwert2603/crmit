@@ -38,4 +38,7 @@ def create_app(config_name):
     from app.auth import auth as auth_blueprint
     app.register_blueprint(auth_blueprint, url_prefix='/auth')
 
+    from app.structure import structure as structure_blueprint
+    app.register_blueprint(structure_blueprint, url_prefix='/structure')
+
     return app

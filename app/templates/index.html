@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block page_content %}
+
+    {% if current_user.is_authenticated %}
+        <b>добро пожаловать, {{ current_user.login }} ({{ current_user.details.fio }})</b>
+        <a href="{{ url_for('auth.change_password') }}" class="btn btn-default">изменить пароль</a>
+        {% if current_user.system_role.name == role_master_name %}
+            <a href="{{ url_for('auth.register_master') }}" class="btn btn-default">добавить руководителя</a>
+            <a href="{{ url_for('auth.register_teacher') }}" class="btn btn-default">добавить преподавателя</a>
+        {% endif %}
+        {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
+            <a href="{{ url_for('auth.register_student') }}" class="btn btn-default">добавить ученика</a>
+        {% endif %}
+    {% else %}
+        <i>вы не авторизованы</i>
+        <a href="{{ url_for('auth.login') }}" class="btn btn-default">войти</a>
+    {% endif %}
+
+{% endblock %}
