@@ -29,3 +29,16 @@
         </li>
     </ul>
 {% endmacro %}
+
+
+{% macro render_search(search) %}
+    <form method="get">
+        <div class="form-group">
+            <label class="control-label" for="search">поиск</label>
+            <input class="form-control" id="search" name="search" type="text" value="{{ search }}">
+        </div>
+        <input class="btn btn-default" type="submit" value="искать">
+    </form>
+
+    {% if search %}результаты поиска по запросу "<b>{{ search }}</b>"{% endif %}
+{% endmacro %}

@@ -96,7 +96,7 @@ class Student(db.Model):
     parent_of_students = db.relationship('ParentOfStudent', backref='student', lazy='dynamic')
 
     @property
-    def children(self):
+    def parents(self):
         return Parent.query \
             .join(ParentOfStudent, ParentOfStudent.parent_id == Parent.id) \
             .filter(ParentOfStudent.student_id == self.id)

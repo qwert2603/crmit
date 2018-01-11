@@ -6,27 +6,26 @@
         <h3>добро пожаловать, {{ current_user.login }} ({{ current_user.details.fio }})</h3>
         <h4>вы - {{ current_user.system_role.name }}</h4>
         <div class="btn-block">
-            <a href="{{ url_for('auth.change_password') }}" class="btn btn-default">изменить пароль</a>
-        </div>
-        <div class="btn-block">
-            {% if current_user.system_role.name == role_master_name %}
-                <a href="{{ url_for('auth.register_master') }}" class="btn btn-default">добавить руководителя</a>
-                <a href="{{ url_for('auth.register_teacher') }}" class="btn btn-default">добавить преподавателя</a>
-            {% endif %}
-            {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
-                <a href="{{ url_for('auth.register_student') }}" class="btn btn-default">добавить ученика</a>
-            {% endif %}
+            <a href="{{ url_for('users.change_password') }}" class="btn btn-default">изменить пароль</a>
         </div>
         {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
-            <a href="{{ url_for('structure.groups_list') }}" class="label label-info">группы</a>
-            <a href="{{ url_for('structure.schools_list') }}" class="label label-primary">школы</a>
-            <a href="{{ url_for('structure.citizenships_list') }}" class="label label-warning">гражданства</a>
-            <a href="{{ url_for('structure.parents_list') }}" class="label label-danger">родители</a>
-            <a href="{{ url_for('structure.sections_list') }}" class="label label-success">секции</a>
+            <div>
+                <a href="{{ url_for('users.masters_list') }}" class="label label-success">руководители</a>
+                <a href="{{ url_for('users.teachers_list') }}" class="label label-success">преподаватели</a>
+                <a href="{{ url_for('users.students_list') }}" class="label label-success">ученики</a>
+            </div>
+
+            <div>
+                <a href="{{ url_for('structure.groups_list') }}" class="label label-default">группы</a>
+                <a href="{{ url_for('structure.schools_list') }}" class="label label-primary">школы</a>
+                <a href="{{ url_for('structure.citizenships_list') }}" class="label label-warning">гражданства</a>
+                <a href="{{ url_for('structure.parents_list') }}" class="label label-danger">родители</a>
+                <a href="{{ url_for('structure.sections_list') }}" class="label label-info">секции</a>
+            </div>
         {% endif %}
     {% else %}
         <i>вы не авторизованы</i>
-        <a href="{{ url_for('auth.login') }}" class="btn btn-default">войти</a>
+        <a href="{{ url_for('users.login') }}" class="btn btn-default">войти</a>
     {% endif %}
 
 {% endblock %}

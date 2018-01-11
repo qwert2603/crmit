@@ -2,15 +2,15 @@ from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_required, login_user, logout_user, current_user
 
 from app import db
-from app.auth import auth
-from app.auth.forms import LoginForm, RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm, \
+from app.users import users
+from app.users.forms import LoginForm, RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm, \
     ChangePasswordForm
 from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentOfStudent
 from app.init_model import role_master_name, role_teacher_name, role_student_name
 from app.decorators import check_master, check_master_or_teacher
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+@users.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -19,10 +19,10 @@ def login():
             login_user(user, form.remember_me.data)
             return redirect(request.args.get('next') or url_for('main.index'))
         flash('неверный логин или пароль!')
-    return render_template('auth/login.html', form=form)
+    return render_template('users/login.html', form=form)
 
 
-@auth.route('/logout')
+@users.route('/logout')
 @login_required
 def logout():
     logout_user()
@@ -30,7 +30,7 @@ def logout():
     return redirect(url_for('.login'))
 
 
-@auth.route('/change_password', methods=['GET', 'POST'])
+@users.route('/change_password', methods=['GET', 'POST'])
 @login_required
 def change_password():
     form = ChangePasswordForm()
@@ -41,10 +41,10 @@ def change_password():
             flash('пароль изменен.')
             return redirect(url_for('main.index'))
         flash('неверный старый пароль!')
-    return render_template('auth/change_password.html', form=form)
+    return render_template('users/change_password.html', form=form)
 
 
-@auth.route('/register/master', methods=['GET', 'POST'])
+@users.route('/register/master', methods=['GET', 'POST'])
 @login_required
 @check_master
 def register_master():
@@ -57,10 +57,10 @@ def register_master():
         db.session.add(master)
         flash('мастер {} создан.'.format(form.login.data))
         return redirect(url_for('main.index'))
-    return render_template('auth/register.html', form=form, role_name='руководителя')
+    return render_template('users/register.html', form=form, role_name='руководителя')
 
 
-@auth.route('/register/teacher', methods=['GET', 'POST'])
+@users.route('/register/teacher', methods=['GET', 'POST'])
 @login_required
 @check_master
 def register_teacher():
@@ -73,10 +73,10 @@ def register_teacher():
         db.session.add(teacher)
         flash('преподаватель {} создан.'.format(form.login.data))
         return redirect(url_for('main.index'))
-    return render_template('auth/register.html', form=form, role_name='преподавателя')
+    return render_template('users/register.html', form=form, role_name='преподавателя')
 
 
-@auth.route('/register/student', methods=['GET', 'POST'])
+@users.route('/register/student', methods=['GET', 'POST'])
 @login_required
 @check_master_or_teacher
 def register_student():
@@ -97,4 +97,4 @@ def register_student():
         db.session.add(student)
         flash('ученик {} создан.'.format(form.login.data))
         return redirect(url_for('main.index'))
-    return render_template('auth/register.html', form=form, role_name='ученика')
+    return render_template('users/register.html', form=form, role_name='ученика')

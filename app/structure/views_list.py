@@ -1,8 +1,7 @@
-from flask import render_template, request
-
 from app.decorators import check_master_or_teacher
 from app.models import Citizenship, Section, Parent, School, Group
 from app.structure import structure
+from app.list_route import create_list_route
 
 
 @structure.route('/citizenships')
@@ -44,10 +43,3 @@ def schools_list():
     return create_list_route(
         lambda search: School.query.filter(School.name.ilike('%{}%'.format(search))).order_by(School.name),
         'structure/schools_list.html')
-
-
-def create_list_route(query, template):
-    search = request.args.get('search', '')
-    page = request.args.get('page', 1, type=int)
-    pagination = query(search).paginate(page, per_page=10, error_out=False)
-    return render_template(template, pagination=pagination, items=pagination.items, search=search)

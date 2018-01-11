@@ -1,24 +1,24 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'structure/_macros.html' import render_citizenship %}
+{% from 'users/_macros.html' import render_teacher %}
 {% from '_macros.html' import render_search %}
 
-{% block title %}список гражданств{% endblock %}
+{% block title %}список преподавателей{% endblock %}
 
 {% block page_content %}
     {% if current_user.system_role.name == role_master_name %}
-        <a href="{{ url_for('structure.add_citizenship') }}" class="btn btn-default">добавить гражданство</a>
+        <a href="{{ url_for('users.register_teacher') }}" class="btn btn-default">добавить преподавателя</a>
     {% endif %}
 
     {{ render_search(search) }}
 
-    {% for citizenship in items %}
-        {{ render_citizenship(citizenship) }}
+    {% for teacher in items %}
+        {{ render_teacher(teacher) }}
     {% else %}
         {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
     {% endfor %}
 
     <div class="footer">
-        {{ pagination_widget(pagination, 'structure.citizenships_list') }}
+        {{ pagination_widget(pagination, 'users.teachers_list') }}
     </div>
 {% endblock %}

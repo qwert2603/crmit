@@ -10,7 +10,7 @@ moment = Moment()
 db = SQLAlchemy()
 login_manager = LoginManager()
 login_manager.session_protection = 'strong'
-login_manager.login_view = 'auth.login'
+login_manager.login_view = 'users.login'
 
 from app.models import AnonUser, SystemUser
 
@@ -35,8 +35,8 @@ def create_app(config_name):
     from app.main import main as main_blueprint
     app.register_blueprint(main_blueprint)
 
-    from app.auth import auth as auth_blueprint
-    app.register_blueprint(auth_blueprint, url_prefix='/auth')
+    from app.users import users as users_blueprint
+    app.register_blueprint(users_blueprint, url_prefix='/users')
 
     from app.structure import structure as structure_blueprint
     app.register_blueprint(structure_blueprint, url_prefix='/structure')

@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+{% from 'users/_macros.html' import render_student %}
+{% from '_macros.html' import render_search %}
+
+{% block title %}список учеников{% endblock %}
+
+{% block page_content %}
+    <a href="{{ url_for('users.register_student') }}" class="btn btn-default">добавить ученика</a>
+
+    {{ render_search(search) }}
+
+    {% for student in items %}
+        {{ render_student(student) }}
+    {% else %}
+        {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
+    {% endfor %}
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'users.students_list') }}
+    </div>
+{% endblock %}
