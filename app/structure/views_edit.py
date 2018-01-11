@@ -17,7 +17,7 @@ def edit_section(id):
         section.name = form.name.data
         section.price = form.price.data
         flash('секция {} изменена'.format(form.name.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.sections_list'))
     if not form.is_submitted():
         form.name.data = section.name
         form.price.data = section.price
@@ -33,7 +33,7 @@ def edit_citizenship(id):
     if form.validate_on_submit():
         citizenship.name = form.name.data
         flash('гражданство {} изменено'.format(form.name.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.citizenships_list'))
     if not form.is_submitted():
         form.name.data = citizenship.name
     return render_template('structure/form_edit.html', form=form, class_name='гражданства')
@@ -48,7 +48,7 @@ def edit_school(id):
     if form.validate_on_submit():
         school.name = form.name.data
         flash('школа {} изменена'.format(form.name.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.schools_list'))
     if not form.is_submitted():
         form.name.data = school.name
     return render_template('structure/form_edit.html', form=form, class_name='школы')
@@ -68,7 +68,7 @@ def edit_parent(id):
         parent.address = form.address.data
         parent.home_phone = form.home_phone.data
         flash('родитель {} изменен'.format(form.fio.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.parents_list'))
     if not form.is_submitted():
         form.fio.data = parent.fio
         form.phone.data = parent.phone
@@ -90,7 +90,7 @@ def edit_group(id):
         group.teacher_id = form.teacher.data
         group.section_id = form.section.data
         flash('группа {} изменена'.format(form.name.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.groups_list'))
     if not form.is_submitted():
         form.name.data = group.name
         form.teacher.data = group.teacher_id

@@ -1,6 +1,5 @@
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
-from app import db
 from app.decorators import check_master, check_master_or_teacher
 from app.models import Master, Teacher, Student, ParentOfStudent
 from app.users import users
@@ -17,7 +16,7 @@ def edit_master(id):
         master.fio = form.fio.data
         master.system_user.login = form.login.data
         flash('руководитель {} изменен'.format(form.fio.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.masters_list'))
     if not form.is_submitted():
         form.login.data = master.system_user.login
         form.fio.data = master.fio
@@ -34,7 +33,7 @@ def edit_teacher(id):
         teacher.fio = form.fio.data
         teacher.system_user.login = form.login.data
         flash('преподаватель {} изменен'.format(form.fio.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.teachers_list'))
     if not form.is_submitted():
         form.login.data = teacher.system_user.login
         form.fio.data = teacher.fio
@@ -71,7 +70,7 @@ def edit_student(id):
         ParentOfStudent.change_parent(student.id, mother_id, new_mother_id, True)
         ParentOfStudent.change_parent(student.id, father_id, new_father_id, False)
         flash('ученик {} изменен'.format(form.fio.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.students_list'))
     if not form.is_submitted():
         form.login.data = student.system_user.login
         form.fio.data = student.fio
