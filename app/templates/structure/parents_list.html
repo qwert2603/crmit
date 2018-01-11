@@ -12,7 +12,7 @@
     {% for parent in items %}
         {{ render_parent(parent) }}
     {% else %}
-        <p><i>нет родителей</i></p>
+        {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
     {% endfor %}
 
     <div class="footer">

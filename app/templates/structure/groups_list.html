@@ -5,12 +5,16 @@
 {% block title %}список групп{% endblock %}
 
 {% block page_content %}
-    <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">добавить группу</a>
+    {% if current_user.system_role.name == role_master_name %}
+        <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">добавить группу</a>
+    {% endif %}
 
     {{ render_search(search) }}
 
     {% for group in items %}
         {{ render_group(group) }}
+    {% else %}
+        {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
     {% endfor %}
 
     <div class="footer">

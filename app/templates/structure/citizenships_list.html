@@ -5,12 +5,16 @@
 {% block title %}список гражданств{% endblock %}
 
 {% block page_content %}
-    <a href="{{ url_for('structure.add_citizenship') }}" class="btn btn-default">добавить гражданство</a>
+    {% if current_user.system_role.name == role_master_name %}
+        <a href="{{ url_for('structure.add_citizenship') }}" class="btn btn-default">добавить гражданство</a>
+    {% endif %}
 
     {{ render_search(search) }}
 
     {% for citizenship in items %}
         {{ render_citizenship(citizenship) }}
+    {% else %}
+        {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
     {% endfor %}
 
     <div class="footer">

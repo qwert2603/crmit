@@ -5,7 +5,9 @@
 {% block title %}список секций{% endblock %}
 
 {% block page_content %}
-    <a href="{{ url_for('structure.add_section') }}" class="btn btn-default">добавить секцию</a>
+    {% if current_user.system_role.name == role_master_name %}
+        <a href="{{ url_for('structure.add_section') }}" class="btn btn-default">добавить секцию</a>
+    {% endif %}
 
     {{ render_search(search) }}
 

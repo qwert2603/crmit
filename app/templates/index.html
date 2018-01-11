@@ -17,15 +17,6 @@
                 <a href="{{ url_for('auth.register_student') }}" class="btn btn-default">добавить ученика</a>
             {% endif %}
         </div>
-        {% if current_user.system_role.name == role_master_name %}
-            <div class="btn-block">
-                <a href="{{ url_for('structure.add_citizenship') }}" class="btn btn-default">добавить гражданство</a>
-                <a href="{{ url_for('structure.add_section') }}" class="btn btn-default">добавить секцию</a>
-                <a href="{{ url_for('structure.add_school') }}" class="btn btn-default">добавить школу</a>
-                <a href="{{ url_for('structure.add_parent') }}" class="btn btn-default">добавить родителя</a>
-                <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">добавить группу</a>
-            </div>
-        {% endif %}
         {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
             <a href="{{ url_for('structure.groups_list') }}" class="label label-info">группы</a>
             <a href="{{ url_for('structure.schools_list') }}" class="label label-primary">школы</a>

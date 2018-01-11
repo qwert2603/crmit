@@ -34,7 +34,7 @@ def create_stub_models():
 
     role_teacher = SystemRole.query.filter_by(name=role_teacher_name).first()
     user_teacher = SystemUser(login='te1', password='12', system_role=role_teacher)
-    teacher = Teacher(fio='учитиель №1', system_user=user_teacher)
+    teacher = Teacher(fio='учитель №1', system_user=user_teacher)
     db.session.add(user_teacher)
     db.session.add(teacher)
 
