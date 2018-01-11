@@ -102,6 +102,20 @@ class Student(db.Model):
             .filter(ParentOfStudent.student_id == self.id)
 
     @property
+    def mother(self):
+        return Parent.query \
+            .join(ParentOfStudent, ParentOfStudent.parent_id == Parent.id) \
+            .filter(ParentOfStudent.student_id == self.id, ParentOfStudent.is_mother == True) \
+            .first()
+
+    @property
+    def father(self):
+        return Parent.query \
+            .join(ParentOfStudent, ParentOfStudent.parent_id == Parent.id) \
+            .filter(ParentOfStudent.student_id == self.id, ParentOfStudent.is_mother == False) \
+            .first()
+
+    @property
     def groups(self):
         return Group.query \
             .join(StudentInGroup, StudentInGroup.group_id == Group.id) \
@@ -113,7 +127,26 @@ class ParentOfStudent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=False)
-    unique = db.UniqueConstraint(student_id, parent_id)
+    is_mother = db.Column(db.Boolean, nullable=False)
+    unique = db.UniqueConstraint(student_id, parent_id, is_mother)
+    unique_2 = db.UniqueConstraint(student_id, parent_id)
+
+    @staticmethod
+    def change_parent(student_id, old_parent_id, new_parent_id, is_mother):
+        pos = ParentOfStudent.query.filter(
+            ParentOfStudent.parent_id == old_parent_id,
+            ParentOfStudent.student_id == student_id,
+            ParentOfStudent.is_mother == is_mother).first()
+        if pos:
+            if new_parent_id:
+                pos.parent_id = new_parent_id
+            else:
+                db.session.delete(pos)
+        else:
+            if new_parent_id:
+                db.session.add(ParentOfStudent(parent_id=new_parent_id, student_id=student_id, is_mother=is_mother))
+            else:
+                pass
 
 
 class Master(db.Model):

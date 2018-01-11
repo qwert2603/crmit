@@ -1,6 +1,6 @@
 {% macro render_master(master) %}
     <h3>{{ master.fio }}</h3>
-{#    <a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default">редактировать</a>#}
+    <a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default">редактировать</a>
 {% endmacro %}
 
 
@@ -14,7 +14,7 @@
             <p><i>нет групп</i></p>
         {% endfor %}
     </ul>
-{#    <a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default">редактировать</a>#}
+    <a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default">редактировать</a>
 {% endmacro %}
 
 
@@ -44,4 +44,5 @@
             <p><i>нет групп</i></p>
         {% endfor %}
     </ul>
+    <a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-default">редактировать</a>
 {% endmacro %}

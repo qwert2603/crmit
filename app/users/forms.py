@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, DateField, SelectField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, DateField, SelectField, \
+    Label
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional
 
 from app.models import SystemUser, School, Citizenship, Parent
@@ -30,16 +31,36 @@ class RegistrationForm(FlaskForm):
         DataRequired(), EqualTo('password', 'пароли должны совпадать')])
 
     def validate_login(self, field):
-        if SystemUser.query.filter_by(login=field.data).first():
+        if (self.system_user is None or field.data != self.system_user.login) \
+                and SystemUser.query.filter_by(login=field.data).first():
             raise ValidationError('логин уже Занят!')
+
+    def setup_for_editing(self):
+        del self.password
+        del self.password_confirm
+        self.submit.label = Label(self.submit.id, 'сохранить')
 
 
 class RegistrationMasterForm(RegistrationForm):
     submit = SubmitField('создать мастера')
 
+    def __init__(self, master=None, *args, **kwargs):
+        super(RegistrationMasterForm, self).__init__(*args, **kwargs)
+        self.master = master
+        if master is not None:
+            self.system_user = master.system_user
+            self.setup_for_editing()
+
 
 class RegistrationTeacherForm(RegistrationForm):
     submit = SubmitField('создать преподавателя')
+
+    def __init__(self, teacher=None, *args, **kwargs):
+        super(RegistrationTeacherForm, self).__init__(*args, **kwargs)
+        self.teacher = teacher
+        if teacher is not None:
+            self.system_user = teacher.system_user
+            self.setup_for_editing()
 
 
 class RegistrationStudentForm(RegistrationForm):
@@ -55,10 +76,19 @@ class RegistrationStudentForm(RegistrationForm):
     father = SelectField('отец', coerce=int, validators=[Optional()])
     submit = SubmitField('создать ученика')
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, student=None, *args, **kwargs):
         super(RegistrationStudentForm, self).__init__(*args, *kwargs)
         self.school.choices = [(school.id, school.name) for school in School.query.order_by(School.name).all()]
         self.citizenship.choices = [(c.id, c.name) for c in Citizenship.query.order_by(Citizenship.name).all()]
         parents = [(-1, 'нет')] + [(p.id, p.fio) for p in Parent.query.order_by(Parent.fio).all()]
         self.mother.choices = parents
         self.father.choices = parents
+
+        self.student = student
+        if student is not None:
+            self.system_user = student.system_user
+            self.setup_for_editing()
+
+    def validate_father(self, field):
+        if field.data != -1 and field.data == self.mother.data:
+            raise ValidationError('отец не может быть матерью!')

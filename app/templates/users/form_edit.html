@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %}редактирование {{ class_name }}{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>редактирование {{ class_name }}</h1>
+    </div>
+    <div class="col-md-8">
+        {{ wtf.quick_form(form) }}
+    </div>
+{% endblock %}

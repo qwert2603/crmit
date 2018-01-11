@@ -55,9 +55,9 @@ def register_student():
                           known_from=form.known_from.data, school_id=form.school.data,
                           citizenship_id=form.citizenship.data)
         if form.mother.data != -1:
-            db.session.add(ParentOfStudent(student=student, parent_id=form.mother.data))
+            db.session.add(ParentOfStudent(student=student, parent_id=form.mother.data, is_mother=True))
         if form.father.data != -1:
-            db.session.add(ParentOfStudent(student=student, parent_id=form.father.data))
+            db.session.add(ParentOfStudent(student=student, parent_id=form.father.data, is_mother=False))
         db.session.add(user_student)
         db.session.add(student)
         flash('ученик {} создан.'.format(form.login.data))
