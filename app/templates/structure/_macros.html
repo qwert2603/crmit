@@ -2,7 +2,7 @@
     <h3>гражданство {{ citizenship.name }}</h3>
     <h4>учеников: {{ citizenship.students.count() }}</h4>
     <a href="{{ url_for('structure.edit_citizenship',id=citizenship.id) }}" class="btn btn-default">редактировать</a>
-    <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}" class="btn btn-danger">удалить</a>
+{#    <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}" class="btn btn-danger">удалить</a>#}
 {% endmacro %}
 
 
@@ -18,7 +18,7 @@
         {% endfor %}
     </ul>
     <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-default">редактировать</a>
-    <a href="{{ url_for('structure.delete_section',id=section.id) }}" class="btn btn-danger">удалить</a>
+{#    <a href="{{ url_for('structure.delete_section',id=section.id) }}" class="btn btn-danger">удалить</a>#}
 {% endmacro %}
 
 
@@ -26,7 +26,7 @@
     <h3>{{ school.name }}</h3>
     <h4>учеников: {{ school.students.count() }}</h4>
     <a href="{{ url_for('structure.edit_school',id=school.id) }}" class="btn btn-default">редактировать</a>
-    <a href="{{ url_for('structure.delete_school',id=school.id) }}" class="btn btn-danger">удалить</a>
+{#    <a href="{{ url_for('structure.delete_school',id=school.id) }}" class="btn btn-danger">удалить</a>#}
 {% endmacro %}
 
 
@@ -45,7 +45,7 @@
         {% endfor %}
     </ul>
     <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default">редактировать</a>
-    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}" class="btn btn-danger">удалить</a>
+{#    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}" class="btn btn-danger">удалить</a>#}
 {% endmacro %}
 
 
@@ -55,7 +55,7 @@
     <h4>преподаватель: {{ group.teacher.fio }}</h4>
     <h4>учеников: {{ group.students.count() }}</h4>
     <a href="{{ url_for('structure.edit_group',id=group.id) }}" class="btn btn-default">редактировать</a>
-    <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>
+{#    <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
 {% endmacro %}
 
 

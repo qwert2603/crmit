@@ -27,13 +27,13 @@ def create_stub_models():
     create_default_citizenship()
 
     role_master = SystemRole.query.filter_by(name=role_master_name).first()
-    user_master = SystemUser(login='qwert2603', password='1918', system_role=role_master)
+    user_master = SystemUser(login='qwert2603', password='12', system_role=role_master)
     master = Master(fio='Алекс', system_user=user_master)
     db.session.add(user_master)
     db.session.add(master)
 
     role_teacher = SystemRole.query.filter_by(name=role_teacher_name).first()
-    user_teacher = SystemUser(login='te1', password='1918', system_role=role_teacher)
+    user_teacher = SystemUser(login='te1', password='12', system_role=role_teacher)
     teacher = Teacher(fio='учитиель №1', system_user=user_teacher)
     db.session.add(user_teacher)
     db.session.add(teacher)

@@ -59,5 +59,6 @@ class RegistrationStudentForm(RegistrationForm):
         super(RegistrationStudentForm, self).__init__(*args, *kwargs)
         self.school.choices = [(school.id, school.name) for school in School.query.order_by(School.name).all()]
         self.citizenship.choices = [(c.id, c.name) for c in Citizenship.query.order_by(Citizenship.name).all()]
-        self.mother.choices = [(p.id, p.fio) for p in Parent.query.order_by(Parent.fio).all()]
-        self.father.choices = [(p.id, p.fio) for p in Parent.query.order_by(Parent.fio).all()]
+        parents = [(-1, 'нет')] + [(p.id, p.fio) for p in Parent.query.order_by(Parent.fio).all()]
+        self.mother.choices = parents
+        self.father.choices = parents
