@@ -1,14 +1,18 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'structure/_macros.html' import render_section %}
+{% from 'structure/_macros.html' import render_section, render_search %}
 
 {% block title %}список секций{% endblock %}
 
 {% block page_content %}
     <a href="{{ url_for('structure.add_section') }}" class="btn btn-default">добавить секцию</a>
 
-    {% for section in sections %}
+    {{ render_search(search) }}
+
+    {% for section in items %}
         {{ render_section(section) }}
+    {% else %}
+        {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
     {% endfor %}
 
     <div class="footer">

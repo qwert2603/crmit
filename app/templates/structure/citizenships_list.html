@@ -1,13 +1,15 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'structure/_macros.html' import render_citizenship %}
+{% from 'structure/_macros.html' import render_citizenship, render_search %}
 
 {% block title %}список гражданств{% endblock %}
 
 {% block page_content %}
     <a href="{{ url_for('structure.add_citizenship') }}" class="btn btn-default">добавить гражданство</a>
 
-    {% for citizenship in citizenships %}
+    {{ render_search(search) }}
+
+    {% for citizenship in items %}
         {{ render_citizenship(citizenship) }}
     {% endfor %}
 

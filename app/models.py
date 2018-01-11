@@ -74,7 +74,7 @@ class Parent(db.Model):
     @property
     def children(self):
         return Student.query \
-            .join(ParentOfStudent, ParentOfStudent.parent_id == Student.id) \
+            .join(ParentOfStudent, ParentOfStudent.student_id == Student.id) \
             .filter(ParentOfStudent.parent_id == self.id)
 
 
@@ -111,8 +111,8 @@ class Student(db.Model):
 class ParentOfStudent(db.Model):
     __tablename__ = 'parent_of_students'
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), primary_key=True, nullable=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'), primary_key=True, nullable=False)
 
 
 class Master(db.Model):
@@ -159,8 +159,8 @@ class Group(db.Model):
 class StudentInGroup(db.Model):
     __tablename__ = 'student_in_groups'
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
-    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), primary_key=True, nullable=False)
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), primary_key=True, nullable=False)
     discount = db.Column(db.Integer, nullable=True)
     enter_date = db.Column(db.Date, nullable=False)
     exit_date = db.Column(db.Date, nullable=True)

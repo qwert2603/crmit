@@ -1,5 +1,6 @@
 {% macro render_citizenship(citizenship) %}
     <h3>гражданство {{ citizenship.name }}</h3>
+    <h4>учеников: {{ citizenship.students.count() }}</h4>
     <a href="{{ url_for('structure.edit_citizenship',id=citizenship.id) }}" class="btn btn-default">редактировать</a>
     <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}" class="btn btn-danger">удалить</a>
 {% endmacro %}
@@ -8,6 +9,14 @@
 {% macro render_section(section) %}
     <h3>секция {{ section.name }}</h3>
     <h4>цена в месяц: {{ section.price }}</h4>
+    группы:
+    <ul>
+        {% for group in section.groups.all() %}
+            <li>{{ group.name }} ({{ group.teacher.fio }})</li>
+        {% else %}
+            <p><i>нет групп</i></p>
+        {% endfor %}
+    </ul>
     <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-default">редактировать</a>
     <a href="{{ url_for('structure.delete_section',id=section.id) }}" class="btn btn-danger">удалить</a>
 {% endmacro %}
@@ -15,6 +24,7 @@
 
 {% macro render_school(school) %}
     <h3>{{ school.name }}</h3>
+    <h4>учеников: {{ school.students.count() }}</h4>
     <a href="{{ url_for('structure.edit_school',id=school.id) }}" class="btn btn-default">редактировать</a>
     <a href="{{ url_for('structure.delete_school',id=school.id) }}" class="btn btn-danger">удалить</a>
 {% endmacro %}
@@ -26,6 +36,14 @@
     <h4>email: {{ parent.email }}</h4>
     <h4>адрес: {{ parent.address }}</h4>
     {% if parent.home_phone %}<h4>домашний телефон: {{ parent.home_phone }}</h4>{% endif %}
+    дети:
+    <ul>
+        {% for student in parent.children.all() %}
+            <li>{{ student.fio }}</li>
+        {% else %}
+            <p><i>нет детей</i></p>
+        {% endfor %}
+    </ul>
     <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default">редактировать</a>
     <a href="{{ url_for('structure.delete_parent',id=parent.id) }}" class="btn btn-danger">удалить</a>
 {% endmacro %}
@@ -35,6 +53,20 @@
     <h3>группа {{ group.name }}</h3>
     <h4>секция: {{ group.section.name }}</h4>
     <h4>преподаватель: {{ group.teacher.fio }}</h4>
+    <h4>учеников: {{ group.students.count() }}</h4>
     <a href="{{ url_for('structure.edit_group',id=group.id) }}" class="btn btn-default">редактировать</a>
     <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>
+{% endmacro %}
+
+
+{% macro render_search(search) %}
+    <form method="get">
+        <div class="form-group">
+            <label class="control-label" for="search">поиск</label>
+            <input class="form-control" id="search" name="search" type="text" value="{{ search }}">
+        </div>
+        <input class="btn btn-default" type="submit" value="искать">
+    </form>
+
+    {% if search %}результаты поиска по запросу "<b>{{ search }}</b>"{% endif %}
 {% endmacro %}
