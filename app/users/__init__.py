@@ -3,6 +3,7 @@ from flask import Blueprint
 users = Blueprint('users', __name__)
 
 from . import views, views_list
+
 from flask_login import current_user
 from datetime import datetime
 from app import db
