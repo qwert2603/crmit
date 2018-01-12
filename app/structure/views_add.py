@@ -17,7 +17,7 @@ def add_citizenship():
         db.session.add(Citizenship(name=form.name.data))
         flash('гражданство {} создано'.format(form.name.data))
         return redirect(url_for('main.index'))
-    return render_template('structure/form_add.html', form=form, class_name='гражданства')
+    return render_template('structure/form_add_edit.html', form=form, class_name='гражданства', creating=True)
 
 
 @structure.route('/section', methods=['GET', 'POST'])
@@ -29,7 +29,7 @@ def add_section():
         db.session.add(Section(name=form.name.data, price=form.price.data))
         flash('секция {} создана'.format(form.name.data))
         return redirect(url_for('main.index'))
-    return render_template('structure/form_add.html', form=form, class_name='секции')
+    return render_template('structure/form_add_edit.html', form=form, class_name='секции', creating=True)
 
 
 @structure.route('/school', methods=['GET', 'POST'])
@@ -41,7 +41,7 @@ def add_school():
         db.session.add(School(name=form.name.data))
         flash('школа {} создана'.format(form.name.data))
         return redirect(url_for('main.index'))
-    return render_template('structure/form_add.html', form=form, class_name='школы')
+    return render_template('structure/form_add_edit.html', form=form, class_name='школы', creating=True)
 
 
 @structure.route('/parent', methods=['GET', 'POST'])
@@ -54,7 +54,7 @@ def add_parent():
                               passport=form.passport.data, address=form.address.data, home_phone=form.home_phone.data))
         flash('родитель {} создан'.format(form.fio.data))
         return redirect(url_for('main.index'))
-    return render_template('structure/form_add.html', form=form, class_name='родителя')
+    return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=True)
 
 
 @structure.route('/group', methods=['GET', 'POST'])
@@ -66,4 +66,4 @@ def add_group():
         db.session.add(Group(name=form.name.data, section_id=form.section.data, teacher_id=form.teacher.data))
         flash('группа {} создана'.format(form.name.data))
         return redirect(url_for('main.index'))
-    return render_template('structure/form_add.html', form=form, class_name='группы')
+    return render_template('structure/form_add_edit.html', form=form, class_name='группы', creating=True)

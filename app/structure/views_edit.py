@@ -21,7 +21,7 @@ def edit_section(id):
     if not form.is_submitted():
         form.name.data = section.name
         form.price.data = section.price
-    return render_template('structure/form_edit.html', form=form, class_name='секции')
+    return render_template('structure/form_add_edit.html', form=form, class_name='секции', creating=False)
 
 
 @structure.route('/citizenship/<int:id>', methods=['GET', 'POST'])
@@ -36,7 +36,7 @@ def edit_citizenship(id):
         return redirect(url_for('.citizenships_list'))
     if not form.is_submitted():
         form.name.data = citizenship.name
-    return render_template('structure/form_edit.html', form=form, class_name='гражданства')
+    return render_template('structure/form_add_edit.html', form=form, class_name='гражданства', creating=False)
 
 
 @structure.route('/school/<int:id>', methods=['GET', 'POST'])
@@ -51,7 +51,7 @@ def edit_school(id):
         return redirect(url_for('.schools_list'))
     if not form.is_submitted():
         form.name.data = school.name
-    return render_template('structure/form_edit.html', form=form, class_name='школы')
+    return render_template('structure/form_add_edit.html', form=form, class_name='школы', creating=False)
 
 
 @structure.route('/parent/<int:id>', methods=['GET', 'POST'])
@@ -76,7 +76,7 @@ def edit_parent(id):
         form.passport.data = parent.passport
         form.address.data = parent.address
         form.home_phone.data = parent.home_phone
-    return render_template('structure/form_edit.html', form=form, class_name='родителя')
+    return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=False)
 
 
 @structure.route('/group/<int:id>', methods=['GET', 'POST'])
@@ -95,4 +95,4 @@ def edit_group(id):
         form.name.data = group.name
         form.teacher.data = group.teacher_id
         form.section.data = group.section_id
-    return render_template('structure/form_edit.html', form=form, class_name='группы')
+    return render_template('structure/form_add_edit.html', form=form, class_name='группы', creating=False)
