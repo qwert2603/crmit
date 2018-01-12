@@ -1,26 +1,6 @@
-apt-get install python3-venv
+virtualenv -p python3 venv
 
-python3 -m venv .
-. bin/activate
-deactivate
-
-pip install -r requiments.txt
-
-pip install mysqlclient
-
-pip install flask==0.12.2 --user
-flask --version
-pip install flask-bootstrap==3.3.7.1 --user
-pip install flask-wtf==0.14.2 --user
-pip install flask-moment==0.5.2 --user
-pip install flask-sqlalchemy==2.3.2 --user
-pip install flask-migrate==2.1.1 --user
-pip install flask-login==0.4.1 --user
-pip install pymysql==0.7.11 --user
-pip list --format=columns
-
-
-export FLASK_APP=appy.py
+export FLASK_APP=manage.py
 export FLASK_DEBUG=1
 flask run --port 1918
 
@@ -34,3 +14,4 @@ venv/bin/python ~/.local/bin/flask shell
 venv/bin/python ~/.local/bin/flask db upgrade
 venv/bin/pip3 install mysql-connector-python
 venv/bin/pip3 install mysql-python
+venv/bin/pip3 install -r requiments.txt
