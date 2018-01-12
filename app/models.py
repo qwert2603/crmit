@@ -130,6 +130,7 @@ class ParentOfStudent(db.Model):
     is_mother = db.Column(db.Boolean, nullable=False)
     unique = db.UniqueConstraint(student_id, parent_id, is_mother)
     unique_2 = db.UniqueConstraint(student_id, parent_id)
+    unique_3 = db.UniqueConstraint(student_id, is_mother)
 
     @staticmethod
     def change_parent(student_id, old_parent_id, new_parent_id, is_mother):
