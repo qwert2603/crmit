@@ -4,6 +4,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Valid
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional
 
 from app.models import SystemUser, School, Citizenship, Parent
+from app.init_model import default_citizenship_name
 
 
 class LoginForm(FlaskForm):
@@ -88,6 +89,8 @@ class RegistrationStudentForm(RegistrationForm):
         if student is not None:
             self.system_user = student.system_user
             self.setup_for_editing()
+        else:
+            self.citizenship.data = Citizenship.query.filter_by(name=default_citizenship_name).first().id
 
     def validate_father(self, field):
         if field.data != -1 and field.data == self.mother.data:

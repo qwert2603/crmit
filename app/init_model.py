@@ -5,6 +5,8 @@ role_master_name = 'руководитель'
 role_teacher_name = 'преподаватель'
 role_student_name = 'ученик'
 
+default_citizenship_name = 'Россия'
+
 
 def create_system_roles():
     role_master = SystemRole(name=role_master_name, details_table_name=Master.__tablename__)
@@ -17,14 +19,15 @@ def create_system_roles():
     db.session.commit()
 
 
-def create_default_citizenship():
-    db.session.add(Citizenship(name='Россия'))
+def create_default_citizenships():
+    db.session.add(Citizenship(name=default_citizenship_name))
+    db.session.add(Citizenship(name='Гражданин Мира'))
     db.session.commit()
 
 
 def create_stub_models():
     create_system_roles()
-    create_default_citizenship()
+    create_default_citizenships()
 
     role_master = SystemRole.query.filter_by(name=role_master_name).first()
     user_master = SystemUser(login='qwert2603', password='12', system_role=role_master)
