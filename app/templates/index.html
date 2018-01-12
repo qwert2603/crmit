@@ -8,21 +8,6 @@
         <div class="btn-block">
             <a href="{{ url_for('users.change_password') }}" class="btn btn-default">изменить пароль</a>
         </div>
-        {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
-            <div>
-                <a href="{{ url_for('users.masters_list') }}" class="label label-success">руководители</a>
-                <a href="{{ url_for('users.teachers_list') }}" class="label label-success">преподаватели</a>
-                <a href="{{ url_for('users.students_list') }}" class="label label-success">ученики</a>
-            </div>
-
-            <div>
-                <a href="{{ url_for('structure.groups_list') }}" class="label label-default">группы</a>
-                <a href="{{ url_for('structure.schools_list') }}" class="label label-primary">школы</a>
-                <a href="{{ url_for('structure.citizenships_list') }}" class="label label-warning">гражданства</a>
-                <a href="{{ url_for('structure.parents_list') }}" class="label label-danger">родители</a>
-                <a href="{{ url_for('structure.sections_list') }}" class="label label-info">секции</a>
-            </div>
-        {% endif %}
     {% else %}
         <i>вы не авторизованы</i>
         <a href="{{ url_for('users.login') }}" class="btn btn-default">войти</a>
