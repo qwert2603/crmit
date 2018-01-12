@@ -22,7 +22,7 @@ def register_master():
         db.session.add(master)
         flash('мастер {} создан.'.format(form.login.data))
         return redirect(url_for('main.index'))
-    return render_template('users/register.html', form=form, role_name='руководителя')
+    return render_template('users/form_register_edit.html', form=form, class_name='руководителя', creating=True)
 
 
 @users.route('/register/teacher', methods=['GET', 'POST'])
@@ -38,7 +38,7 @@ def register_teacher():
         db.session.add(teacher)
         flash('преподаватель {} создан.'.format(form.login.data))
         return redirect(url_for('main.index'))
-    return render_template('users/register.html', form=form, role_name='преподавателя')
+    return render_template('users/form_register_edit.html', form=form, class_name='преподавателя', creating=True)
 
 
 @users.route('/register/student', methods=['GET', 'POST'])
@@ -62,4 +62,4 @@ def register_student():
         db.session.add(student)
         flash('ученик {} создан.'.format(form.login.data))
         return redirect(url_for('main.index'))
-    return render_template('users/register.html', form=form, role_name='ученика')
+    return render_template('users/form_register_edit.html', form=form, class_name='ученика', creating=True)

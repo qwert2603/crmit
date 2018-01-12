@@ -31,8 +31,10 @@ class RegistrationForm(FlaskForm):
     password_confirm = PasswordField('подтверждение пароля', validators=[
         DataRequired(), EqualTo('password', 'пароли должны совпадать')])
 
+    system_user = None
+
     def validate_login(self, field):
-        if (self.system_user is None or field.data != self.system_user.login) \
+        if (self.system_user is None or self.system_user.login != field.data) \
                 and SystemUser.query.filter_by(login=field.data).first():
             raise ValidationError('логин уже Занят!')
 

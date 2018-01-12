@@ -20,7 +20,7 @@ def edit_master(id):
     if not form.is_submitted():
         form.login.data = master.system_user.login
         form.fio.data = master.fio
-    return render_template('users/form_edit.html', form=form, class_name='мастера')
+    return render_template('users/form_register_edit.html', form=form, class_name='мастера', creating=False)
 
 
 @users.route('/teacher/<int:id>', methods=['GET', 'POST'])
@@ -37,7 +37,7 @@ def edit_teacher(id):
     if not form.is_submitted():
         form.login.data = teacher.system_user.login
         form.fio.data = teacher.fio
-    return render_template('users/form_edit.html', form=form, class_name='преподавателя')
+    return render_template('users/form_register_edit.html', form=form, class_name='преподавателя', creating=False)
 
 
 @users.route('/student/<int:id>', methods=['GET', 'POST'])
@@ -84,4 +84,4 @@ def edit_student(id):
         form.citizenship.data = student.citizenship_id
         form.mother.data = mother_id
         form.father.data = father_id
-    return render_template('users/form_edit.html', form=form, class_name='ученика')
+    return render_template('users/form_register_edit.html', form=form, class_name='ученика', creating=False)
