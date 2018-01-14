@@ -67,7 +67,7 @@ class RegistrationTeacherForm(RegistrationForm):
 
 
 class RegistrationStudentForm(RegistrationForm):
-    birth_date = DateField('дата рождения', validators=[DataRequired()])
+    birth_date = DateField('дата рождения', validators=[DataRequired()])  # todo: date picker.
     birth_place = StringField('место рождения', validators=[Length(1, 255)])
     registration_place = StringField('адрес регистрации', validators=[Length(1, 255)])
     actual_address = StringField('фактический адрес проживания', validators=[Length(1, 255)])
@@ -75,7 +75,7 @@ class RegistrationStudentForm(RegistrationForm):
     known_from = StringField('откуда узнал(а) о ЦМИТ', validators=[Length(0, 255)])
     school = SelectField('школа', coerce=int, validators=[DataRequired()])
     citizenship = SelectField('гражданство', coerce=int, validators=[DataRequired()])
-    mother = SelectField('мать', coerce=int, validators=[Optional()])
+    mother = SelectField('мать', coerce=int, validators=[Optional()])  # todo: "add_parent" button.
     father = SelectField('отец', coerce=int, validators=[Optional()])
     submit = SubmitField('создать ученика')
 
