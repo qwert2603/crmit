@@ -7,6 +7,11 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='styles.css') }}">
 {% endblock %}
 
+{% block scripts %}
+    {{ super() }}
+    <script src="/../static/nav.js"></script>
+{% endblock %}
+
 {% block navbar %}
     <div class="navbar navbar-inverse" role="navigation">
         <div class="container">
