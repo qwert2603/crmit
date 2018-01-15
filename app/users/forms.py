@@ -82,19 +82,19 @@ class RegistrationStudentForm(RegistrationForm):
     mother = SelectField('мать', coerce=int, validators=[Optional()])
     father = SelectField('отец', coerce=int, validators=[Optional()])
 
-    m_fio = StringField('m фио', validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
-    m_phone = StringField('m телефон', validators=[Length(0, 32)])
-    m_email = StringField('m email', validators=[Optional(), Length(0, 128), Email()])
-    m_passport = StringField('m паспорт', validators=[Length(0, 255)])
-    m_address = StringField('m адрес', validators=[Length(0, 255)])
-    m_home_phone = StringField('m домашний телефон', validators=[Length(0, 32)])
+    m_fio = StringField('новая мать: фио', validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
+    m_phone = StringField('новая мать: телефон', validators=[Length(0, 32)])
+    m_email = StringField('новая мать: email', validators=[Optional(), Length(0, 128), Email()])
+    m_passport = StringField('новая мать: паспорт', validators=[Length(0, 255)])
+    m_address = StringField('новая мать: адрес', validators=[Length(0, 255)])
+    m_home_phone = StringField('новая мать: домашний телефон', validators=[Length(0, 32)])
 
-    f_fio = StringField('f фио', validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
-    f_phone = StringField('f телефон', validators=[Length(0, 32)])
-    f_email = StringField('f email', validators=[Optional(), Length(0, 128), Email()])
-    f_passport = StringField('f паспорт', validators=[Length(0, 255)])
-    f_address = StringField('f адрес', validators=[Length(0, 255)])
-    f_home_phone = StringField('f домашний телефон', validators=[Length(0, 32)])
+    f_fio = StringField('новый отец: фио', validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
+    f_phone = StringField('новый отец: телефон', validators=[Length(0, 32)])
+    f_email = StringField('новый отец: email', validators=[Optional(), Length(0, 128), Email()])
+    f_passport = StringField('новый отец: паспорт', validators=[Length(0, 255)])
+    f_address = StringField('новый отец: адрес', validators=[Length(0, 255)])
+    f_home_phone = StringField('новый отец: домашний телефон', validators=[Length(0, 32)])
 
     def required_fields_values_new_mother(self):
         return [self.m_fio.data, self.m_phone.data, self.m_email.data, self.m_passport.data, self.m_address.data]
