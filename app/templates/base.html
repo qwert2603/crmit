@@ -9,7 +9,7 @@
 
 {% block scripts %}
     {{ super() }}
-    <script src="/../static/nav.js"></script>
+    <script src="{{ url_for('static', filename='nav.js') }}"></script>
 {% endblock %}
 
 {% block navbar %}

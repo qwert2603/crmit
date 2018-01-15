@@ -10,5 +10,13 @@
     <div class="col-md-8">
         {{ wtf.quick_form(form) }}
     </div>
+
+    {% if class_name == 'ученика' %}
+        <div class="col-md-12 add_parents">
+            <a href="{{ url_for('structure.add_parent', is_mother=True) }}" class="btn btn-default">добавить мать</a>
+            <a href="{{ url_for('structure.add_parent', is_mother=False) }}" class="btn btn-default">добавить отца</a>
+        </div>
+    {% endif %}
+
     {% include '_cancel_button.html' %}
 {% endblock %}
