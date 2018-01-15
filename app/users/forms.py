@@ -1,10 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, DateField, SelectField, \
-    Label
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, SelectField, Label
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional
 
-from app.models import SystemUser, School, Citizenship, Parent
 from app.init_model import default_citizenship_name
+from app.models import SystemUser, School, Citizenship, Parent
+from app.form import DateFieldWidget
 
 
 class LoginForm(FlaskForm):
@@ -67,7 +67,7 @@ class RegistrationTeacherForm(RegistrationForm):
 
 
 class RegistrationStudentForm(RegistrationForm):
-    birth_date = DateField('дата рождения', validators=[DataRequired()])  # todo: date picker.
+    birth_date = DateFieldWidget('дата рождения', validators=[DataRequired()])
     birth_place = StringField('место рождения', validators=[Length(1, 255)])
     registration_place = StringField('адрес регистрации', validators=[Length(1, 255)])
     actual_address = StringField('фактический адрес проживания', validators=[Length(1, 255)])
