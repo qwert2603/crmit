@@ -7,6 +7,7 @@ $('#left').click(function () {
 });
 
 $('#right').on('click', function () {
+    // todo: don't move student if he attended lesson or paid ever.
     moveItems('#in_group', '#others');
 });
 
