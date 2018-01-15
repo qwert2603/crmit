@@ -4,9 +4,10 @@ from flask_login import login_required
 from app import db
 from app.decorators import check_master, check_master_or_teacher
 from app.init_model import role_master_name, role_teacher_name, role_student_name
-from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentOfStudent
+from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentOfStudent, Parent
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
+from app.users.forms import create_new_parent_id
 
 
 @users.route('/register/master', methods=['GET', 'POST'])
@@ -54,10 +55,24 @@ def register_student():
                           actual_address=form.actual_address.data, additional_info=form.additional_info.data,
                           known_from=form.known_from.data, school_id=form.school.data,
                           citizenship_id=form.citizenship.data)
-        if form.mother.data != -1:
+        if form.mother.data > 0:
             db.session.add(ParentOfStudent(student=student, parent_id=form.mother.data, is_mother=True))
-        if form.father.data != -1:
+        if form.father.data > 0:
             db.session.add(ParentOfStudent(student=student, parent_id=form.father.data, is_mother=False))
+        if form.mother.data == create_new_parent_id:
+            mother = Parent(fio=form.m_fio.data, phone=form.m_phone.data, email=form.m_email.data,
+                            passport=form.m_passport.data, address=form.m_address.data,
+                            home_phone=form.m_home_phone.data)
+            db.session.add(mother)
+            db.session.add(ParentOfStudent(student=student, parent=mother, is_mother=True))
+            flash('родитель {} создан'.format(form.m_fio.data))
+        if form.father.data == create_new_parent_id:
+            father = Parent(fio=form.f_fio.data, phone=form.f_phone.data, email=form.f_email.data,
+                            passport=form.f_passport.data, address=form.f_address.data,
+                            home_phone=form.f_home_phone.data)
+            db.session.add(father)
+            db.session.add(ParentOfStudent(student=student, parent=father, is_mother=False))
+            flash('родитель {} создан'.format(form.f_fio.data))
         db.session.add(user_student)
         db.session.add(student)
         flash('ученик {} создан.'.format(form.login.data))
