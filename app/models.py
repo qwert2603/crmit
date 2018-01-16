@@ -256,6 +256,7 @@ class SectionPreference(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'), nullable=False)
+    unique = db.UniqueConstraint(candidate_id, section_id)
 
 
 class DayPreference(db.Model):
@@ -263,3 +264,4 @@ class DayPreference(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     day = db.Column(db.Integer, nullable=False)
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'), nullable=False)
+    unique = db.UniqueConstraint(candidate_id, day)
