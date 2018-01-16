@@ -41,10 +41,12 @@ def create_stub_models():
     db.session.add(user_teacher)
     db.session.add(teacher)
 
-    section = Section(name='робо', price=800)
-    db.session.add(section)
+    section1 = Section(name='робо', price=800)
+    section2 = Section(name='веб', price=900)
+    db.session.add(section1)
+    db.session.add(section2)
 
-    group = Group(name='робо-71', section=section, teacher=teacher)
-    db.session.add(group)
+    db.session.add(Group(name='робо-71', section=section1, teacher=teacher))
+    db.session.add(Group(name='веб-61', section=section2, teacher=teacher))
 
     db.session.commit()
