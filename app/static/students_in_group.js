@@ -1,5 +1,14 @@
 function moveItems(origin, dest) {
-    $(origin).find(':selected').appendTo(dest);
+    var find = $(origin).find(':selected');
+    // prefix '(f)' is always first in selected.
+    // i hope.
+    const label = find['0'].label;
+    if (label.indexOf('(f)') >= 0) {
+        alert(label + ' уже посещал занятия или вносил оплату!');
+    }
+    else {
+        find.appendTo(dest);
+    }
 }
 
 $('#left').click(function () {
@@ -7,7 +16,6 @@ $('#left').click(function () {
 });
 
 $('#right').on('click', function () {
-    // todo: don't move student if he attended lesson or paid ever.
     moveItems('#in_group', '#others');
 });
 

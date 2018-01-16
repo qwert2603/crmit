@@ -1,15 +1,15 @@
 """empty message
 
-Revision ID: c77b479d68fc
+Revision ID: 186a59257efd
 Revises: 
-Create Date: 2018-01-12 09:04:39.917700
+Create Date: 2018-01-16 19:39:57.139024
 
 """
 from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision = 'c77b479d68fc'
+revision = '186a59257efd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -156,8 +156,8 @@ def upgrade():
                     sa.Column('student_id', sa.Integer(), nullable=False),
                     sa.Column('group_id', sa.Integer(), nullable=False),
                     sa.Column('discount', sa.Integer(), nullable=True),
-                    sa.Column('enter_date', sa.Date(), nullable=False),
-                    sa.Column('exit_date', sa.Date(), nullable=True),
+                    sa.Column('enter_month', sa.Integer(), nullable=False),
+                    sa.Column('exit_month', sa.Integer(), nullable=True),
                     sa.ForeignKeyConstraint(['group_id'], ['groups.id'], ),
                     sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
                     sa.PrimaryKeyConstraint('id'),
@@ -170,7 +170,8 @@ def upgrade():
                     sa.Column('was', sa.Boolean(), nullable=False),
                     sa.ForeignKeyConstraint(['lesson_id'], ['lessons.id'], ),
                     sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
-                    sa.PrimaryKeyConstraint('id')
+                    sa.PrimaryKeyConstraint('id'),
+                    sa.UniqueConstraint('student_id', 'lesson_id')
                     )
     op.create_table('payments',
                     sa.Column('id', sa.Integer(), nullable=False),
@@ -180,7 +181,8 @@ def upgrade():
                     sa.Column('cash', sa.Boolean(), nullable=False),
                     sa.Column('confirmed', sa.Boolean(), nullable=False),
                     sa.ForeignKeyConstraint(['student_in_group_id'], ['student_in_groups.id'], ),
-                    sa.PrimaryKeyConstraint('id')
+                    sa.PrimaryKeyConstraint('id'),
+                    sa.UniqueConstraint('student_in_group_id', 'month')
                     )
     # ### end Alembic commands ###
 
