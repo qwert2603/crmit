@@ -196,7 +196,7 @@ class StudentInGroup(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
-    discount = db.Column(db.Integer, nullable=True)
+    discount = db.Column(db.Integer, nullable=True, default=0)
     enter_month = db.Column(db.Integer, nullable=False, default=0)
     exit_month = db.Column(db.Integer, nullable=True)
     payments = db.relationship('Payment', backref='student_in_group', lazy='dynamic')
@@ -207,6 +207,10 @@ class StudentInGroup(db.Model):
         return Attending.query \
             .join(Lesson, Lesson.id == Attending.lesson_id) \
             .filter(Lesson.group_id == self.group_id, Attending.student_id == self.student_id)
+
+    @property
+    def attendings_was(self):
+        return self.attendings.filter(Attending.was == True)
 
 
 class Payment(db.Model):

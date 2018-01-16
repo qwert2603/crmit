@@ -112,7 +112,7 @@ class RegistrationStudentForm(RegistrationForm):
         if student is None:
             schools = [(-1, 'выберите школу')] + schools
         self.school.choices = schools
-        self.citizenship.choices = [(c.id, c.name) for c in Citizenship.query.order_by(Citizenship.name).all()]
+        self.citizenship.choices = [(c.id, c.name) for c in Citizenship.query.order_by(Citizenship.id).all()]
         parents = [(no_parent_id, 'нет')] + [(p.id, p.fio) for p in Parent.query.order_by(Parent.fio).all()]
         if student is None:
             parents = [(create_new_parent_id, 'создать нового')] + parents
@@ -124,8 +124,6 @@ class RegistrationStudentForm(RegistrationForm):
             self.system_user = student.system_user
             self.delete_new_parents_fields()
             self.setup_for_editing()
-        else:
-            self.citizenship.data = Citizenship.query.filter_by(name=default_citizenship_name).first().id
 
     def validate_school(self, field):
         if field.data <= 0:

@@ -22,7 +22,7 @@
                 <select class="form-control" id="in_group" name="in_group" multiple="multiple">
                     {% for student_in_group in students_in_group %}
                         <option value="{{ student_in_group.student.id }}">
-                            {% if student_in_group.attendings.count() > 0 or student_in_group.payments.count() > 0 %}
+                            {% if student_in_group.attendings_was.count() > 0 or student_in_group.payments.count() > 0 %}
                                 (f)
                             {% endif %}
                             {{ student_in_group.student.fio }}
@@ -47,7 +47,7 @@
                 </p>
             </div>
 
-            <p><input class="btn btn-default" type="submit" value="сохранить" onclick="selectAll();"></p>
+            <p><input class="btn btn-default" type="submit" name="submit" value="сохранить" onclick="selectAll();"></p>
         </form>
     </div>
 
