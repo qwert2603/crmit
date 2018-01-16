@@ -82,14 +82,16 @@ class RegistrationStudentForm(RegistrationForm):
     mother = SelectField('мать', coerce=int, validators=[Optional()])
     father = SelectField('отец', coerce=int, validators=[Optional()])
 
-    m_fio = StringField('новая мать: фио', validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
+    m_fio = StringField('новая мать: фио',
+                        validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
     m_phone = StringField('новая мать: телефон', validators=[Length(0, 32)])
     m_email = StringField('новая мать: email', validators=[Optional(), Length(0, 128), Email()])
     m_passport = StringField('новая мать: паспорт', validators=[Length(0, 255)])
     m_address = StringField('новая мать: адрес', validators=[Length(0, 255)])
     m_home_phone = StringField('новая мать: домашний телефон', validators=[Length(0, 32)])
 
-    f_fio = StringField('новый отец: фио', validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
+    f_fio = StringField('новый отец: фио',
+                        validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
     f_phone = StringField('новый отец: телефон', validators=[Length(0, 32)])
     f_email = StringField('новый отец: email', validators=[Optional(), Length(0, 128), Email()])
     f_passport = StringField('новый отец: паспорт', validators=[Length(0, 255)])
@@ -106,7 +108,10 @@ class RegistrationStudentForm(RegistrationForm):
 
     def __init__(self, student=None, *args, **kwargs):
         super(RegistrationStudentForm, self).__init__(*args, *kwargs)
-        self.school.choices = [(school.id, school.name) for school in School.query.order_by(School.name).all()]
+        schools = [(school.id, school.name) for school in School.query.order_by(School.name).all()]
+        if student is None:
+            schools = [(-1, 'выберите школу')] + schools
+        self.school.choices = schools
         self.citizenship.choices = [(c.id, c.name) for c in Citizenship.query.order_by(Citizenship.name).all()]
         parents = [(no_parent_id, 'нет')] + [(p.id, p.fio) for p in Parent.query.order_by(Parent.fio).all()]
         if student is None:
@@ -121,6 +126,10 @@ class RegistrationStudentForm(RegistrationForm):
             self.setup_for_editing()
         else:
             self.citizenship.data = Citizenship.query.filter_by(name=default_citizenship_name).first().id
+
+    def validate_school(self, field):
+        if field.data <= 0:
+            raise ValidationError('школа не выбрана!')
 
     def validate_father(self, field):
         if field.data > 0 and field.data == self.mother.data:
