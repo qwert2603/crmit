@@ -202,6 +202,12 @@ class StudentInGroup(db.Model):
     payments = db.relationship('Payment', backref='student_in_group', lazy='dynamic')
     unique = db.UniqueConstraint(student_id, group_id)
 
+    @property
+    def attendings(self):
+        return Attending.query \
+            .join(Lesson, Lesson.id == Attending.lesson_id) \
+            .filter(Lesson.group_id == self.group_id, Attending.student_id == self.student_id)
+
 
 class Payment(db.Model):
     __tablename__ = 'payments'

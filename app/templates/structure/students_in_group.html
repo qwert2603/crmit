@@ -14,35 +14,37 @@
         <h1>ученики в {{ group.name }}</h1>
     </div>
 
-    <form method="post">
+    <div class="col-md-12">
+        <form method="post">
 
-        <div class="form-group col-md-4">
-            <label class="control-label" for="in_group">в группе</label>
-            <select class="form-control" id="in_group" name="in_group" multiple="multiple">
-                {% for student in students %}
-                    <option value="{{ student.id }}">{{ student.fio }}</option>
-                {% endfor %}
-            </select>
-        </div>
+            <div class="form-group col-md-4">
+                <label class="control-label" for="in_group">в группе</label>
+                <select class="form-control" id="in_group" name="in_group" multiple="multiple">
+                    {% for student in students %}
+                        <option value="{{ student.id }}">{{ student.fio }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <div class="form-group col-md-4">
-            <label class="control-label" for="others">остальные</label>
-            <select class="form-control" id="others" multiple="multiple">
-                {% for student in others %}
-                    <option value="{{ student.id }}">{{ student.fio }}</option>
-                {% endfor %}
-            </select>
-        </div>
+            <div class="form-group col-md-4">
+                <label class="control-label" for="others">остальные</label>
+                <select class="form-control" id="others" multiple="multiple">
+                    {% for student in others %}
+                        <option value="{{ student.id }}">{{ student.fio }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-        <div class="btn-group col-md-offset-4">
-            <p>
-                <input class="btn btn-default" type="button" id="left" value="<"/>
-                <input class="btn btn-default" type="button" id="right" value=">"/>
-            </p>
-        </div>
+            <div class="btn-group col-md-offset-4">
+                <p>
+                    <input class="btn btn-default" type="button" id="left" value="<"/>
+                    <input class="btn btn-default" type="button" id="right" value=">"/>
+                </p>
+            </div>
 
-        <p><input class="btn btn-default" type="submit" value="сохранить" onclick="selectAll();"></p>
-    </form>
+            <p><input class="btn btn-default" type="submit" value="сохранить" onclick="selectAll();"></p>
+        </form>
+    </div>
 
     {% include '_cancel_button.html' %}
 
