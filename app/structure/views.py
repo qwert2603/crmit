@@ -26,6 +26,7 @@ def students_in_group(id):
                     flash('нельзя удалить {} из группы {}, так как он посещал занятия!'.format(
                         old_student_in_group.student.fio,
                         group.name))
+                # todo: check only confirmed payments.
                 elif old_student_in_group.payments.count() > 0:
                     flash('нельзя удалить {} из группы {}, так как он вносил оплату!'.format(
                         old_student_in_group.student.fio,
