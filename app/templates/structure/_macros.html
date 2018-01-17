@@ -56,5 +56,6 @@
     <h4>учеников: {{ group.students.count() }}</h4>
     <a href="{{ url_for('structure.edit_group',id=group.id) }}" class="btn btn-default">редактировать</a>
     <a href="{{ url_for('structure.students_in_group',id=group.id) }}" class="btn btn-default">изменить список учеников</a>
+    <a href="{{ url_for('structure.discounts',id=group.id) }}" class="btn btn-default">скидки</a>
     {#    <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
 {% endmacro %}

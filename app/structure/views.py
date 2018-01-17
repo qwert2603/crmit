@@ -40,3 +40,24 @@ def students_in_group(id):
         .order_by(Student.fio).all()
     return render_template('structure/students_in_group.html', group=group, students_in_group=students_in_group,
                            other_students=other_students)
+
+
+@structure.route('/discounts/<int:id>', methods=['GET', 'POST'])
+@login_required
+@check_master_or_teacher
+def discounts(id):
+    group = Group.query.get_or_404(id)
+    students_in_group = group.students_in_groups.all()
+    if 'submit' in request.form:
+        for student_in_group in students_in_group:
+            new_discount = request.form.get('d_{}'.format(student_in_group.id), 0, type=int)
+            if new_discount is not None:
+                if new_discount > group.section.price:
+                    flash('скидка не может быть больше стоимости({})'.format(student_in_group.student.fio))
+                elif new_discount < 0:
+                    flash('скидка не может быть меньше нуля! ({})'.format(student_in_group.student.fio))
+                else:
+                    student_in_group.discount = new_discount
+        flash('скидки в группе {} изменены.'.format(group.name))
+        return redirect(url_for('structure.groups_list'))
+    return render_template('structure/discounts.html', group=group, students_in_group=students_in_group)

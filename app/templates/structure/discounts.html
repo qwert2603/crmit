@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
+{% endblock %}
+
+{% block title %}{{ group.name }}. ученики (скидки){% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>ученики в {{ group.name }}</h1>
+    </div>
+
+    <table>
+        {% for student_in_group in students_in_group %}
+            <tr>
+                <td>{{ student_in_group.student.fio }}</td>
+                <td><input form="save_form" type="number" name="d_{{ student_in_group.id }}"
+                           value="{{ student_in_group.discount }}"></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post" id="save_form">
+        <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
+    </form>
+
+    {% include '_cancel_button.html' %}
+
+{% endblock %}
