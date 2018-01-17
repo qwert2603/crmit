@@ -56,11 +56,11 @@ def create_stub_models():
     db.session.add(section1)
     db.session.add(section2)
 
-    group = Group(name='робо-71', section=section1, teacher=teacher)
+    group = Group(name='робо-71', section=section1, teacher=teacher, start_year=2017)
     db.session.add(group)
     db.session.add(Group(name='веб-61', section=section2, teacher=teacher))
 
-    student_in_group = StudentInGroup(student=student, group=group, discount=100, enter_month=1)
+    student_in_group = StudentInGroup(student=student, group=group, discount=100, enter_month=0, exit_month=8)
     db.session.add(student_in_group)
     db.session.add(Payment(student_in_group=student_in_group, month=1, value=800))
 

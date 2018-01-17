@@ -46,6 +46,8 @@ def register_teacher():
 @login_required
 @check_master_or_teacher
 def register_student():
+    # todo: login = fio
+    # todo: password = 'default'
     form = RegistrationStudentForm()
     if form.validate_on_submit():
         role_student = SystemRole.query.filter_by(name=role_student_name).first()

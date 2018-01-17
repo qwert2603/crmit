@@ -61,3 +61,11 @@ def discounts(id):
         flash('скидки в группе {} изменены.'.format(group.name))
         return redirect(url_for('structure.groups_list'))
     return render_template('structure/discounts.html', group=group, students_in_group=students_in_group)
+
+
+@structure.route('/lessons/<int:group_id>', methods=['GET', 'POST'])
+@login_required
+@check_master_or_teacher
+def lessons(group_id):
+    # todo: new blueprint.
+    return 'lessons {}'.format(group_id)

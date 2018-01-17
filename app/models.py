@@ -65,7 +65,7 @@ class Parent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fio = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=True)
+    email = db.Column(db.String(255), nullable=True)  # todo: check nullable in forms.
     passport = db.Column(db.String(255), nullable=False, unique=True)
     address = db.Column(db.String(255), nullable=False)
     home_phone = db.Column(db.String(255), nullable=True)
@@ -181,6 +181,7 @@ class Group(db.Model):
     name = db.Column(db.String(255), nullable=False, unique=True)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
+    start_year = db.Column(db.Integer, nullable=False, default=2017)
     students_in_groups = db.relationship('StudentInGroup', backref='group', lazy='dynamic')
     lessons = db.relationship('Lesson', backref='group', lazy='dynamic')
 
@@ -197,8 +198,8 @@ class StudentInGroup(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
     discount = db.Column(db.Integer, nullable=True, default=0)
-    enter_month = db.Column(db.Integer, nullable=False, default=0)
-    exit_month = db.Column(db.Integer, nullable=True)
+    enter_month = db.Column(db.Integer, nullable=False, default=0)  # 0 == Sep,2017.
+    exit_month = db.Column(db.Integer, nullable=False, default=8)
     payments = db.relationship('Payment', backref='student_in_group', lazy='dynamic')
     unique = db.UniqueConstraint(student_id, group_id)
 

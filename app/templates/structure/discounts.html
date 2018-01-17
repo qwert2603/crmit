@@ -20,10 +20,10 @@
                     <td>{{ student_in_group.student.fio }}</td>
                     <td><input form="save_form" type="number" name="d_{{ student_in_group.id }}"
                                value="{{ student_in_group.discount }}"></td>
+                    {# todo: enter_month / exit_month #}
                 </tr>
             {% endfor %}
         </table>
-
 
         <form method="post" id="save_form">
             <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>

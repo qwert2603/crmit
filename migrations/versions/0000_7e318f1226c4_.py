@@ -1,15 +1,15 @@
 """empty message
 
-Revision ID: d44e2f63f19d
+Revision ID: 7e318f1226c4
 Revises: 
-Create Date: 2018-01-17 09:03:35.007500
+Create Date: 2018-01-17 12:11:28.995873
 
 """
 from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision = 'd44e2f63f19d'
+revision = '7e318f1226c4'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -127,6 +127,7 @@ def upgrade():
                     sa.Column('name', sa.String(length=255), nullable=False),
                     sa.Column('section_id', sa.Integer(), nullable=False),
                     sa.Column('teacher_id', sa.Integer(), nullable=False),
+                    sa.Column('start_year', sa.Integer(), nullable=False),
                     sa.ForeignKeyConstraint(['section_id'], ['sections.id'], ),
                     sa.ForeignKeyConstraint(['teacher_id'], ['teachers.id'], ),
                     sa.PrimaryKeyConstraint('id'),
@@ -159,7 +160,7 @@ def upgrade():
                     sa.Column('group_id', sa.Integer(), nullable=False),
                     sa.Column('discount', sa.Integer(), nullable=True),
                     sa.Column('enter_month', sa.Integer(), nullable=False),
-                    sa.Column('exit_month', sa.Integer(), nullable=True),
+                    sa.Column('exit_month', sa.Integer(), nullable=False),
                     sa.ForeignKeyConstraint(['group_id'], ['groups.id'], ),
                     sa.ForeignKeyConstraint(['student_id'], ['students.id'], ),
                     sa.PrimaryKeyConstraint('id'),
