@@ -65,7 +65,7 @@ class Parent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fio = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=True)  # todo: check nullable in forms.
+    email = db.Column(db.String(255), nullable=True)
     passport = db.Column(db.String(255), nullable=False, unique=True)
     address = db.Column(db.String(255), nullable=False)
     home_phone = db.Column(db.String(255), nullable=True)
