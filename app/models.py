@@ -198,8 +198,8 @@ class StudentInGroup(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
     discount = db.Column(db.Integer, nullable=True, default=0)
-    enter_month = db.Column(db.Integer, nullable=False, default=0)  # 0 == Sep,2017.
-    exit_month = db.Column(db.Integer, nullable=False, default=8)
+    enter_month = db.Column(db.Integer, nullable=False, default=0)  # 0 == Sep,2017. todo: remove default value.
+    exit_month = db.Column(db.Integer, nullable=False, default=8)  # todo: remove default value.
     payments = db.relationship('Payment', backref='student_in_group', lazy='dynamic')
     unique = db.UniqueConstraint(student_id, group_id)
 
@@ -212,6 +212,18 @@ class StudentInGroup(db.Model):
     @property
     def attendings_was(self):
         return self.attendings.filter(Attending.was == True)
+
+    @property
+    def attendings_was_not(self):
+        return self.attendings.filter(Attending.was == False)
+
+    @property
+    def payments_confirmed(self):
+        return self.payments.filter(Payment.confirmed == True)
+
+    @property
+    def payments_not_confirmed(self):
+        return self.payments.filter(Payment.confirmed == False)
 
 
 class Payment(db.Model):
