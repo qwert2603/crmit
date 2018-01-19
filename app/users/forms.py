@@ -103,10 +103,10 @@ class RegistrationStudentForm(RegistrationForm):
     f_home_phone = StringField('новый отец: домашний телефон', validators=[Length(0, 32)])
 
     def required_fields_values_new_mother(self):
-        return [self.m_fio.data, self.m_phone.data, self.m_email.data, self.m_passport.data, self.m_address.data]
+        return [self.m_fio.data, self.m_phone.data, self.m_passport.data, self.m_address.data]
 
     def required_fields_values_new_father(self):
-        return [self.f_fio.data, self.f_phone.data, self.f_email.data, self.f_passport.data, self.f_address.data]
+        return [self.f_fio.data, self.f_phone.data, self.f_passport.data, self.f_address.data]
 
     submit = SubmitField('создать ученика')
 
@@ -147,11 +147,17 @@ class RegistrationStudentForm(RegistrationForm):
         if field.data == create_new_parent_id:
             if any(len(p) == 0 for p in self.required_fields_values_new_father()):
                 raise ValidationError('заполните поля в "новый родитель - отец"!')
+            if Parent.query.filter_by(passport=self.f_passport.data).first():
+                raise ValidationError('паспорт отца уже зарегистрирован!')
+            if self.f_passport.data == self.m_passport.data:
+                raise ValidationError('паспорта родителей совпадают!')
 
     def validate_mother(self, field):
         if field.data == create_new_parent_id:
             if any(len(p) == 0 for p in self.required_fields_values_new_mother()):
                 raise ValidationError('заполните поля в "новый родитель - мать"!')
+            if Parent.query.filter_by(passport=self.m_passport.data).first():
+                raise ValidationError('паспорт матери уже зарегистрирован!')
 
     def delete_new_parents_fields(self):
         del self.m_fio

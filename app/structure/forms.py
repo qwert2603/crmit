@@ -1,13 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label
-from wtforms.validators import Length, DataRequired, Email, Regexp
+from wtforms.validators import Length, DataRequired, Email, Regexp, Optional
 from app.models import Group, Section, Citizenship, School, Parent, Teacher
 
 
 class ParentForm(FlaskForm):
     fio = StringField('фио', validators=[Length(1, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
     phone = StringField('телефон', validators=[Length(1, 32)])
-    email = StringField('email', validators=[DataRequired(), Email()])
+    email = StringField('email', validators=[Optional(), Length(0, 128), Email()])
     passport = StringField('паспорт', validators=[Length(1, 255)])
     address = StringField('адрес', validators=[Length(1, 255)])
     home_phone = StringField('домашний телефон', validators=[Length(0, 32)])
