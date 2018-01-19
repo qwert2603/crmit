@@ -8,6 +8,8 @@ from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentO
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
 from app.users.forms import create_new_parent_id
+from app.init_model import default_student_password
+from app.utils import generate_login
 
 
 @users.route('/register/master', methods=['GET', 'POST'])
@@ -46,13 +48,14 @@ def register_teacher():
 @login_required
 @check_master_or_teacher
 def register_student():
-    # todo: login = fio
-    # todo: password = 'default'
     form = RegistrationStudentForm()
     if form.validate_on_submit():
+        fio = '{} {} {}'.format(form.last_name.data, form.first_name.data, form.second_name.data).rstrip()
         role_student = SystemRole.query.filter_by(name=role_student_name).first()
-        user_student = SystemUser(login=form.login.data, password=form.password.data, system_role=role_student)
-        student = Student(fio=form.fio.data, system_user=user_student, birth_date=form.birth_date.data,
+        user_student = SystemUser(
+            login=generate_login(form.last_name.data, form.first_name.data, form.second_name.data),
+            password=default_student_password, system_role=role_student)
+        student = Student(fio=fio, system_user=user_student, birth_date=form.birth_date.data,
                           birth_place=form.birth_place.data, registration_place=form.registration_place.data,
                           actual_address=form.actual_address.data, additional_info=form.additional_info.data,
                           known_from=form.known_from.data, school_id=form.school.data,
@@ -77,6 +80,6 @@ def register_student():
             flash('родитель {} создан'.format(form.f_fio.data))
         db.session.add(user_student)
         db.session.add(student)
-        flash('ученик {} создан.'.format(form.login.data))
+        flash('ученик {} создан.'.format(fio))
         return redirect(url_for('main.index'))
     return render_template('users/form_register_edit.html', form=form, class_name='ученика', creating=True)

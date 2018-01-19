@@ -5,6 +5,7 @@ from app import db
 from app.models import SystemUser
 from app.users import users
 from app.users.forms import LoginForm, ChangePasswordForm
+from app.decorators import check_master_or_teacher
 
 
 @users.route('/login', methods=['GET', 'POST'])
@@ -29,6 +30,7 @@ def logout():
 
 @users.route('/change_password', methods=['GET', 'POST'])
 @login_required
+@check_master_or_teacher
 def change_password():
     form = ChangePasswordForm()
     if form.validate_on_submit():

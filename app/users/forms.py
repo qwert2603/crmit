@@ -71,6 +71,10 @@ create_new_parent_id = -2
 
 
 class RegistrationStudentForm(RegistrationForm):
+    last_name = StringField('фамилия', validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
+    first_name = StringField('имя', validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
+    second_name = StringField('отчество',
+                              validators=[Length(0, 60), Regexp('^[А-Я][а-я]+$|^$', 0, 'только русские буквы')])
     birth_date = DateFieldWidget('дата рождения', validators=[DataRequired()])
     birth_place = StringField('место рождения', validators=[Length(1, 255)])
     registration_place = StringField('адрес регистрации', validators=[Length(1, 255)])
@@ -121,9 +125,17 @@ class RegistrationStudentForm(RegistrationForm):
 
         self.student = student
         if student is not None:
+            del self.last_name
+            del self.first_name
+            del self.second_name
+            self.setup_for_editing()
             self.system_user = student.system_user
             self.delete_new_parents_fields()
-            self.setup_for_editing()
+        else:
+            del self.login
+            del self.fio
+            del self.password
+            del self.password_confirm
 
     def validate_school(self, field):
         if field.data <= 0:

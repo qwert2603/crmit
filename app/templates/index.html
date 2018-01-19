@@ -5,9 +5,11 @@
     {% if current_user.is_authenticated %}
         <h3>добро пожаловать, {{ current_user.login }} ({{ current_user.details.fio }})</h3>
         <h4>вы - {{ current_user.system_role.name }}</h4>
-        <div class="btn-block">
-            <a href="{{ url_for('users.change_password') }}" class="btn btn-default">изменить пароль</a>
-        </div>
+        {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
+            <div class="btn-block">
+                <a href="{{ url_for('users.change_password') }}" class="btn btn-default">изменить пароль</a>
+            </div>
+        {% endif %}
     {% else %}
         <i>вы не авторизованы</i>
         <a href="{{ url_for('users.login') }}" class="btn btn-default">войти</a>
