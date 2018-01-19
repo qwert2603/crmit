@@ -1,48 +1,54 @@
 {% macro render_master(master) %}
-    <h3>{{ master.fio }}</h3>
-    <a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default">редактировать</a>
+    <tr>
+        <td>{{ master.fio }}</td>
+        <td>{{ master.system_user.login }}</td>
+        <td><a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default">редактировать</a></td>
+    </tr>
 {% endmacro %}
 
 
 {% macro render_teacher(teacher) %}
-    <h3>{{ teacher.fio }}</h3>
-    группы:
-    <ul>
-        {% for group in teacher.groups.all() %}
-            <li>{{ group.name }} (учеников: {{ group.students.count() }})</li>
-        {% else %}
-            <p><i>нет групп</i></p>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default">редактировать</a>
+    <tr>
+        <td>{{ teacher.fio }}</td>
+        <td>{{ teacher.system_user.login }}</td>
+        <td>
+            <ul>
+                {% for group in teacher.groups.all() %}
+                    <li>{{ group.name }} (учеников: {{ group.students.count() }})</li>
+                {% else %}
+                    <p><i>нет групп</i></p>
+                {% endfor %}
+            </ul>
+        </td>
+        <td><a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default">редактировать</a></td>
+    </tr>
 {% endmacro %}
 
 
 {% macro render_student(student) %}
-    <h3>{{ student.fio }}</h3>
-    <h4>дата рождения: {{ student.birth_date }}</h4>
-    <h4>место рождения: {{ student.birth_place }}</h4>
-    <h4>регистрация: {{ student.registration_place }}</h4>
-    <h4>фактический адрес: {{ student.actual_address }}</h4>
-    {% if student.additional_info %} <h4>доп. инфо: {{ student.additional_info }}</h4>{% endif %}
-    {% if student.known_from %}<h4>узнал(а) о ЦМИТ: {{ student.known_from }}</h4>{% endif %}
-    <h4>школа: {{ student.school.name }}</h4>
-    <h4>гражданство: {{ student.citizenship.name }}</h4>
-    родители:
-    <ul>
-        {% for parent in student.parents.all() %}
-            <li>{{ parent.fio }}</li>
-        {% else %}
-            <p><i>нет родитей</i></p>
-        {% endfor %}
-    </ul>
-    группы:
-    <ul>
-        {% for group in student.groups.all() %}
-            <li>{{ group.name }} (учеников: {{ group.students.count() }})</li>
-        {% else %}
-            <p><i>нет групп</i></p>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-default">редактировать</a>
+    <tr>
+        <td><a href="{{ url_for('users.student_details',id=student.id) }}">{{ student.fio }}</a></td>
+        <td>{{ student.system_user.login }}</td>
+        <td>{{ student.birth_date }}</td>
+        <td>{{ student.school.name }}</td>
+        <td>
+            <ul>
+                {% for parent in student.parents.all() %}
+                    <li>{{ parent.fio }}</li>
+                {% else %}
+                    <p><i>нет родитей</i></p>
+                {% endfor %}
+            </ul>
+        </td>
+        <td>
+            <ul>
+                {% for group in student.groups.all() %}
+                    <li>{{ group.name }} ({{ group.students.count() }} уч.)</li>
+                {% else %}
+                    <p><i>нет групп</i></p>
+                {% endfor %}
+            </ul>
+        </td>
+        <td><a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-default">редактировать</a></td>
+    </tr>
 {% endmacro %}

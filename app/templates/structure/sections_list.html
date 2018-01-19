@@ -12,11 +12,19 @@
 
     {{ render_search(search) }}
 
-    {% for section in items %}
-        {{ render_section(section) }}
-    {% else %}
-        {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
-    {% endfor %}
+    <table class="table">
+        <tr>
+            <th>название</th>
+            <th>цена в месяц</th>
+            <th>группы</th>
+            <th></th>
+        </tr>
+        {% for section in items %}
+            {{ render_section(section) }}
+        {% else %}
+            {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
+        {% endfor %}
+    </table>
 
     <div class="footer">
         {{ pagination_widget(pagination, 'structure.sections_list') }}

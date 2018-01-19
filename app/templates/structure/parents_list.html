@@ -10,11 +10,22 @@
 
     {{ render_search(search) }}
 
-    {% for parent in items %}
-        {{ render_parent(parent) }}
-    {% else %}
-        {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
-    {% endfor %}
+    <table class="table">
+        <tr>
+            <th>фио</th>
+            <th>телефон</th>
+            <th>email</th>
+            <th>адрес</th>
+            <th>домашний телефон</th>
+            <th>дети</th>
+            <th></th>
+        </tr>
+        {% for parent in items %}
+            {{ render_parent(parent) }}
+        {% else %}
+            {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
+        {% endfor %}
+    </table>
 
     <div class="footer">
         {{ pagination_widget(pagination, 'structure.parents_list') }}

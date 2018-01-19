@@ -12,11 +12,18 @@
 
     {{ render_search(search) }}
 
-    {% for citizenship in items %}
-        {{ render_citizenship(citizenship) }}
-    {% else %}
-        {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
-    {% endfor %}
+    <table class="table">
+        <tr>
+            <th>название</th>
+            <th>учеников</th>
+            <th></th>
+        </tr>
+        {% for citizenship in items %}
+            {{ render_citizenship(citizenship) }}
+        {% else %}
+            {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
+        {% endfor %}
+    </table>
 
     <div class="footer">
         {{ pagination_widget(pagination, 'structure.citizenships_list') }}

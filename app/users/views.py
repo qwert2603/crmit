@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, flash
 from flask_login import login_required, login_user, logout_user, current_user
 
 from app import db
-from app.models import SystemUser
+from app.models import SystemUser, Student
 from app.users import users
 from app.users.forms import LoginForm, ChangePasswordForm
 from app.decorators import check_master_or_teacher
@@ -42,3 +42,10 @@ def change_password():
         flash('неверный старый пароль!')
     return render_template('users/change_password.html', form=form)
 
+
+@users.route('/student_details/<int:id>')
+@login_required
+@check_master_or_teacher
+def student_details(id):
+    student = Student.query.get_or_404(id)
+    return render_template('users/student_details.html', student=student)

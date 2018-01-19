@@ -1,63 +1,82 @@
 {% macro render_citizenship(citizenship) %}
-    <h3>гражданство {{ citizenship.name }}</h3>
-    <h4>учеников: {{ citizenship.students.count() }}</h4>
-    <a href="{{ url_for('structure.edit_citizenship',id=citizenship.id) }}" class="btn btn-default">редактировать</a>
-    {#    <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}" class="btn btn-danger">удалить</a>#}
+    <tr>
+        <td>{{ citizenship.name }}</td>
+        <td>{{ citizenship.students.count() }}</td>
+        <td>
+            <a href="{{ url_for('structure.edit_citizenship',id=citizenship.id) }}" class="btn btn-default">редактировать</a>
+        </td>
+        {#    <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}" class="btn btn-danger">удалить</a>#}
+    </tr>
 {% endmacro %}
 
 
 {% macro render_section(section) %}
-    <h3>секция {{ section.name }}</h3>
-    <h4>цена в месяц: {{ section.price }}</h4>
-    группы:
-    <ul>
-        {% for group in section.groups.all() %}
-            <li>{{ group.name }} ({{ group.teacher.fio }})</li>
-        {% else %}
-            <p><i>нет групп</i></p>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-default">редактировать</a>
-    {#    <a href="{{ url_for('structure.delete_section',id=section.id) }}" class="btn btn-danger">удалить</a>#}
+    <tr>
+        <td>{{ section.name }}</td>
+        <td>{{ section.price }}</td>
+        <td>
+            <ul>
+                {% for group in section.groups.all() %}
+                    <li>{{ group.name }} ({{ group.teacher.fio }})</li>
+                {% else %}
+                    <p><i>нет групп</i></p>
+                {% endfor %}
+            </ul>
+        </td>
+        <td>
+            <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-default">редактировать</a>
+        </td>
+        {#    <a href="{{ url_for('structure.delete_section',id=section.id) }}" class="btn btn-danger">удалить</a>#}
+    </tr>
 {% endmacro %}
 
-{#todo: table rows#}
-
 {% macro render_school(school) %}
-    <h3>{{ school.name }}</h3>
-    <h4>учеников: {{ school.students.count() }}</h4>
-    <a href="{{ url_for('structure.edit_school',id=school.id) }}" class="btn btn-default">редактировать</a>
-    {#    <a href="{{ url_for('structure.delete_school',id=school.id) }}" class="btn btn-danger">удалить</a>#}
+    <tr>
+        <td>{{ school.name }}</td>
+        <td>{{ school.students.count() }}</td>
+        <td>
+            <a href="{{ url_for('structure.edit_school',id=school.id) }}" class="btn btn-default">редактировать</a>
+        </td>
+        {#    <a href="{{ url_for('structure.delete_school',id=school.id) }}" class="btn btn-danger">удалить</a>#}
+    </tr>
 {% endmacro %}
 
 
 {% macro render_parent(parent) %}
-    <h3>{{ parent.fio }}</h3>
-    <h4>телефон: {{ parent.phone }}</h4>
-    <h4>email: {{ parent.email }}</h4>
-    <h4>адрес: {{ parent.address }}</h4>
-    {% if parent.home_phone %}<h4>домашний телефон: {{ parent.home_phone }}</h4>{% endif %}
-    дети:
-    <ul>
-        {% for student in parent.children.all() %}
-            <li>{{ student.fio }}</li>
-        {% else %}
-            <p><i>нет детей</i></p>
-        {% endfor %}
-    </ul>
-    <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default">редактировать</a>
-    {#    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}" class="btn btn-danger">удалить</a>#}
+    <tr>
+        <td>{{ parent.fio }}</td>
+        <td>{{ parent.phone }}</td>
+        <td>{{ parent.email }}</td>
+        <td>{{ parent.address }}</td>
+        <td>{{ parent.home_phone }}</td>
+        <td>
+            <ul>
+                {% for student in parent.children.all() %}
+                    <li>{{ student.fio }}</li>
+                {% else %}
+                    <p><i>нет детей</i></p>
+                {% endfor %}
+            </ul>
+        </td>
+        <td>
+            <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default">редактировать</a>
+        </td>
+        {#    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}" class="btn btn-danger">удалить</a>#}
+    </tr>
 {% endmacro %}
 
 
 {% macro render_group(group) %}
-    <h3>группа {{ group.name }}</h3>
-    <h4>секция: {{ group.section.name }}</h4>
-    <h4>преподаватель: {{ group.teacher.fio }}</h4>
-    <h4>учеников: {{ group.students.count() }}</h4>
-    <a href="{{ url_for('structure.edit_group',id=group.id) }}" class="btn btn-default">редактировать</a>
-    <a href="{{ url_for('structure.students_in_group',id=group.id) }}" class="btn btn-default">изменить список учеников</a>
-    <a href="{{ url_for('structure.discounts',id=group.id) }}" class="btn btn-default">скидки</a>
-    <a href="{{ url_for('structure.lessons',group_id=group.id) }}" class="btn btn-default">занятия</a>
-    {#    <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
+    <tr>
+        <td>{{ group.name }}</td>
+        <td>{{ group.section.name }}</td>
+        <td>{{ group.teacher.fio }}</td>
+        <td>{{ group.students.count() }}</td>
+        <td><a href="{{ url_for('structure.edit_group',id=group.id) }}" class="btn btn-default">редактировать</a></td>
+        <td><a href="{{ url_for('structure.students_in_group',id=group.id) }}" class="btn btn-default">изменить список
+            учеников</a></td>
+        <td><a href="{{ url_for('structure.discounts',id=group.id) }}" class="btn btn-default">скидки</a></td>
+        <td><a href="{{ url_for('structure.lessons',group_id=group.id) }}" class="btn btn-default">занятия</a></td>
+{#        <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
+    </tr>
 {% endmacro %}

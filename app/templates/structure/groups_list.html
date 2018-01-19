@@ -12,11 +12,23 @@
 
     {{ render_search(search) }}
 
-    {% for group in items %}
-        {{ render_group(group) }}
-    {% else %}
-        {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
-    {% endfor %}
+    <table class="table">
+        <tr>
+            <th>название</th>
+            <th>секция</th>
+            <th>преподаватель</th>
+            <th>учеников</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for group in items %}
+            {{ render_group(group) }}
+        {% else %}
+            {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
+        {% endfor %}
+    </table>
 
     <div class="footer">
         {{ pagination_widget(pagination, 'structure.groups_list') }}
