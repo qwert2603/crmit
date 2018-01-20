@@ -1,3 +1,6 @@
+import datetime
+
+
 def generate_login(last_name, first_name, second_name):
     login = ''
     login += translit(first_name[0])
@@ -44,3 +47,69 @@ def translit(c):
     if c == 'ю': return 'yu'
     if c == 'я': return 'ya'
     raise Exception('unknown letter "{}"'.format(c))
+
+
+months_per_year = 12
+earliest_year = 2017
+start_month_teaching = 8  # September
+end_month_teaching = 4  # May
+
+
+def group_start_month(start_year):
+    return (start_year - earliest_year) * months_per_year + start_month_teaching
+
+
+def group_end_month(start_year):
+    return (start_year + 1 - earliest_year) * months_per_year + end_month_teaching
+
+
+def number_of_month(date):
+    return (date.year - earliest_year) * months_per_year + date.month - 1
+
+
+month_names = [
+    'январь',
+    'ферваль',
+    'март',
+    'апрель',
+    'май',
+    'июнь',
+    'июль',
+    'август',
+    'сентябрь',
+    'октябрь',
+    'ноябрь',
+    'декабрь'
+]
+
+days_per_month = [31, 28, 31, 30,
+                  31, 30, 31, 31,
+                  30, 31, 30, 31]
+
+
+def year_from_month_number(month_number):
+    return month_number // months_per_year + earliest_year
+
+
+def month_from_month_number(month_number):
+    return month_number % months_per_year
+
+
+def get_month_name(month_number):
+    return '{} {}'.format(year_from_month_number(month_number), month_names[month_from_month_number(month_number)])
+
+
+def start_date_of_month(month_number):
+    return datetime.date(year_from_month_number(month_number), month_from_month_number(month_number) + 1, 1)
+
+
+def end_date_of_month(month_number):
+    year = year_from_month_number(month_number)
+    month_of_year = month_from_month_number(month_number)
+    day = days_per_month[month_of_year]
+    if is_leap_year(year) and month_of_year == 1: day = day + 1
+    return datetime.date(year, month_of_year + 1, day)
+
+
+def is_leap_year(year):
+    return year % 4 == 0 and year % 100 != 0 and year % 400 == 0

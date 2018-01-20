@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}занятия в {{ group.name }} за {{ month_name }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>занятия в {{ group.name }} за {{ month_name }}</h1>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>ученик</th>
+            {% for lesson_date in lesson_dates %}
+                <th>{{ lesson_date }}</th>
+            {% endfor %}
+            <th>оплата</th>
+        </tr>
+        {% for student_in_group in students_in_group %}
+            <tr>
+                <td>{{ student_in_group.student.fio }}</td>
+                {% for lesson_id in lesson_ids %}
+                    <td>
+                        {{ attendings[lesson_id].get(student_in_group.student_id, 0) }}
+                        <input form="save_form" type="checkbox"
+                               name="a_{{ lesson_id }}_{{ student_in_group.student_id }}"
+                               {% if attendings[lesson_id].get(student_in_group.student_id, False) %}checked{% endif %}>
+                    </td>
+                {% endfor %}
+                <td>
+                    {% if confirmed.get(student_in_group.id) %}
+                        {{ payments.get(student_in_group.id, 0) }} /
+                        {{ group.section.price - student_in_group.discount }}
+                        (подтв.)
+                    {% else %}
+                        <input form="save_form" type="number" name="p_{{ student_in_group.id }}"
+                               value="{{ payments.get(student_in_group.id, 0) }}">
+                        / {{ group.section.price - student_in_group.discount }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post" id="save_form">
+        <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
+    </form>
+
+    <a href="{{ url_for('users.register_student') }}" class="btn btn-default">добавить ученика</a>
+
+{% endblock %}

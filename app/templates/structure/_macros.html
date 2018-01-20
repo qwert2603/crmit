@@ -76,7 +76,7 @@
         <td><a href="{{ url_for('structure.students_in_group',id=group.id) }}" class="btn btn-default">изменить список
             учеников</a></td>
         <td><a href="{{ url_for('structure.discounts',id=group.id) }}" class="btn btn-default">скидки</a></td>
-        <td><a href="{{ url_for('structure.lessons',group_id=group.id) }}" class="btn btn-default">занятия</a></td>
+        <td><a href="{{ url_for('lessons.lessons_list',group_id=group.id) }}" class="btn btn-default">занятия</a></td>
 {#        <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
     </tr>
 {% endmacro %}

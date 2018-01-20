@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+{% from 'lessons/_macros.html' import render_lesson %}
+
+{% block title %}занятия в {{ group.name }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>занятия в {{ group.name }}</h1>
+    </div>
+
+    <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">добавить занятие</a>
+
+    <table class="table">
+        <tr>
+            <th>дата</th>
+            <th>преподаватель</th>
+            <th>учеников</th>
+            <th></th>
+        </tr>
+        {% for lesson in items %}
+            {{ render_lesson(lesson) }}
+        {% endfor %}
+    </table>
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'lessons.lessons_list', group_id=group.id) }}
+    </div>
+{% endblock %}

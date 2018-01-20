@@ -2,6 +2,7 @@ from datetime import datetime
 from flask_login import AnonymousUserMixin, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
+from app.utils import number_of_month
 
 
 class AnonUser(AnonymousUserMixin):
@@ -182,7 +183,7 @@ class Group(db.Model):
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
     start_year = db.Column(db.Integer, nullable=False, default=2017)
-    students_in_groups = db.relationship('StudentInGroup', backref='group', lazy='dynamic')
+    students_in_group = db.relationship('StudentInGroup', backref='group', lazy='dynamic')
     lessons = db.relationship('Lesson', backref='group', lazy='dynamic')
 
     @property
@@ -191,15 +192,23 @@ class Group(db.Model):
             .join(StudentInGroup, StudentInGroup.student_id == Student.id) \
             .filter(StudentInGroup.group_id == self.id)
 
+    def students_in_month(self, month_number):
+        return self.students.filter(StudentInGroup.enter_month <= month_number,
+                                    StudentInGroup.exit_month >= month_number)
+
+    def students_in_group_in_month(self, month_number):
+        return self.students_in_group.filter(StudentInGroup.enter_month <= month_number,
+                                             StudentInGroup.exit_month >= month_number)
+
 
 class StudentInGroup(db.Model):
     __tablename__ = 'student_in_groups'
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
-    discount = db.Column(db.Integer, nullable=True, default=0)
-    enter_month = db.Column(db.Integer, nullable=False, default=0)  # 0 == Sep,2017. todo: remove default value.
-    exit_month = db.Column(db.Integer, nullable=False, default=8)  # todo: remove default value.
+    discount = db.Column(db.Integer, nullable=False, default=0)
+    enter_month = db.Column(db.Integer, nullable=False, default=8)  # 0 == Jan,2017. todo: remove default value.
+    exit_month = db.Column(db.Integer, nullable=False, default=17)  # todo: remove default value.
     payments = db.relationship('Payment', backref='student_in_group', lazy='dynamic')
     unique = db.UniqueConstraint(student_id, group_id)
 
@@ -244,6 +253,14 @@ class Lesson(db.Model):
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
     attendings = db.relationship('Attending', backref='lesson', lazy='dynamic')
+
+    @property
+    def attendings_was(self):
+        return self.attendings.filter(Attending.was == True)
+
+    @property
+    def month_number(self):
+        return number_of_month(self.date)
 
 
 class Attending(db.Model):

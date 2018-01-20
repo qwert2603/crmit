@@ -11,7 +11,7 @@ from app import db
 @check_master_or_teacher
 def students_in_group(id):
     group = Group.query.get_or_404(id)
-    students_in_group = group.students_in_groups.all()
+    students_in_group = group.students_in_group.all()
     in_group_students_ids = [s.student.id for s in students_in_group]
     if 'submit' in request.form:
         form_in_group = [int(i) for i in request.form.getlist('in_group')]
@@ -49,7 +49,7 @@ def students_in_group(id):
 @check_master_or_teacher
 def discounts(id):
     group = Group.query.get_or_404(id)
-    students_in_group = group.students_in_groups.all()
+    students_in_group = group.students_in_group.all()
     if 'submit' in request.form:
         for student_in_group in students_in_group:
             new_discount = request.form.get('d_{}'.format(student_in_group.id), 0, type=int)
@@ -63,11 +63,3 @@ def discounts(id):
         flash('скидки в группе {} изменены.'.format(group.name))
         return redirect(url_for('structure.groups_list'))
     return render_template('structure/discounts.html', group=group, students_in_group=students_in_group)
-
-
-@structure.route('/lessons/<int:group_id>', methods=['GET', 'POST'])
-@login_required
-@check_master_or_teacher
-def lessons(group_id):
-    # todo: new blueprint.
-    return 'lessons {}'.format(group_id)
