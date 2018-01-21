@@ -21,7 +21,7 @@
                 <td>{{ student_in_group.student.fio }}</td>
                 {% for lesson_id in lesson_ids %}
                     <td>
-                        {{ attendings[lesson_id].get(student_in_group.student_id, 0) }}
+{#                        {{ attendings[lesson_id].get(student_in_group.student_id, 0) }}#}
                         <input form="save_form" type="checkbox"
                                name="a_{{ lesson_id }}_{{ student_in_group.student_id }}"
                                {% if attendings[lesson_id].get(student_in_group.student_id, False) %}checked{% endif %}>
@@ -31,9 +31,10 @@
                     {% if confirmed.get(student_in_group.id) %}
                         {{ payments.get(student_in_group.id, 0) }} /
                         {{ group.section.price - student_in_group.discount }}
-                        (подтв.)
+                        <span style="color: green; ">(подтв.)</span>
                     {% else %}
-                        <input form="save_form" type="number" name="p_{{ student_in_group.id }}"
+                        <input max="{{ group.section.price - student_in_group.discount }}" min="0" form="save_form"
+                               type="number" name="p_{{ student_in_group.id }}"
                                value="{{ payments.get(student_in_group.id, 0) }}">
                         / {{ group.section.price - student_in_group.discount }}
                     {% endif %}

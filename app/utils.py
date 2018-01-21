@@ -96,7 +96,7 @@ def month_from_month_number(month_number):
 
 
 def get_month_name(month_number):
-    return '{} {}'.format(year_from_month_number(month_number), month_names[month_from_month_number(month_number)])
+    return '{} {}'.format(month_names[month_from_month_number(month_number)], year_from_month_number(month_number))
 
 
 def start_date_of_month(month_number):

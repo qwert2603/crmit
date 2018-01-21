@@ -2,7 +2,8 @@
     <tr>
         <td>{{ master.fio }}</td>
         <td>{{ master.system_user.login }}</td>
-        <td><a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default">редактировать</a></td>
+        <td><a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default"><span
+                class="glyphicon glyphicon-pencil"></span></a></td>
     </tr>
 {% endmacro %}
 
@@ -20,7 +21,8 @@
                 {% endfor %}
             </ul>
         </td>
-        <td><a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default">редактировать</a></td>
+        <td><a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default"><span
+                class="glyphicon glyphicon-pencil"></span></a></td>
     </tr>
 {% endmacro %}
 
@@ -49,6 +51,7 @@
                 {% endfor %}
             </ul>
         </td>
-        <td><a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-default">редактировать</a></td>
+        <td><a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-default"><span
+                class="glyphicon glyphicon-pencil"></span></a></td>
     </tr>
 {% endmacro %}

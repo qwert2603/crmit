@@ -3,7 +3,8 @@
         <td>{{ citizenship.name }}</td>
         <td>{{ citizenship.students.count() }}</td>
         <td>
-            <a href="{{ url_for('structure.edit_citizenship',id=citizenship.id) }}" class="btn btn-default">редактировать</a>
+            <a href="{{ url_for('structure.edit_citizenship',id=citizenship.id) }}" class="btn btn-default"><span
+                    class="glyphicon glyphicon-pencil"></span></a>
         </td>
         {#    <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}" class="btn btn-danger">удалить</a>#}
     </tr>
@@ -24,7 +25,8 @@
             </ul>
         </td>
         <td>
-            <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-default">редактировать</a>
+            <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-default"><span
+                    class="glyphicon glyphicon-pencil"></span></a>
         </td>
         {#    <a href="{{ url_for('structure.delete_section',id=section.id) }}" class="btn btn-danger">удалить</a>#}
     </tr>
@@ -35,7 +37,8 @@
         <td>{{ school.name }}</td>
         <td>{{ school.students.count() }}</td>
         <td>
-            <a href="{{ url_for('structure.edit_school',id=school.id) }}" class="btn btn-default">редактировать</a>
+            <a href="{{ url_for('structure.edit_school',id=school.id) }}" class="btn btn-default"><span
+                    class="glyphicon glyphicon-pencil"></span></a>
         </td>
         {#    <a href="{{ url_for('structure.delete_school',id=school.id) }}" class="btn btn-danger">удалить</a>#}
     </tr>
@@ -59,7 +62,8 @@
             </ul>
         </td>
         <td>
-            <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default">редактировать</a>
+            <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default"><span
+                    class="glyphicon glyphicon-pencil"></span></a>
         </td>
         {#    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}" class="btn btn-danger">удалить</a>#}
     </tr>
@@ -72,11 +76,14 @@
         <td>{{ group.section.name }}</td>
         <td>{{ group.teacher.fio }}</td>
         <td>{{ group.students.count() }}</td>
-        <td><a href="{{ url_for('structure.edit_group',id=group.id) }}" class="btn btn-default">редактировать</a></td>
-        <td><a href="{{ url_for('structure.students_in_group',id=group.id) }}" class="btn btn-default">изменить список
-            учеников</a></td>
+        <td><a href="{{ url_for('lessons.lessons_list',group_id=group.id) }}" class="btn btn-default"><span
+                class="glyphicon glyphicon-calendar"></span></a></td>
+        <td><a href="{{ url_for('structure.students_in_group',id=group.id) }}" class="btn btn-default">
+            список учеников
+        </a></td>
         <td><a href="{{ url_for('structure.discounts',id=group.id) }}" class="btn btn-default">скидки</a></td>
-        <td><a href="{{ url_for('lessons.lessons_list',group_id=group.id) }}" class="btn btn-default">занятия</a></td>
-{#        <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
+        <td><a href="{{ url_for('structure.edit_group',id=group.id) }}" class="btn btn-default"><span
+                class="glyphicon glyphicon-pencil"></span></a></td>
+        {#        <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
     </tr>
 {% endmacro %}
