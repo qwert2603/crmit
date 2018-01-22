@@ -182,7 +182,8 @@ class Group(db.Model):
     name = db.Column(db.String(255), nullable=False, unique=True)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    start_year = db.Column(db.Integer, nullable=False, default=2017)
+    start_month = db.Column(db.Integer, nullable=False)  # todo: add in forms.
+    end_month = db.Column(db.Integer, nullable=False)  # todo: add in forms.
     students_in_group = db.relationship('StudentInGroup', backref='group', lazy='dynamic')
     lessons = db.relationship('Lesson', backref='group', lazy='dynamic')
 
@@ -207,8 +208,8 @@ class StudentInGroup(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
     discount = db.Column(db.Integer, nullable=False, default=0)
-    enter_month = db.Column(db.Integer, nullable=False, default=8)  # 0 == Jan,2017. todo: remove default value.
-    exit_month = db.Column(db.Integer, nullable=False, default=17)  # todo: remove default value.
+    enter_month = db.Column(db.Integer, nullable=False)
+    exit_month = db.Column(db.Integer, nullable=False)
     payments = db.relationship('Payment', backref='student_in_group', lazy='dynamic')
     unique = db.UniqueConstraint(student_id, group_id)
 

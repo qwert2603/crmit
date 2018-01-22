@@ -55,14 +55,6 @@ start_month_teaching = 8  # September
 end_month_teaching = 4  # May
 
 
-def group_start_month(start_year):
-    return (start_year - earliest_year) * months_per_year + start_month_teaching
-
-
-def group_end_month(start_year):
-    return (start_year + 1 - earliest_year) * months_per_year + end_month_teaching
-
-
 def number_of_month(date):
     return (date.year - earliest_year) * months_per_year + date.month - 1
 

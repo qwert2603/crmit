@@ -5,7 +5,7 @@ from app import db
 from app.decorators import check_master_or_teacher
 from app.lessons import lessons
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending
-from app.utils import group_start_month, group_end_month, get_month_name, start_date_of_month, end_date_of_month
+from app.utils import get_month_name, start_date_of_month, end_date_of_month
 from app.lessons.utils import payments_dicts, lessons_lists
 
 
@@ -24,7 +24,7 @@ def lessons_list(group_id):
 @check_master_or_teacher
 def lessons_in_month(group_id, month_number):
     group = Group.query.get_or_404(group_id)
-    if month_number < group_start_month(group.start_year) or month_number > group_end_month(group.start_year):
+    if month_number < group.start_month or month_number > group.end_month:
         abort(404)
     month_name = get_month_name(month_number)
     students_in_group = group.students_in_group_in_month(month_number)
