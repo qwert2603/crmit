@@ -49,6 +49,7 @@ def register_teacher():
 @check_master_or_teacher
 def register_student():
     form = RegistrationStudentForm()
+    # todo: psw = birth_date
     if form.validate_on_submit():
         fio = '{} {} {}'.format(form.last_name.data, form.first_name.data, form.second_name.data).rstrip()
         role_student = SystemRole.query.filter_by(name=role_student_name).first()
