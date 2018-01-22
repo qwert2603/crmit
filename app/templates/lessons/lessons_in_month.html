@@ -15,13 +15,13 @@
                 <th>{{ lesson_date }}</th>
             {% endfor %}
             <th>оплата</th>
+            <th>нал.</th>
         </tr>
         {% for student_in_group in students_in_group %}
             <tr>
                 <td>{{ student_in_group.student.fio }}</td>
                 {% for lesson_id in lesson_ids %}
                     <td>
-{#                        {{ attendings[lesson_id].get(student_in_group.student_id, 0) }}#}
                         <input form="save_form" type="checkbox"
                                name="a_{{ lesson_id }}_{{ student_in_group.student_id }}"
                                {% if attendings[lesson_id].get(student_in_group.student_id, False) %}checked{% endif %}>
@@ -37,6 +37,14 @@
                                type="number" name="p_{{ student_in_group.id }}"
                                value="{{ payments.get(student_in_group.id, 0) }}">
                         / {{ group.section.price - student_in_group.discount }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if confirmed.get(student_in_group.id) %}
+                        <input type="checkbox" disabled {% if cash[student_in_group.id] %}checked{% endif %}>
+                    {% else %}
+                        <input form="save_form" type="checkbox" name="c_{{ student_in_group.id }}"
+                               {% if cash.get(student_in_group.id, True) %}checked{% endif %}>
                     {% endif %}
                 </td>
             </tr>
