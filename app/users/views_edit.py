@@ -4,7 +4,7 @@ from app.decorators import check_master, check_master_or_teacher
 from app.models import Master, Teacher, Student, ParentOfStudent
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
-
+from app.utils import password_from_date
 
 @users.route('/master/<int:id>', methods=['GET', 'POST'])
 @login_required
@@ -55,6 +55,7 @@ def edit_student(id):
     if form.validate_on_submit():
         student.fio = form.fio.data
         student.system_user.login = form.login.data
+        student.system_user.password = password_from_date(form.birth_date.data)
         student.birth_date = form.birth_date.data
         student.birth_place = form.birth_place.data
         student.registration_place = form.registration_place.data

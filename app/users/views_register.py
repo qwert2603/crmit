@@ -8,8 +8,7 @@ from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentO
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
 from app.users.forms import create_new_parent_id
-from app.init_model import default_student_password
-from app.utils import generate_login
+from app.utils import generate_login, password_from_date
 
 
 @users.route('/register/master', methods=['GET', 'POST'])
@@ -49,13 +48,12 @@ def register_teacher():
 @check_master_or_teacher
 def register_student():
     form = RegistrationStudentForm()
-    # todo: psw = birth_date
     if form.validate_on_submit():
         fio = '{} {} {}'.format(form.last_name.data, form.first_name.data, form.second_name.data).rstrip()
         role_student = SystemRole.query.filter_by(name=role_student_name).first()
         user_student = SystemUser(
             login=generate_login(form.last_name.data, form.first_name.data, form.second_name.data),
-            password=default_student_password, system_role=role_student)
+            password=password_from_date(form.birth_date.data), system_role=role_student)
         student = Student(fio=fio, system_user=user_student, birth_date=form.birth_date.data,
                           birth_place=form.birth_place.data, registration_place=form.registration_place.data,
                           actual_address=form.actual_address.data, additional_info=form.additional_info.data,
