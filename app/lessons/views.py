@@ -12,6 +12,8 @@ from app.models import Lesson, Group, Payment, StudentInGroup, Attending
 from app.utils import get_month_name, parse_date_or_none, number_of_month
 
 
+# todo: lessons list screen (with filter by teacher / group).
+
 @lessons.route('/<int:group_id>')
 @login_required
 @check_master_or_teacher
@@ -19,10 +21,12 @@ def lessons_list(group_id):
     group = Group.query.get_or_404(group_id)
     page = request.args.get('page', 1, type=int)
     pagination = group.lessons.order_by(Lesson.date.desc()).paginate(page, per_page=20, error_out=False)
+    # todo: move to stat screen.
     students_by_month = group_students_count_by_month_dict(group_id)
     pays_by_month = group_payments_count_by_month_dict(group_id)
     pays_confirmed_by_month = group_payments_confirmed_count_by_month_dict(group_id)
     attendings_percent_by_month = group_attendings_percent_by_month_dict(group_id)
+    # todo: show lessons's days of month (3 / 12 / 15 / 22 / 26).
     months = [{'month_number': month_number, 'month_name': get_month_name(month_number),
                'students_count': students_by_month.get(month_number),
                'lessons_count': Lesson.lessons_in_group_in_month(group_id, month_number).count(),
@@ -86,6 +90,7 @@ def lessons_in_month(group_id, month_number):
         return redirect(url_for('lessons.lessons_in_month', group_id=group_id, month_number=month_number))
     pd = payments_dicts(group_id, month_number)
     ll = lessons_lists(group_id, month_number)
+    # todo: removable_lessons = dict().
     return render_template('lessons/lessons_in_month.html', group=group, month_name=month_name,
                            students_in_group=students_in_group, payments=pd[0], confirmed=pd[1], cash=pd[2],
                            lessons=ll[0], lesson_ids=ll[1], attendings=ll[2])
