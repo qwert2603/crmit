@@ -1,14 +1,15 @@
 from flask import request, render_template, abort, flash, url_for, redirect
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from app import db
 from app.decorators import check_master_or_teacher
+from app.init_model import role_teacher_name
 from app.lessons import lessons
 from app.lessons.utils import payments_dicts, lessons_lists, group_payments_count_by_month_dict, \
     group_payments_confirmed_count_by_month_dict, group_students_count_by_month_dict, \
     group_attendings_percent_by_month_dict
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending
-from app.utils import get_month_name, parse_date_or_none
+from app.utils import get_month_name, parse_date_or_none, number_of_month
 
 
 @lessons.route('/<int:group_id>')
@@ -88,3 +89,20 @@ def lessons_in_month(group_id, month_number):
     return render_template('lessons/lessons_in_month.html', group=group, month_name=month_name,
                            students_in_group=students_in_group, payments=pd[0], confirmed=pd[1], cash=pd[2],
                            lessons=ll[0], lesson_ids=ll[1], attendings=ll[2])
+
+
+@lessons.route('/create/<int:group_id>', methods=['GET', 'POST'])
+@login_required
+@check_master_or_teacher
+def create_lesson(group_id):
+    group = Group.query.get_or_404(group_id)
+    if current_user.system_role.name == role_teacher_name:
+        if current_user.teacher.id != group.teacher_id:
+            abort(403)
+
+    if 'submit' in request.form:
+        date = parse_date_or_none(request.form.get('date'))
+        db.session.add(Lesson(group_id=group_id, teacher_id=group.teacher_id, date=date))
+        flash('занятие создано: {}'.format(date.date()))
+        return redirect(url_for('.lessons_in_month', group_id=group_id, month_number=number_of_month(date)))
+    return render_template('lessons/create_lesson.html', group=group)

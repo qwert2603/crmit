@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ group.name }}. новое занятие{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ group.name }}. новое занятие</h1>
+    </div>
+
+    <form method="post" class="form-group col-md-4">
+        <div class="form-group">
+            <h4><label for="date">дата</label></h4>
+            <input class="form-control" id="date" name="date" type="date" required value="today"
+                   min="{{ start_date_of_month(group.start_month) }}"
+                   max="{{ end_date_of_month(group.end_month) }}">
+        </div>
+        <input class="btn btn-default" type="submit" name="submit" value="создать">
+    </form>
+
+    {% include '_cancel_button.html' %}
+
+{% endblock %}

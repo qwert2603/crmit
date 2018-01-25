@@ -9,14 +9,18 @@
         <h1>занятия в {{ group.name }}</h1>
     </div>
 
+    <a href="{{ url_for('lessons.create_lesson',group_id=group.id) }}" class="btn btn-primary margined_button">
+        новое занятие
+    </a>
+
     <table class="table">
         <tr>
             <th>месяц</th>
-            <td>учеников</td>
-            <td>занятий</td>
-            <td>% посещения</td>
-            <td>оплата</td>
-            <td></td>
+            <th>учеников</th>
+            <th>занятий</th>
+            <th>% посещения</th>
+            <th>оплата</th>
+            <th></th>
         </tr>
         {% for month in months %}
             <tr>
@@ -29,7 +33,6 @@
                 <td>{{ month.lessons_count }}</td>
                 <td>{{ month.attendings_percent }}</td>
                 <td>{{ month.payments_confirmed }} / {{ month.payments }} / {{ month.students_count }}</td>
-                <td><a class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></a></td>
             </tr>
         {% endfor %}
     </table>
