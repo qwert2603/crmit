@@ -182,8 +182,8 @@ class Group(db.Model):
     name = db.Column(db.String(255), nullable=False, unique=True)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    start_month = db.Column(db.Integer, nullable=False)  # todo: add in forms.
-    end_month = db.Column(db.Integer, nullable=False)  # todo: add in forms.
+    start_month = db.Column(db.Integer, nullable=False, index=True)  # todo: add in forms.
+    end_month = db.Column(db.Integer, nullable=False, index=True)  # todo: add in forms.
     students_in_group = db.relationship('StudentInGroup', backref='group', lazy='dynamic')
     lessons = db.relationship('Lesson', backref='group', lazy='dynamic')
 
@@ -205,11 +205,11 @@ class Group(db.Model):
 class StudentInGroup(db.Model):
     __tablename__ = 'student_in_groups'
     id = db.Column(db.Integer, primary_key=True)
-    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
-    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False, index=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False, index=True)
     discount = db.Column(db.Integer, nullable=False, default=0)
-    enter_month = db.Column(db.Integer, nullable=False)
-    exit_month = db.Column(db.Integer, nullable=False)
+    enter_month = db.Column(db.Integer, nullable=False, index=True)
+    exit_month = db.Column(db.Integer, nullable=False, index=True)
     payments = db.relationship('Payment', backref='student_in_group', lazy='dynamic')
     unique = db.UniqueConstraint(student_id, group_id)
 
@@ -239,8 +239,8 @@ class StudentInGroup(db.Model):
 class Payment(db.Model):
     __tablename__ = 'payments'
     id = db.Column(db.Integer, primary_key=True)
-    student_in_group_id = db.Column(db.Integer, db.ForeignKey('student_in_groups.id'), nullable=False)
-    month = db.Column(db.Integer, nullable=False)
+    student_in_group_id = db.Column(db.Integer, db.ForeignKey('student_in_groups.id'), nullable=False, index=True)
+    month = db.Column(db.Integer, nullable=False, index=True)
     value = db.Column(db.Integer, nullable=False)
     cash = db.Column(db.Boolean, nullable=False, default=True)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
@@ -250,9 +250,9 @@ class Payment(db.Model):
 class Lesson(db.Model):
     __tablename__ = 'lessons'
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
-    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False)
+    date = db.Column(db.Date, nullable=False, index=True)
+    teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False, index=True)
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=False, index=True)
     attendings = db.relationship('Attending', backref='lesson', lazy='dynamic')
 
     @property
@@ -269,8 +269,8 @@ class Lesson(db.Model):
 class Attending(db.Model):
     __tablename__ = 'attendings'
     id = db.Column(db.Integer, primary_key=True)
-    lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False)
-    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
+    lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False, index=True)
+    student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False, index=True)
     was = db.Column(db.Boolean, nullable=False, default=False)
     unique = db.UniqueConstraint(student_id, lesson_id)
 
