@@ -2,7 +2,7 @@ from datetime import datetime
 from flask_login import AnonymousUserMixin, UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
-from app.utils import number_of_month
+from app.utils import end_date_of_month, start_date_of_month
 
 
 class AnonUser(AnonymousUserMixin):
@@ -259,9 +259,11 @@ class Lesson(db.Model):
     def attendings_was(self):
         return self.attendings.filter(Attending.was == True)
 
-    @property
-    def month_number(self):
-        return number_of_month(self.date)
+    @staticmethod
+    def lessons_in_group_in_month(group_id, month_number):
+        return Lesson.query.filter(Lesson.group_id == group_id,
+                                   Lesson.date >= start_date_of_month(month_number),
+                                   Lesson.date <= end_date_of_month(month_number))
 
 
 class Attending(db.Model):

@@ -40,7 +40,10 @@
             <a href="{{ url_for('structure.edit_school',id=school.id) }}" class="btn btn-default"><span
                     class="glyphicon glyphicon-pencil"></span></a>
         </td>
-        {#    <a href="{{ url_for('structure.delete_school',id=school.id) }}" class="btn btn-danger">удалить</a>#}
+        <td>
+            <a href="{{ url_for('structure.delete_school',id=school.id) }}" class="btn btn-danger disabled"><span
+                    class="glyphicon glyphicon-remove"></span></a>
+        </td>
     </tr>
 {% endmacro %}
 

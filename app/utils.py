@@ -109,3 +109,10 @@ def is_leap_year(year):
 
 def password_from_date(date):
     return '{:0>2}{:0>2}{:4}'.format(date.day, date.month, date.year)
+
+
+def parse_date_or_none(date_str):
+    try:
+        return datetime.datetime.strptime(date_str, '%Y-%m-%d')
+    except ValueError:
+        return None

@@ -12,9 +12,12 @@
     <table class="table">
         <tr>
             <th>ученик</th>
-            {% for lesson_date in lesson_dates %}
-                {#todo: datepicker#}
-                <th>{{ lesson_date }}</th>
+            {% for lesson in lessons %}
+                <th>
+                    <input form="save_form" type="date" name="l_{{ lesson.id }}" value="{{ lesson.date }}" required
+                           min="{{ start_date_of_month(group.start_month) }}"
+                           max="{{ end_date_of_month(group.end_month) }}">
+                </th>
             {% endfor %}
             <th>оплата</th>
             <th>нал.</th>
@@ -51,6 +54,18 @@
                 </td>
             </tr>
         {% endfor %}
+        <tr>
+            <td></td>
+            {% for lesson_id in lesson_ids %}
+                <td>
+                    <a class="btn btn-danger disabled" name="rl_{{ lesson_id }}">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </td>
+            {% endfor %}
+            <td></td>
+            <td></td>
+        </tr>
     </table>
 
     <form method="post" id="save_form">

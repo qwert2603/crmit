@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'lessons/_macros.html' import render_lesson %}
 
 {% block title %}занятия в {{ group.name }}{% endblock %}
 
@@ -10,7 +9,30 @@
         <h1>занятия в {{ group.name }}</h1>
     </div>
 
-    <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">добавить занятие</a>
+    <table class="table">
+        <tr>
+            <th>месяц</th>
+            <td>учеников</td>
+            <td>занятий</td>
+            <td>% посещения</td>
+            <td>оплата</td>
+            <td></td>
+        </tr>
+        {% for month in months %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('lessons.lessons_in_month',group_id=group.id,month_number=month.month_number) }}">
+                        {{ month.month_name }}
+                    </a>
+                </td>
+                <td>{{ month.students_count }}</td>
+                <td>{{ month.lessons_count }}</td>
+                <td>{{ month.attendings_percent }}</td>
+                <td>{{ month.payments_confirmed }} / {{ month.payments }} / {{ month.students_count }}</td>
+                <td><a class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></a></td>
+            </tr>
+        {% endfor %}
+    </table>
 
     <table class="table">
         <tr>
@@ -19,9 +41,17 @@
             <th>учеников</th>
             <th></th>
         </tr>
-    {#todo: months list#}
-        {% for lesson in items %}
-            {{ render_lesson(lesson) }}
+        {% for lesson in lessons %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('lessons.lessons_in_month',group_id=lesson.group_id,month_number=number_of_month(lesson.date)) }}">
+                        {{ lesson.date }}
+                    </a>
+                </td>
+                <td>{{ lesson.teacher.fio }}</td>
+                <td>{{ lesson.attendings_was.count() }}
+                    / {{ lesson.group.students_in_month(number_of_month(lesson.date)).count() }}</td>
+            </tr>
         {% endfor %}
     </table>
 
