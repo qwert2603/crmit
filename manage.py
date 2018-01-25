@@ -21,11 +21,14 @@ def make_shell_context():
                 Citizenship=models.Citizenship, School=models.School, Section=models.Section)
 
 
+context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_teacher_name,
+                    role_student_name=role_student_name, start_date_of_month=start_date_of_month,
+                    end_date_of_month=end_date_of_month, number_of_month=number_of_month)
+
+
 @app.context_processor
 def context_processor():
-    return dict(role_master_name=role_master_name, role_teacher_name=role_teacher_name,
-                role_student_name=role_student_name, start_date_of_month=start_date_of_month,
-                end_date_of_month=end_date_of_month, number_of_month=number_of_month)
+    return context_dict
 
 
 if __name__ == '__main__':

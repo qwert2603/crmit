@@ -12,7 +12,7 @@ from app.init_model import role_master_name, role_teacher_name, role_student_nam
 
 @app.context_processor
 def context_processor():
-    return dict(role_master_name=role_master_name, role_teacher_name=role_teacher_name,
-                role_student_name=role_student_name)
+    from manage import context_dict
+    return context_dict
 
 CGIHandler().run(app)
