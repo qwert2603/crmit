@@ -19,7 +19,8 @@ def students_in_group(id):
         print(form_in_group)
         for new_id in form_in_group:
             if new_id not in in_group_students_ids:
-                db.session.add(StudentInGroup(student_id=new_id, group_id=id))
+                db.session.add(StudentInGroup(student_id=new_id, group_id=id, enter_month=group.start_month,
+                                              exit_month=group.end_month))
         for old_student_in_group in students_in_group:
             if old_student_in_group.student.id not in form_in_group:
                 if old_student_in_group.attendings_was.count() > 0:
