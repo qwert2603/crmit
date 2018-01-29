@@ -34,9 +34,9 @@ def payments_dicts(group_id, month_number):
 def dates_of_lessons_dict(group_id):
     sql = '''
                 SELECT
-                    extract(YEAR FROM date)                           AS year,
-                    extract(MONTH FROM date)                          AS month,
-                    string_agg(extract(DAY FROM date) :: TEXT, ' / ') AS dates
+                    extract(YEAR FROM date)                                         AS year,
+                    extract(MONTH FROM date)                                        AS month,
+                    string_agg(extract(DAY FROM date) :: TEXT, ' / ' ORDER BY date) AS dates
                 FROM lessons
                 WHERE group_id = {}
                 GROUP BY month, year
