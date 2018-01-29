@@ -44,4 +44,7 @@ def create_app(config_name):
     from app.lessons import lessons as lessons_blueprint
     app.register_blueprint(lessons_blueprint, url_prefix='/lessons')
 
+    from app.stat import stat as stat_blueprint
+    app.register_blueprint(stat_blueprint, url_prefix='/stat')
+
     return app

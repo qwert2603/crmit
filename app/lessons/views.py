@@ -5,9 +5,7 @@ from app import db
 from app.decorators import check_master_or_teacher
 from app.init_model import role_teacher_name
 from app.lessons import lessons
-from app.lessons.utils import payments_dicts, lessons_lists, group_payments_count_by_month_dict, \
-    group_payments_confirmed_count_by_month_dict, group_students_count_by_month_dict, \
-    group_attendings_percent_by_month_dict
+from app.lessons.utils import payments_dicts, lessons_lists, dates_of_lessons_dict
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending
 from app.utils import get_month_name, parse_date_or_none, number_of_month
 
@@ -21,18 +19,9 @@ def lessons_list(group_id):
     group = Group.query.get_or_404(group_id)
     page = request.args.get('page', 1, type=int)
     pagination = group.lessons.order_by(Lesson.date.desc()).paginate(page, per_page=20, error_out=False)
-    # todo: move to stat screen.
-    students_by_month = group_students_count_by_month_dict(group_id)
-    pays_by_month = group_payments_count_by_month_dict(group_id)
-    pays_confirmed_by_month = group_payments_confirmed_count_by_month_dict(group_id)
-    attendings_percent_by_month = group_attendings_percent_by_month_dict(group_id)
-    # todo: show lessons's days of month (3 / 12 / 15 / 22 / 26).
+    dates_of_lessons = dates_of_lessons_dict(group_id)
     months = [{'month_number': month_number, 'month_name': get_month_name(month_number),
-               'students_count': students_by_month.get(month_number),
-               'lessons_count': Lesson.lessons_in_group_in_month(group_id, month_number).count(),
-               'attendings_percent': attendings_percent_by_month.get(month_number, 0),
-               'payments': pays_by_month.get(month_number, 0),
-               'payments_confirmed': pays_confirmed_by_month.get(month_number, 0)}
+               'lessons_dates': dates_of_lessons.get(month_number)}
               for month_number in range(group.start_month, group.end_month + 1)]
     return render_template('lessons/lessons_list.html', group=group, pagination=pagination, lessons=pagination.items,
                            months=months)

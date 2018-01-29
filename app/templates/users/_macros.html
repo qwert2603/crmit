@@ -15,7 +15,7 @@
         <td>
             <ul>
                 {% for group in teacher.groups.all() %}
-                    <li>{{ group.name }} (учеников: {{ group.students.count() }})</li>
+                    <li>{{ group.name }}</li>
                 {% else %}
                     <p><i>нет групп</i></p>
                 {% endfor %}
@@ -45,7 +45,7 @@
         <td>
             <ul>
                 {% for group in student.groups.all() %}
-                    <li>{{ group.name }} ({{ group.students.count() }} уч.)</li>
+                    <li>{{ group.name }}</li>
                 {% else %}
                     <p><i>нет групп</i></p>
                 {% endfor %}

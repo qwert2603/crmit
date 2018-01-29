@@ -1,21 +1,6 @@
-from sqlalchemy import func
-
 from app import db
-from app.models import Lesson, Payment, StudentInGroup, Group, Attending
-
-
-def payments_dicts(group_id, month_number):
-    ps = Payment.query \
-        .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
-        .filter(StudentInGroup.group_id == group_id, Payment.month == month_number)
-    values = dict()
-    confirmed = dict()
-    cash = dict()
-    for p in ps:
-        values[p.student_in_group_id] = p.value
-        confirmed[p.student_in_group_id] = p.confirmed
-        cash[p.student_in_group_id] = p.cash
-    return [values, confirmed, cash]
+from app.models import Lesson, Payment, StudentInGroup
+from app.utils import number_of_month_2
 
 
 def lessons_lists(group_id, month_number):
@@ -32,48 +17,33 @@ def lessons_lists(group_id, month_number):
     return [lessons, lesson_ids, attendings]
 
 
-def group_students_count_by_month_dict(group_id):
-    group = Group.query.get(group_id)
-    result = dict()
-    for m in range(group.start_month, group.end_month + 1):
-        result[m] = group.students_in_month(m).count()
-    return result
-
-
-def group_payments_count_by_month_dict(group_id):
-    pays_by_month = db.session.query(Payment.month, func.count(Payment.id)) \
+def payments_dicts(group_id, month_number):
+    ps = Payment.query \
         .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
-        .filter(StudentInGroup.group_id == group_id, Payment.value > 0) \
-        .group_by(Payment.month) \
-        .all()
+        .filter(StudentInGroup.group_id == group_id, Payment.month == month_number)
+    values = dict()
+    confirmed = dict()
+    cash = dict()
+    for p in ps:
+        values[p.student_in_group_id] = p.value
+        confirmed[p.student_in_group_id] = p.confirmed
+        cash[p.student_in_group_id] = p.cash
+    return [values, confirmed, cash]
+
+
+def dates_of_lessons_dict(group_id):
+    sql = '''
+                SELECT
+                    extract(YEAR FROM date)                           AS year,
+                    extract(MONTH FROM date)                          AS month,
+                    string_agg(extract(DAY FROM date) :: TEXT, ' / ') AS dates
+                FROM lessons
+                WHERE group_id = {}
+                GROUP BY month, year
+    '''.format(group_id)
+
+    rows = db.engine.execute(sql)
     result = dict()
-    for p in pays_by_month:
-        result[p[0]] = p[1]
-    return result
-
-
-def group_payments_confirmed_count_by_month_dict(group_id):
-    pays_by_month = db.session.query(Payment.month, func.count(Payment.id)) \
-        .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
-        .filter(StudentInGroup.group_id == group_id, Payment.confirmed == True) \
-        .group_by(Payment.month) \
-        .all()
-    result = dict()
-    for p in pays_by_month:
-        result[p[0]] = p[1]
-    return result
-
-
-def group_attendings_percent_by_month_dict(group_id):
-    group = Group.query.get(group_id)
-    result = dict()
-    for month_number in range(group.start_month, group.end_month + 1):
-        students_in_month = group.students_in_month(month_number).count()
-        if students_in_month == 0 or Lesson.lessons_in_group_in_month(group_id, month_number).count() == 0:
-            continue
-        was_count = 0
-        lessons = Lesson.lessons_in_group_in_month(group_id, month_number).all()
-        for l in lessons:
-            was_count += l.attendings_was.count()
-        result[month_number] = 100 * was_count // (students_in_month * len(lessons))
+    for row in rows:
+        result[number_of_month_2(row['year'], row['month'] - 1)] = row['dates']
     return result
