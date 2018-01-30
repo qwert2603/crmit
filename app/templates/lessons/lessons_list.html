@@ -1,41 +1,46 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
 
-{% block title %}занятия в {{ group.name }}{% endblock %}
+{% block title %}занятия{% endblock %}
 
 {% block page_content %}
 
     <div class="page-header">
-        <h1>занятия в {{ group.name }}</h1>
+        <h1>занятия</h1>
     </div>
 
-    <a href="{{ url_for('lessons.create_lesson',group_id=group.id) }}" class="btn btn-primary margined_button">
-        новое занятие
-    </a>
-
-    <table class="table">
-        <tr>
-            <th>месяц</th>
-            <th>занятия</th>
-        </tr>
-        {% for month in months %}
-            <tr>
-                <td>
-                    <a href="{{ url_for('lessons.lessons_in_month',group_id=group.id,month_number=month.month_number) }}">
-                        {{ month.month_name }}
-                    </a>
-                </td>
-                <td>{{ month.lessons_dates or '' }}</td>
-            </tr>
-        {% endfor %}
-    </table>
+    <form method="get" class="form-group">
+        <div class="form-group">
+            <h3><label for="group_id">группа</label></h3>
+            <select class="form-control" id="group_id" name="group_id">
+                <option value="0">все</option>
+                {% for group in groups %}
+                    <option value="{{ group.id }}" {% if group.id==group_id %}selected{% endif %}>
+                        {{ group.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <h3><label for="teacher_id">преподаватель</label></h3>
+            <select class="form-control" id="teacher_id" name="teacher_id">
+                <option value="0">все</option>
+                {% for teacher in teachers %}
+                    <option value="{{ teacher.id }}" {% if teacher.id==teacher_id %}selected{% endif %}>
+                        {{ teacher.fio }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <input class="btn btn-default" type="submit" value="искать">
+    </form>
 
     <table class="table">
         <tr>
             <th>дата</th>
+            <th>группа</th>
             <th>преподаватель</th>
             <th>учеников</th>
-            <th></th>
         </tr>
         {% for lesson in lessons %}
             <tr>
@@ -44,14 +49,18 @@
                         {{ lesson.date }}
                     </a>
                 </td>
+                <td>{{ lesson.group.name }}</td>
                 <td>{{ lesson.teacher.fio }}</td>
                 <td>{{ lesson.attendings_was.count() }}
                     / {{ lesson.group.students_in_month(number_of_month(lesson.date)).count() }}</td>
             </tr>
+        {% else %}
+            <h3><i>нет занятий</i></h3>
         {% endfor %}
+
     </table>
 
     <div class="footer">
-        {{ pagination_widget(pagination, 'lessons.lessons_list', group_id=group.id) }}
+        {{ pagination_widget(pagination, 'lessons.lessons_list', group_id=group_id) }}
     </div>
 {% endblock %}

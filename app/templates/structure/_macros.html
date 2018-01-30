@@ -79,7 +79,7 @@
         <td>{{ group.section.name }}</td>
         <td>{{ group.teacher.fio }}</td>
         <td>{{ group.students.count() }}</td>
-        <td><a href="{{ url_for('lessons.lessons_list',group_id=group.id) }}" class="btn btn-default"><span
+        <td><a href="{{ url_for('lessons.months_list',group_id=group.id) }}" class="btn btn-default"><span
                 class="glyphicon glyphicon-calendar"></span></a></td>
         <td><a href="{{ url_for('structure.students_in_group',id=group.id) }}" class="btn btn-default">
             список учеников

@@ -6,25 +6,37 @@ from app.decorators import check_master_or_teacher
 from app.init_model import role_teacher_name
 from app.lessons import lessons
 from app.lessons.utils import payments_dicts, lessons_lists, dates_of_lessons_dict
-from app.models import Lesson, Group, Payment, StudentInGroup, Attending
+from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher
 from app.utils import get_month_name, parse_date_or_none, number_of_month
 
 
-# todo: lessons list screen (with filter by teacher / group).
-
-@lessons.route('/<int:group_id>')
+@lessons.route('/list')
 @login_required
 @check_master_or_teacher
-def lessons_list(group_id):
-    group = Group.query.get_or_404(group_id)
+def lessons_list():
+    group_id = request.args.get('group_id', 0, type=int)
+    teacher_id = request.args.get('teacher_id', 0, type=int)
     page = request.args.get('page', 1, type=int)
-    pagination = group.lessons.order_by(Lesson.date.desc()).paginate(page, per_page=20, error_out=False)
+    pagination = Lesson.query.order_by(Lesson.date.desc())
+    if group_id > 0: pagination = pagination.filter(Lesson.group_id == group_id)
+    if teacher_id > 0: pagination = pagination.filter(Lesson.teacher_id == teacher_id)
+    pagination = pagination.paginate(page, per_page=20, error_out=False)
+    print(group_id, teacher_id)
+    return render_template('lessons/lessons_list.html', group_id=group_id, teacher_id=teacher_id, pagination=pagination,
+                           lessons=pagination.items, groups=Group.query.order_by(Group.name).all(),
+                           teachers=Teacher.query.order_by(Teacher.fio).all())
+
+
+@lessons.route('/months/<int:group_id>')
+@login_required
+@check_master_or_teacher
+def months_list(group_id):
+    group = Group.query.get_or_404(group_id)
     dates_of_lessons = dates_of_lessons_dict(group_id)
     months = [{'month_number': month_number, 'month_name': get_month_name(month_number),
                'lessons_dates': dates_of_lessons.get(month_number)}
               for month_number in range(group.start_month, group.end_month + 1)]
-    return render_template('lessons/lessons_list.html', group=group, pagination=pagination, lessons=pagination.items,
-                           months=months)
+    return render_template('lessons/months_list.html', group=group, months=months)
 
 
 @lessons.route('/<int:group_id>/<int:month_number>', methods=['GET', 'POST'])

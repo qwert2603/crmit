@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+
+{% block title %}занятия в {{ group.name }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>занятия в {{ group.name }}</h1>
+    </div>
+
+    <a href="{{ url_for('lessons.create_lesson',group_id=group.id) }}" class="btn btn-primary margined_button">
+        новое занятие
+    </a>
+
+    <table class="table">
+        <tr>
+            <th>месяц</th>
+            <th>занятия</th>
+        </tr>
+        {% for month in months %}
+            <tr>
+                <td>
+                    <a href="{{ url_for('lessons.lessons_in_month', group_id=group.id, month_number=month.month_number) }}">
+                        {{ month.month_name }}
+                    </a>
+                </td>
+                <td>{{ month.lessons_dates or '' }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

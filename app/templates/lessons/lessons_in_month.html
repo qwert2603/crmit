@@ -8,7 +8,7 @@
         <h1>занятия в {{ group.name }} за {{ month_name }}</h1>
     </div>
 
-    <a href="{{ url_for('lessons.lessons_list',group_id=group.id) }}" class="btn btn-success margined_button">
+    <a href="{{ url_for('lessons.months_list',group_id=group.id) }}" class="btn btn-success margined_button">
         список по месяцам
     </a>
 
