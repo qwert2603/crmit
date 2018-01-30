@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label
 from wtforms.validators import Length, DataRequired, Email, Regexp, Optional
 from app.models import Group, Section, Citizenship, School, Parent, Teacher
+from app.utils import month_names, number_of_month_2
 
 
 class ParentForm(FlaskForm):
@@ -84,12 +85,20 @@ class GroupForm(FlaskForm):
     section = SelectField('секция', coerce=int, validators=[DataRequired()])
     name = StringField('название', validators=[Length(1, 255)])
     teacher = SelectField('преподаватель', coerce=int, validators=[DataRequired()])
+    start_y = SelectField('начало. год', coerce=int, validators=[DataRequired()])
+    start_m = SelectField('начало. месяц', coerce=int, validators=[DataRequired()])
+    end_y = SelectField('конец. год', coerce=int, validators=[DataRequired()])
+    end_m = SelectField('конец. месяц', coerce=int, validators=[DataRequired()])
     submit = SubmitField('создать')
 
     def __init__(self, group=None, *args, **kwargs):
         super(GroupForm, self).__init__(*args, *kwargs)
         self.section.choices = [(section.id, section.name) for section in Section.query.order_by(Section.name).all()]
         self.teacher.choices = [(teacher.id, teacher.fio) for teacher in Teacher.query.order_by(Teacher.fio).all()]
+        self.start_y.choices = [(y, y) for y in range(2017, 2030)]
+        self.start_m.choices = [(m + 1, month_names[m]) for m in range(0, 12)]
+        self.end_y.choices = [(y, y) for y in range(2017, 2030)]
+        self.end_m.choices = [(m + 1, month_names[m]) for m in range(0, 12)]
         self.group = group
         if group is not None:
             self.submit.label = Label(self.submit.id, 'сохранить')
@@ -98,3 +107,12 @@ class GroupForm(FlaskForm):
         if (self.group is None or self.name.data != self.group.name) \
                 and Group.query.filter_by(name=field.data).first():
             raise ValidationError('группа с Таким названием уже существует!')
+
+    def validate_end_m(self, field):
+        start_month = number_of_month_2(int(self.start_y.data), int(self.start_m.data) - 1)
+        end_month = number_of_month_2(int(self.end_y.data), int(self.end_m.data) - 1)
+        if start_month > end_month:
+            raise ValidationError('начало не может быть позже конца!')
+        if end_month - start_month >= 12:
+            raise ValidationError('группа не может существовать больше 12 месяцев!')
+        # todo: check max_start_month_number_group

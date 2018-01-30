@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 from app import create_app, db
 import app.models as models
 from app.init_model import role_master_name, role_teacher_name, role_student_name
-from app.utils import start_date_of_month, end_date_of_month, number_of_month
+from app.utils import start_date_of_month, end_date_of_month, number_of_month, get_month_name
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
@@ -23,7 +23,7 @@ def make_shell_context():
 
 context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_teacher_name,
                     role_student_name=role_student_name, start_date_of_month=start_date_of_month,
-                    end_date_of_month=end_date_of_month, number_of_month=number_of_month)
+                    end_date_of_month=end_date_of_month, number_of_month=number_of_month, get_month_name=get_month_name)
 
 
 @app.context_processor
