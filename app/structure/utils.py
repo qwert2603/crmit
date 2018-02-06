@@ -1,7 +1,7 @@
 from sqlalchemy import func, or_
 from app import db
 from app.models import Payment, StudentInGroup, Lesson
-from app.utils import number_of_month, compare_not_none
+from app.utils import number_of_month_for_date, compare_not_none
 
 
 def max_start_month_number_group(group_id):
@@ -14,7 +14,7 @@ def max_start_month_number_group(group_id):
         .filter(Lesson.group_id == group_id) \
         .scalar()
     min_lesson_month = None
-    if min_lesson_date is not None: min_lesson_month = number_of_month(min_lesson_date)
+    if min_lesson_date is not None: min_lesson_month = number_of_month_for_date(min_lesson_date)
     return compare_not_none(min, min_payment_month, min_lesson_month)
 
 
@@ -28,7 +28,7 @@ def min_end_month_number_group(group_id):
         .filter(Lesson.group_id == group_id) \
         .scalar()
     max_lesson_month = None
-    if max_lesson_date is not None: max_lesson_month = number_of_month(max_lesson_date)
+    if max_lesson_date is not None: max_lesson_month = number_of_month_for_date(max_lesson_date)
     return compare_not_none(max, max_payment_month, max_lesson_month)
 
 

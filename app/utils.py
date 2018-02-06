@@ -53,17 +53,17 @@ months_per_year = 12
 earliest_year = 2017
 
 
-def number_of_month(date):
+def number_of_month_for_date(date):
     return (date.year - earliest_year) * months_per_year + date.month - 1
 
 
-def number_of_month_2(year, month_in_year):
+def number_of_month(year, month_in_year):
     return (year - earliest_year) * months_per_year + month_in_year
 
 
 month_names = [
     'январь',
-    'ферваль',
+    'февраль',
     'март',
     'апрель',
     'май',

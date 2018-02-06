@@ -3,7 +3,7 @@ from wtforms import StringField, ValidationError, IntegerField, SelectField, Sub
 from wtforms.validators import Length, DataRequired, Email, Regexp, Optional
 from app.models import Group, Section, Citizenship, School, Parent, Teacher
 from app.structure.utils import max_start_month_number_group, min_end_month_number_group
-from app.utils import month_names, number_of_month_2
+from app.utils import month_names, number_of_month
 
 
 class ParentForm(FlaskForm):
@@ -110,10 +110,10 @@ class GroupForm(FlaskForm):
             raise ValidationError('группа с Таким названием уже существует!')
 
     def start_month(self):
-        return number_of_month_2(int(self.start_y.data), int(self.start_m.data) - 1)
+        return number_of_month(int(self.start_y.data), int(self.start_m.data) - 1)
 
     def end_month(self):
-        return number_of_month_2(int(self.end_y.data), int(self.end_m.data) - 1)
+        return number_of_month(int(self.end_y.data), int(self.end_m.data) - 1)
 
     def validate_end_m(self, field):
         start_month = self.start_month()

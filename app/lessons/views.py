@@ -7,7 +7,7 @@ from app.init_model import role_teacher_name
 from app.lessons import lessons
 from app.lessons.utils import payments_dicts, lessons_lists, dates_of_lessons_dict
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher
-from app.utils import get_month_name, parse_date_or_none, number_of_month
+from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date
 
 
 @lessons.route('/list')
@@ -110,5 +110,5 @@ def create_lesson(group_id):
         date = parse_date_or_none(request.form.get('date'))
         db.session.add(Lesson(group_id=group_id, teacher_id=group.teacher_id, date=date))
         flash('занятие создано: {}'.format(date.date()))
-        return redirect(url_for('.lessons_in_month', group_id=group_id, month_number=number_of_month(date)))
+        return redirect(url_for('.lessons_in_month', group_id=group_id, month_number=number_of_month_for_date(date)))
     return render_template('lessons/create_lesson.html', group=group)

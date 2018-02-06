@@ -45,14 +45,14 @@
         {% for lesson in lessons %}
             <tr>
                 <td>
-                    <a href="{{ url_for('lessons.lessons_in_month',group_id=lesson.group_id,month_number=number_of_month(lesson.date)) }}">
+                    <a href="{{ url_for('lessons.lessons_in_month',group_id=lesson.group_id,month_number=number_of_month_for_date(lesson.date)) }}">
                         {{ lesson.date }}
                     </a>
                 </td>
                 <td>{{ lesson.group.name }}</td>
                 <td>{{ lesson.teacher.fio }}</td>
                 <td>{{ lesson.attendings_was.count() }}
-                    / {{ lesson.group.students_in_month(number_of_month(lesson.date)).count() }}</td>
+                    / {{ lesson.group.students_in_month(number_of_month_for_date(lesson.date)).count() }}</td>
             </tr>
         {% else %}
             <h3><i>нет занятий</i></h3>

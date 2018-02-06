@@ -1,6 +1,6 @@
 from app import db
 from app.models import Lesson, Payment, StudentInGroup
-from app.utils import number_of_month_2
+from app.utils import number_of_month
 
 
 def lessons_lists(group_id, month_number):
@@ -45,5 +45,5 @@ def dates_of_lessons_dict(group_id):
     rows = db.engine.execute(sql)
     result = dict()
     for row in rows:
-        result[number_of_month_2(row['year'], row['month'] - 1)] = row['dates']
+        result[number_of_month(row['year'], row['month'] - 1)] = row['dates']
     return result
