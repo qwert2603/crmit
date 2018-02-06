@@ -182,8 +182,8 @@ class Group(db.Model):
     name = db.Column(db.String(255), nullable=False, unique=True)
     section_id = db.Column(db.Integer, db.ForeignKey('sections.id'), nullable=False)
     teacher_id = db.Column(db.Integer, db.ForeignKey('teachers.id'), nullable=False)
-    start_month = db.Column(db.Integer, nullable=False, index=True)  # todo: add in forms.
-    end_month = db.Column(db.Integer, nullable=False, index=True)  # todo: add in forms.
+    start_month = db.Column(db.Integer, nullable=False, index=True)
+    end_month = db.Column(db.Integer, nullable=False, index=True)
     students_in_group = db.relationship('StudentInGroup', backref='group', lazy='dynamic')
     lessons = db.relationship('Lesson', backref='group', lazy='dynamic')
 

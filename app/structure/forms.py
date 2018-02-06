@@ -2,6 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label
 from wtforms.validators import Length, DataRequired, Email, Regexp, Optional
 from app.models import Group, Section, Citizenship, School, Parent, Teacher
+from app.structure.utils import max_start_month_number_group, min_end_month_number_group
 from app.utils import month_names, number_of_month_2
 
 
@@ -108,11 +109,23 @@ class GroupForm(FlaskForm):
                 and Group.query.filter_by(name=field.data).first():
             raise ValidationError('группа с Таким названием уже существует!')
 
+    def start_month(self):
+        return number_of_month_2(int(self.start_y.data), int(self.start_m.data) - 1)
+
+    def end_month(self):
+        return number_of_month_2(int(self.end_y.data), int(self.end_m.data) - 1)
+
     def validate_end_m(self, field):
-        start_month = number_of_month_2(int(self.start_y.data), int(self.start_m.data) - 1)
-        end_month = number_of_month_2(int(self.end_y.data), int(self.end_m.data) - 1)
+        start_month = self.start_month()
+        end_month = self.end_month()
         if start_month > end_month:
             raise ValidationError('начало не может быть позже конца!')
         if end_month - start_month >= 12:
             raise ValidationError('группа не может существовать больше 12 месяцев!')
-        # todo: check max_start_month_number_group
+        if self.group is not None:
+            max_start_month = max_start_month_number_group(self.group.id)
+            if max_start_month is not None and start_month > max_start_month:
+                raise ValidationError('существуют занятия и платежи до месяца начала!')
+            min_end_month = min_end_month_number_group(self.group.id)
+            if min_end_month is not None and end_month < min_end_month:
+                raise ValidationError('существуют занятия и платежи после месяца конца!')

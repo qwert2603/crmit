@@ -51,8 +51,6 @@ def translit(c):
 
 months_per_year = 12
 earliest_year = 2017
-start_month_teaching = 8  # September
-end_month_teaching = 4  # May
 
 
 def number_of_month(date):
@@ -120,3 +118,10 @@ def parse_date_or_none(date_str):
         return datetime.datetime.strptime(date_str, '%Y-%m-%d')
     except ValueError:
         return None
+
+
+def compare_not_none(f, a1, a2):
+    if a1 is None and a2 is None: return None
+    if a1 is None: return a2
+    if a2 is None: return a1
+    return f(a1, a2)

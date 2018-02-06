@@ -1,10 +1,11 @@
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
-
 from app.decorators import check_master, check_master_or_teacher
 from app.models import Citizenship, Section, Parent, School, Group
 from app.structure import structure
 from app.structure.forms import CitizenshipForm, SectionForm, ParentForm, SchoolForm, GroupForm
+from app.structure.utils import delete_unconfirmed_payments_out_of_months_period
+from app.utils import year_from_month_number, month_from_month_number
 
 
 @structure.route('/section/<int:id>', methods=['GET', 'POST'])
@@ -89,10 +90,17 @@ def edit_group(id):
         group.name = form.name.data
         group.teacher_id = form.teacher.data
         group.section_id = form.section.data
+        group.start_month = form.start_month()
+        group.end_month = form.end_month()
+        delete_unconfirmed_payments_out_of_months_period(group)
         flash('группа {} изменена'.format(form.name.data))
         return redirect(url_for('.groups_list'))
     if not form.is_submitted():
         form.name.data = group.name
         form.teacher.data = group.teacher_id
         form.section.data = group.section_id
+        form.start_y.data = year_from_month_number(group.start_month)
+        form.start_m.data = month_from_month_number(group.start_month) + 1
+        form.end_y.data = year_from_month_number(group.end_month)
+        form.end_m.data = month_from_month_number(group.end_month) + 1
     return render_template('structure/form_add_edit.html', form=form, class_name='группы', creating=False)
