@@ -63,7 +63,8 @@ def add_parent():
 def add_group():
     form = GroupForm()
     if form.validate_on_submit():
-        db.session.add(Group(name=form.name.data, section_id=form.section.data, teacher_id=form.teacher.data))
+        db.session.add(Group(name=form.name.data, section_id=form.section.data, teacher_id=form.teacher.data,
+                             start_month=form.start_month(), end_month=form.end_month()))
         flash('группа {} создана'.format(form.name.data))
         return redirect(url_for('main.index'))
     return render_template('structure/form_add_edit.html', form=form, class_name='группы', creating=True)
