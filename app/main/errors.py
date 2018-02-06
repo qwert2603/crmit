@@ -16,3 +16,8 @@ def error500(e):
 @main.app_errorhandler(403)
 def error403(e):
     return render_template('403.html'), 403
+
+
+@main.app_errorhandler(409)
+def error409(e):
+    return render_template('409.html'), 409

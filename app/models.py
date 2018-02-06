@@ -259,6 +259,10 @@ class Lesson(db.Model):
     def attendings_was(self):
         return self.attendings.filter(Attending.was == True)
 
+    @property
+    def attendings_was_not(self):
+        return self.attendings.filter(Attending.was == False)
+
     @staticmethod
     def lessons_in_group_in_month(group_id, month_number):
         return Lesson.query.filter(Lesson.group_id == group_id,

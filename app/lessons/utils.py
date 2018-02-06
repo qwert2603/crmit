@@ -31,6 +31,14 @@ def payments_dicts(group_id, month_number):
     return [values, confirmed, cash]
 
 
+def removable_lessons_dict(group_id, month_number):
+    removable = dict()
+    for l in Lesson.lessons_in_group_in_month(group_id, month_number):
+        if l.attendings_was.count() == 0:
+            removable[l.id] = True
+    return removable
+
+
 def dates_of_lessons_dict(group_id):
     sql = '''
                 SELECT

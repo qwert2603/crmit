@@ -5,7 +5,7 @@ from app import db
 from app.decorators import check_master_or_teacher
 from app.init_model import role_teacher_name
 from app.lessons import lessons
-from app.lessons.utils import payments_dicts, lessons_lists, dates_of_lessons_dict
+from app.lessons.utils import payments_dicts, lessons_lists, dates_of_lessons_dict, removable_lessons_dict
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date
 
@@ -91,10 +91,10 @@ def lessons_in_month(group_id, month_number):
         return redirect(url_for('lessons.lessons_in_month', group_id=group_id, month_number=month_number))
     pd = payments_dicts(group_id, month_number)
     ll = lessons_lists(group_id, month_number)
-    # todo: removable_lessons = dict().
+    removable_lessons = removable_lessons_dict(group_id, month_number)
     return render_template('lessons/lessons_in_month.html', group=group, month_name=month_name,
                            students_in_group=students_in_group, payments=pd[0], confirmed=pd[1], cash=pd[2],
-                           lessons=ll[0], lesson_ids=ll[1], attendings=ll[2])
+                           lessons=ll[0], lesson_ids=ll[1], attendings=ll[2], removable_lessons=removable_lessons)
 
 
 @lessons.route('/create/<int:group_id>', methods=['GET', 'POST'])
@@ -112,3 +112,18 @@ def create_lesson(group_id):
         flash('занятие создано: {}'.format(date.date()))
         return redirect(url_for('.lessons_in_month', group_id=group_id, month_number=number_of_month_for_date(date)))
     return render_template('lessons/create_lesson.html', group=group)
+
+
+@lessons.route('/delete/<int:lesson_id>')
+@login_required
+@check_master_or_teacher
+def delete_lesson(lesson_id):
+    lesson = Lesson.query.get(lesson_id)
+    if lesson.attendings_was.count() > 0: abort(409)
+    month_number = number_of_month_for_date(lesson.date)
+    group_id = lesson.group_id
+    for a in lesson.attendings_was_not:
+        db.session.delete(a)
+    db.session.delete(lesson)
+    flash('занятие {} удалено'.format(lesson.date))
+    return redirect(url_for('.lessons_in_month', group_id=group_id, month_number=month_number))

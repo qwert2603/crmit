@@ -61,7 +61,8 @@
             <td></td>
             {% for lesson_id in lesson_ids %}
                 <td>
-                    <a class="btn btn-danger disabled" name="rl_{{ lesson_id }}">
+                    <a href="{{ url_for('lessons.delete_lesson',lesson_id=lesson_id) }}"
+                       class="btn btn-danger {% if not removable_lessons.get(lesson_id, False) %}disabled{% endif %}">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </td>
