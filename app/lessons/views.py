@@ -49,6 +49,11 @@ def lessons_in_month(group_id, month_number):
     month_name = get_month_name(month_number)
     students_in_group = group.students_in_group_in_month(month_number)
     if 'submit' in request.form:
+        ls = Lesson.lessons_in_group_in_month(group_id, month_number).all()
+        for l in ls:
+            new_date = parse_date_or_none(request.form.get('l_{}'.format(l.id)))
+            if new_date is not None:
+                l.date = new_date
         ps = Payment.query \
             .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
             .filter(StudentInGroup.group_id == group_id, Payment.month == month_number)
@@ -69,11 +74,6 @@ def lessons_in_month(group_id, month_number):
             else:
                 db.session.add(Payment(student_in_group=student_in_group, month=month_number, value=new_value,
                                        cash=is_cash))
-            ls = Lesson.lessons_in_group_in_month(group_id, month_number).all()
-            for l in ls:
-                new_date = parse_date_or_none(request.form.get('l_{}'.format(l.id)))
-                if new_date is not None:
-                    l.date = new_date
             attendings = dict()
             for l in ls:
                 attendings[l.id] = dict()
@@ -92,9 +92,10 @@ def lessons_in_month(group_id, month_number):
     pd = payments_dicts(group_id, month_number)
     ll = lessons_lists(group_id, month_number)
     removable_lessons = removable_lessons_dict(group_id, month_number)
-    return render_template('lessons/lessons_in_month.html', group=group, month_name=month_name,
-                           students_in_group=students_in_group, payments=pd[0], confirmed=pd[1], cash=pd[2],
-                           lessons=ll[0], lesson_ids=ll[1], attendings=ll[2], removable_lessons=removable_lessons)
+    return render_template('lessons/lessons_in_month.html', group=group, month_number=month_number,
+                           month_name=month_name, students_in_group=students_in_group, payments=pd[0], confirmed=pd[1],
+                           cash=pd[2], lessons=ll[0], lesson_ids=ll[1], attendings=ll[2],
+                           removable_lessons=removable_lessons)
 
 
 @lessons.route('/create/<int:group_id>', methods=['GET', 'POST'])

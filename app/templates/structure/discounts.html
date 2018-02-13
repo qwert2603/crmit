@@ -15,12 +15,39 @@
 
     <div class="col-md-12">
         <table class="table">
+            <tr>
+                <th>фио</th>
+                <th>скидка</th>
+                <th>вход</th>
+                <th>выход</th>
+            </tr>
             {% for student_in_group in students_in_group %}
                 <tr>
                     <td>{{ student_in_group.student.fio }}</td>
                     <td><input form="save_form" type="number" name="d_{{ student_in_group.id }}"
-                               value="{{ student_in_group.discount }}"></td>
-                    {# todo: enter_month / exit_month #}
+                               value="{{ student_in_group.discount }}" min="0" max="{{ group.section.price }}"></td>
+                    <td>
+                        <select form="save_form" name="enter_{{ student_in_group.id }}">
+                            {% for m in range(
+                                group.start_month,
+                                (student_in_group.max_enter_month_number or group.end_month) + 1
+                            ) %}
+                                <option value="{{ m }}"
+                                        {% if m==student_in_group.enter_month %}selected{% endif %}>{{ get_month_name(m) }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <select form="save_form" name="exit_{{ student_in_group.id }}">
+                            {% for m in range(
+                                student_in_group.min_exit_month_number or group.start_month,
+                                group.end_month + 1
+                            ) %}
+                                <option value="{{ m }}"
+                                        {% if m==student_in_group.exit_month %}selected{% endif %}>{{ get_month_name(m) }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
                 </tr>
             {% endfor %}
         </table>

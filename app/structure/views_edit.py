@@ -4,7 +4,8 @@ from app.decorators import check_master, check_master_or_teacher
 from app.models import Citizenship, Section, Parent, School, Group
 from app.structure import structure
 from app.structure.forms import CitizenshipForm, SectionForm, ParentForm, SchoolForm, GroupForm
-from app.structure.utils import delete_unconfirmed_payments_out_of_months_period
+from app.structure.utils import delete_unconfirmed_payments_out_of_months_period, \
+    correct_student_enter_exit_month_to_group_period
 from app.utils import year_from_month_number, month_from_month_number
 
 
@@ -92,6 +93,7 @@ def edit_group(id):
         group.section_id = form.section.data
         group.start_month = form.start_month()
         group.end_month = form.end_month()
+        correct_student_enter_exit_month_to_group_period(group)
         delete_unconfirmed_payments_out_of_months_period(group)
         flash('группа {} изменена'.format(form.name.data))
         return redirect(url_for('.groups_list'))

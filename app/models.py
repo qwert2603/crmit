@@ -235,6 +235,16 @@ class StudentInGroup(db.Model):
     def payments_not_confirmed(self):
         return self.payments.filter(Payment.confirmed == False)
 
+    @property
+    def max_enter_month_number(self):
+        from app.structure.utils import max_enter_month_number_student_in_group
+        return max_enter_month_number_student_in_group(self)
+
+    @property
+    def min_exit_month_number(self):
+        from app.structure.utils import min_exit_month_number_student_in_group
+        return min_exit_month_number_student_in_group(self)
+
 
 class Payment(db.Model):
     __tablename__ = 'payments'

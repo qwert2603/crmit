@@ -8,8 +8,18 @@
         <h1>занятия в {{ group.name }} за {{ month_name }}</h1>
     </div>
 
+    <a href="{{ url_for('lessons.lessons_in_month', group_id=group.id, month_number=month_number - 1) }}"
+       class="btn btn-info {% if month_number == group.start_month %}disabled{% endif %}">
+        &laquo; {{ get_month_name(month_number - 1) }}
+    </a>
+
     <a href="{{ url_for('lessons.months_list',group_id=group.id) }}" class="btn btn-success margined_button">
         список по месяцам
+    </a>
+
+    <a href="{{ url_for('lessons.lessons_in_month', group_id=group.id, month_number=month_number + 1) }}"
+       class="btn btn-info {% if month_number == group.end_month %}disabled{% endif %}">
+        {{ get_month_name(month_number + 1) }} &raquo;
     </a>
 
     <table class="table">

@@ -4,6 +4,8 @@ from app.decorators import check_master_or_teacher
 from app.models import Group, Student, StudentInGroup
 from app.structure import structure
 from app import db
+from app.structure.utils import max_enter_month_number_student_in_group, min_exit_month_number_student_in_group, \
+    delete_attendings_was_not_out_of_months_period_student, delete_unconfirmed_payments_out_of_months_period_student
 
 
 @structure.route('/students_in_group/<int:id>', methods=['GET', 'POST'])
@@ -61,6 +63,28 @@ def discounts(id):
                     flash('скидка не может быть меньше нуля! ({})'.format(student_in_group.student.fio))
                 else:
                     student_in_group.discount = new_discount
-        flash('скидки в группе {} изменены.'.format(group.name))
+            new_enter_month_number = request.form.get('enter_{}'.format(student_in_group.id), 0, type=int)
+            if new_enter_month_number is not None:
+                if new_enter_month_number < group.start_month:
+                    flash('ученик не может войти раньше начала группы ({})'.format(student_in_group.student.fio))
+                elif new_enter_month_number > group.end_month:
+                    flash('ученик не может войти позже конца группы ({})'.format(student_in_group.student.fio))
+                elif new_enter_month_number > (max_enter_month_number_student_in_group(student_in_group) or 999999):
+                    flash('ученик не может войти позже посещения или оплаты ({})'.format(student_in_group.student.fio))
+                else:
+                    student_in_group.enter_month = new_enter_month_number
+            new_exit_month_number = request.form.get('exit_{}'.format(student_in_group.id), 0, type=int)
+            if new_exit_month_number is not None:
+                if new_exit_month_number < group.start_month:
+                    flash('ученик не может выйти раньше начала группы ({})'.format(student_in_group.student.fio))
+                elif new_exit_month_number > group.end_month:
+                    flash('ученик не может выйти позже конца группы ({})'.format(student_in_group.student.fio))
+                elif new_exit_month_number < (min_exit_month_number_student_in_group(student_in_group) or -1):
+                    flash('ученик не может выйти раньше посещения или оплаты ({})'.format(student_in_group.student.fio))
+                else:
+                    student_in_group.exit_month = new_exit_month_number
+            delete_unconfirmed_payments_out_of_months_period_student(student_in_group)
+            delete_attendings_was_not_out_of_months_period_student(student_in_group)
+        flash('скидки и месяцы входа/выхода в группе {} изменены.'.format(group.name))
         return redirect(url_for('structure.groups_list'))
     return render_template('structure/discounts.html', group=group, students_in_group=students_in_group)
