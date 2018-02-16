@@ -24,6 +24,7 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         {% for group in items %}
             <tr>
@@ -42,6 +43,7 @@
                         class="glyphicon glyphicon-pencil"></span></a></td>
                 <td><a href="{{ url_for('stat.group_stat',group_id=group.id) }}" class="btn btn-default"><span
                         class="glyphicon glyphicon-stats"></span></a></td>
+                <td><a href="{{ url_for('payments.payments_in_group',group_id=group.id) }}" class="btn btn-default">&#8381;</a></td>
                 {#        <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
             </tr>
         {% else %}

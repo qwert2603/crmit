@@ -47,4 +47,7 @@ def create_app(config_name):
     from app.stat import stat as stat_blueprint
     app.register_blueprint(stat_blueprint, url_prefix='/stat')
 
+    from app.payments import payments as payments_blueprint
+    app.register_blueprint(payments_blueprint, url_prefix='/payments')
+
     return app
