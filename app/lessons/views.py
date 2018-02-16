@@ -6,7 +6,7 @@ from app.decorators import check_master_or_teacher
 from app.init_model import role_teacher_name
 from app.lessons import lessons
 from app.lessons.utils import payments_dicts, lessons_lists, dates_of_lessons_dict, removable_lessons_dict
-from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher
+from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
     end_date_of_month
 
@@ -48,7 +48,10 @@ def lessons_in_month(group_id, month_number):
     if month_number < group.start_month or month_number > group.end_month:
         abort(404)
     month_name = get_month_name(month_number)
-    students_in_group = group.students_in_group_in_month(month_number)
+    students_in_group = group.students_in_group_in_month(month_number) \
+        .join(Student, Student.id == StudentInGroup.student_id) \
+        .order_by(Student.fio) \
+        .all()
     if 'submit' in request.form:
         ls = Lesson.lessons_in_group_in_month(group_id, month_number).all()
         for l in ls:
