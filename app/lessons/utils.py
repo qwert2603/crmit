@@ -1,6 +1,7 @@
 from app import db
 from app.models import Lesson, Payment, StudentInGroup
 from app.utils import number_of_month
+from config import DB_TYPE_POSTGRES, DB_TYPE
 
 
 def lessons_lists(group_id, month_number):
@@ -40,15 +41,26 @@ def removable_lessons_dict(group_id, month_number):
 
 
 def dates_of_lessons_dict(group_id):
-    sql = '''
+    if DB_TYPE == DB_TYPE_POSTGRES:
+        sql = '''
+                    SELECT
+                        extract(YEAR FROM date)                                         AS year,
+                        extract(MONTH FROM date)                                        AS month,
+                        string_agg(extract(DAY FROM date) :: TEXT, ' / ' ORDER BY date) AS dates
+                    FROM lessons
+                    WHERE group_id = {}
+                    GROUP BY month, year
+        '''.format(group_id)
+    else:
+        sql = '''
                 SELECT
-                    extract(YEAR FROM date)                                         AS year,
-                    extract(MONTH FROM date)                                        AS month,
-                    string_agg(extract(DAY FROM date) :: TEXT, ' / ' ORDER BY date) AS dates
-                FROM lessons
+                    extract(YEAR FROM date) AS year,
+                    extract(MONTH FROM date) AS month,
+                    GROUP_CONCAT(CAST(extract(DAY FROM date) as CHAR) ORDER BY date SEPARATOR ' / ') AS dates
+                    FROM lessons
                 WHERE group_id = {}
                 GROUP BY month, year
-    '''.format(group_id)
+        '''.format(group_id)
 
     rows = db.engine.execute(sql)
     result = dict()

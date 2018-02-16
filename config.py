@@ -2,6 +2,10 @@ import os
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+DB_TYPE_POSTGRES = 'postgres'
+DB_TYPE_MYSQL = 'mysql'
+DB_TYPE = DB_TYPE_POSTGRES
+
 
 class Config:
     SECRET_KEY = '1918'  # todo
