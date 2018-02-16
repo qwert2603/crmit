@@ -128,7 +128,7 @@ class ParentOfStudent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=False)
-    is_mother = db.Column(db.Boolean, nullable=False)
+    is_mother = db.Column(db.Boolean, nullable=False)  # todo: parent_kind???
     unique = db.UniqueConstraint(student_id, parent_id, is_mother)
     unique_2 = db.UniqueConstraint(student_id, parent_id)
     unique_3 = db.UniqueConstraint(student_id, is_mother)

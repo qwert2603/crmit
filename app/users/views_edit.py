@@ -6,6 +6,7 @@ from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
 from app.utils import password_from_date
 
+
 @users.route('/master/<int:id>', methods=['GET', 'POST'])
 @login_required
 @check_master
