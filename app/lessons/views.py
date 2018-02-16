@@ -22,7 +22,6 @@ def lessons_list():
     if group_id > 0: pagination = pagination.filter(Lesson.group_id == group_id)
     if teacher_id > 0: pagination = pagination.filter(Lesson.teacher_id == teacher_id)
     pagination = pagination.paginate(page, per_page=20, error_out=False)
-    print(group_id, teacher_id)
     return render_template('lessons/lessons_list.html', group_id=group_id, teacher_id=teacher_id, pagination=pagination,
                            lessons=pagination.items, groups=Group.query.order_by(Group.name).all(),
                            teachers=Teacher.query.order_by(Teacher.fio).all())
