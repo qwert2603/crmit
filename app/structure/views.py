@@ -48,10 +48,10 @@ def students_in_group(id):
                            other_students=other_students)
 
 
-@structure.route('/discounts/<int:id>', methods=['GET', 'POST'])
+@structure.route('/details/<int:id>', methods=['GET', 'POST'])
 @login_required
 @check_master_or_teacher
-def discounts(id):
+def details(id):
     group = Group.query.get_or_404(id)
     students_in_group = group.students_in_group \
         .join(Student, Student.id == StudentInGroup.student_id) \
@@ -91,4 +91,4 @@ def discounts(id):
             delete_attendings_was_not_out_of_months_period_student(student_in_group)
         flash('скидки и месяцы входа/выхода в группе {} изменены.'.format(group.name))
         return redirect(url_for('structure.groups_list'))
-    return render_template('structure/discounts.html', group=group, students_in_group=students_in_group)
+    return render_template('structure/details.html', group=group, students_in_group=students_in_group)

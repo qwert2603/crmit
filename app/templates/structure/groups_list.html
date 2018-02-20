@@ -38,7 +38,7 @@
                 <td><a href="{{ url_for('structure.students_in_group',id=group.id) }}" class="btn btn-default">
                     список учеников
                 </a></td>
-                <td><a href="{{ url_for('structure.discounts',id=group.id) }}" class="btn btn-default">детали</a></td>
+                <td><a href="{{ url_for('structure.details',id=group.id) }}" class="btn btn-default">детали</a></td>
                 <td><a href="{{ url_for('structure.edit_group',id=group.id) }}" class="btn btn-default"><span
                         class="glyphicon glyphicon-pencil"></span></a></td>
                 <td><a href="{{ url_for('stat.group_stat',group_id=group.id) }}" class="btn btn-default"><span
