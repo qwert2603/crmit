@@ -5,7 +5,7 @@ from app import db
 from app.decorators import check_master_or_teacher
 from app.init_model import role_teacher_name
 from app.lessons import lessons
-from app.lessons.utils import payments_dicts, lessons_lists, dates_of_lessons_dict, removable_lessons_dict
+from app.lessons.utils import payments_in_month_dicts, lessons_lists, dates_of_lessons_dict, removable_lessons_dict
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
     end_date_of_month
@@ -84,16 +84,15 @@ def lessons_in_month(group_id, month_number):
                 for a in l.attendings:
                     attendings[l.id][a.student_id] = a
             for l in ls:
-                for student_in_group in students_in_group:
-                    new_was = 'a_{}_{}'.format(l.id, student_in_group.student_id) in request.form
-                    attending = attendings[l.id].get(student_in_group.student_id)
-                    if attending is not None:
-                        attending.was = new_was
-                    else:
-                        db.session.add(Attending(lesson=l, student=student_in_group.student, was=new_was))
+                new_was = 'a_{}_{}'.format(l.id, student_in_group.student_id) in request.form
+                attending = attendings[l.id].get(student_in_group.student_id)
+                if attending is not None:
+                    attending.was = new_was
+                else:
+                    db.session.add(Attending(lesson=l, student=student_in_group.student, was=new_was))
         flash('посещения и оплата в группе {} за {} сохранены.'.format(group.name, month_name))
         return redirect(url_for('lessons.lessons_in_month', group_id=group_id, month_number=month_number))
-    pd = payments_dicts(group_id, month_number)
+    pd = payments_in_month_dicts(group_id, month_number)
     ll = lessons_lists(group_id, month_number)
     removable_lessons = removable_lessons_dict(group_id, month_number)
     return render_template('lessons/lessons_in_month.html', group=group, month_number=month_number,

@@ -18,7 +18,19 @@ def lessons_lists(group_id, month_number):
     return [lessons, lesson_ids, attendings]
 
 
-def payments_dicts(group_id, month_number):
+def payments_dicts(group):
+    values = dict()
+    confirmed = dict()
+    cash = dict()
+    for m in range(group.start_month, group.end_month + 1):
+        in_month_dicts = payments_in_month_dicts(group.id, m)
+        values[m] = in_month_dicts[0]
+        confirmed[m] = in_month_dicts[1]
+        cash[m] = in_month_dicts[2]
+    return [values, confirmed, cash]
+
+
+def payments_in_month_dicts(group_id, month_number):
     ps = Payment.query \
         .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
         .filter(StudentInGroup.group_id == group_id, Payment.month == month_number)

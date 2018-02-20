@@ -7,6 +7,52 @@
         <h1>{{ group.name }}. оплата</h1>
     </div>
 
+    <table class="table">
+        <tr>
+            <th>ученик</th>
+            {% for m in range(group.start_month, group.end_month + 1) %}
+                <th>{{ get_month_name(m) }}</th>
+            {% endfor %}
+        </tr>
 
-    imagine
+        {% for student_in_group in students_in_group %}
+            <tr>
+                <td>{{ student_in_group.student.fio }}</td>
+                {% for m in range(group.start_month, group.end_month + 1) %}
+                    <td>
+                        {% if student_in_group.enter_month <= m and m <= student_in_group.exit_month %}
+                            {% if confirmed[m].get(student_in_group.id) %}
+                                {{ payments[m].get(student_in_group.id, 0) }}
+                                / {{ group.section.price - student_in_group.discount }}
+                            {% else %}
+                                <input max="{{ group.section.price - student_in_group.discount }}" min="0"
+                                       form="save_form"
+                                       type="number" name="p_{{ m }}_{{ student_in_group.id }}"
+                                       value="{{ payments[m].get(student_in_group.id, 0) }}">
+                                / {{ group.section.price - student_in_group.discount }}
+                            {% endif %}
+                            <br/>
+                            <input form="save_form" type="checkbox"
+                                   name="cash_{{ m }}_{{ student_in_group.id }}"
+                                   {% if cash[m].get(student_in_group.id, True) %}checked{% endif %}
+                                   {% if confirmed[m].get(student_in_group.id) %}disabled{% endif %}>
+                            нал.
+                            <br/>
+                            <input form="save_form" type="checkbox"
+                                   name="conf_{{ m }}_{{ student_in_group.id }}"
+                                   {% if confirmed[m].get(student_in_group.id) %}checked{% endif %}>
+                            <span style="{% if confirmed[m].get(student_in_group.id) %}color: green;{% endif %}">подтв.</span>
+                        {% else %}
+                            <i>n/a</i>
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+    <form method="post" id="save_form">
+        <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
+    </form>
+
 {% endblock %}
