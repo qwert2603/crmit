@@ -13,6 +13,7 @@
             {% for m in range(group.start_month, group.end_month + 1) %}
                 <th>{{ get_month_name(m) }}</th>
             {% endfor %}
+            <th>подтверждено</th>
         </tr>
 
         {% for student_in_group in students_in_group %}
@@ -47,8 +48,25 @@
                         {% endif %}
                     </td>
                 {% endfor %}
+                <td>
+                     <span style="{% if confirmed_count_students[student_in_group.id] == student_in_group.exit_month - student_in_group.enter_month + 1 %}color: green;{% endif %}">
+                        {{ confirmed_count_students[student_in_group.id] }} /
+                        {{ student_in_group.exit_month - student_in_group.enter_month + 1 }}
+                     </span>
+                </td>
             </tr>
         {% endfor %}
+        <tr>
+            <td>подтверждено</td>
+            {% for m in range(group.start_month, group.end_month + 1) %}
+                <td>
+                    <span style="{% if confirmed_count_months[m] == students_in_month[m] %}color: green;{% endif %}">
+                        {{ confirmed_count_months[m] }} / {{ students_in_month[m] }}
+                    </span>
+                </td>
+            {% endfor %}
+            <td><b>{{ confirmed_payments }} / {{ total_payments }}</b></td>
+        </tr>
     </table>
 
     <form method="post" id="save_form">

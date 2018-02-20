@@ -45,5 +45,15 @@ def payments_in_group(group_id):
         flash('оплата в группе {} сохранена.'.format(group.name))
         return redirect(url_for('payments.payments_in_group', group_id=group_id))
     pd = payments_dicts(group)
+    total_payments = 0
+    confirmed_payments = 0
+    students_in_month = dict()
+    for month_number in range(group.start_month, group.end_month + 1):
+        students_count = group.students_in_group_in_month(month_number).count()
+        total_payments += students_count
+        confirmed_payments += pd[3][month_number]
+        students_in_month[month_number] = students_count
     return render_template('payments/payments_in_group.html', group=group, students_in_group=students_in_group,
-                           payments=pd[0], confirmed=pd[1], cash=pd[2])
+                           payments=pd[0], confirmed=pd[1], cash=pd[2], confirmed_count_months=pd[3],
+                           confirmed_count_students=pd[4], total_payments=total_payments,
+                           confirmed_payments=confirmed_payments, students_in_month=students_in_month)

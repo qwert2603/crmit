@@ -22,12 +22,22 @@ def payments_dicts(group):
     values = dict()
     confirmed = dict()
     cash = dict()
+    confirmed_count_months = dict()
+    confirmed_count_students = dict()
+    students_in_group = group.students_in_group.all()
+    for s in students_in_group:
+        confirmed_count_students[s.id] = 0
     for m in range(group.start_month, group.end_month + 1):
         in_month_dicts = payments_in_month_dicts(group.id, m)
         values[m] = in_month_dicts[0]
         confirmed[m] = in_month_dicts[1]
         cash[m] = in_month_dicts[2]
-    return [values, confirmed, cash]
+        confirmed_count_months[m] = 0
+        for s in students_in_group:
+            if confirmed.get(m, dict()).get(s.id):
+                confirmed_count_students[s.id] += 1
+                confirmed_count_months[m] += 1
+    return [values, confirmed, cash, confirmed_count_months, confirmed_count_students]
 
 
 def payments_in_month_dicts(group_id, month_number):
