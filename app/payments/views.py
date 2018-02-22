@@ -11,6 +11,7 @@ from app.payments import payments
 @payments.route('/group/<int:group_id>', methods=['GET', 'POST'])
 @login_required
 @check_master
+# todo: препод — только свои группы.
 def payments_in_group(group_id):
     group = Group.query.get_or_404(group_id)
     students_in_group = group.students_in_group \
