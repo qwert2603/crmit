@@ -43,6 +43,7 @@ def months_list(group_id):
 @login_required
 @check_master_or_teacher
 def lessons_in_month(group_id, month_number):
+    # todo: @check_access_group_write() or let other teachers see only.
     group = Group.query.get_or_404(group_id)
     if month_number < group.start_month or month_number > group.end_month:
         abort(404)
@@ -106,6 +107,7 @@ def lessons_in_month(group_id, month_number):
 @check_master_or_teacher
 def create_lesson(group_id):
     group = Group.query.get_or_404(group_id)
+    # todo: @check_access_group_write()
     if current_user.system_role.name == role_teacher_name:
         if current_user.teacher.id != group.teacher_id:
             abort(403)
@@ -124,6 +126,7 @@ def create_lesson(group_id):
 @login_required
 @check_master_or_teacher
 def delete_lesson(lesson_id):
+    # todo: @check_access_group_write()
     lesson = Lesson.query.get(lesson_id)
     if lesson.attendings_was.count() > 0: abort(409)
     month_number = number_of_month_for_date(lesson.date)
