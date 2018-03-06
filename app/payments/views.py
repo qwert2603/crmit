@@ -1,8 +1,9 @@
-from flask import render_template, request, flash, redirect, url_for
-from flask_login import login_required
+from flask import render_template, request, flash, redirect, url_for, abort
+from flask_login import login_required, current_user
 
 from app import db
-from app.decorators import check_master
+from app.decorators import check_master_or_teacher
+from app.init_model import role_teacher_name, role_master_name
 from app.lessons.utils import payments_dicts
 from app.models import Group, StudentInGroup, Student, Payment
 from app.payments import payments
@@ -10,14 +11,17 @@ from app.payments import payments
 
 @payments.route('/group/<int:group_id>', methods=['GET', 'POST'])
 @login_required
-@check_master
-# todo: препод — только свои группы.
+@check_master_or_teacher
 def payments_in_group(group_id):
     group = Group.query.get_or_404(group_id)
     students_in_group = group.students_in_group \
         .join(Student, Student.id == StudentInGroup.student_id) \
         .order_by(Student.fio) \
         .all()
+    if current_user.system_role.name == role_teacher_name:
+        if current_user.teacher.id != group.teacher_id:
+            abort(403)
+    can_confirm = current_user.system_role.name == role_master_name
     if 'submit' in request.form:
         for month_number in range(group.start_month, group.end_month + 1):
             ps = Payment.query \
@@ -38,10 +42,10 @@ def payments_in_group(group_id):
                     if not payment.confirmed:
                         payment.value = new_value
                         payment.cash = is_cash
-                    payment.confirmed = is_confirmed
+                    if can_confirm: payment.confirmed = is_confirmed
                 else:
                     db.session.add(Payment(student_in_group=student_in_group, month=month_number, value=new_value,
-                                           cash=is_cash, confirmed=is_confirmed))
+                                           cash=is_cash, confirmed=can_confirm and is_confirmed))
         db.session.commit()
         flash('оплата в группе {} сохранена.'.format(group.name))
         return redirect(url_for('payments.payments_in_group', group_id=group_id))
@@ -57,4 +61,5 @@ def payments_in_group(group_id):
     return render_template('payments/payments_in_group.html', group=group, students_in_group=students_in_group,
                            payments=pd[0], confirmed=pd[1], cash=pd[2], confirmed_count_months=pd[3],
                            confirmed_count_students=pd[4], total_payments=total_payments,
-                           confirmed_payments=confirmed_payments, students_in_month=students_in_month)
+                           confirmed_payments=confirmed_payments, students_in_month=students_in_month,
+                           can_confirm=can_confirm)

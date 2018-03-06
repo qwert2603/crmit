@@ -41,7 +41,8 @@
                             <br/>
                             <input form="save_form" type="checkbox"
                                    name="conf_{{ m }}_{{ student_in_group.id }}"
-                                   {% if confirmed[m].get(student_in_group.id) %}checked{% endif %}>
+                                   {% if confirmed[m].get(student_in_group.id) %}checked{% endif %}
+                                   {% if not can_confirm %}disabled{% endif %}>
                             <span style="{% if confirmed[m].get(student_in_group.id) %}color: green;{% endif %}">подтв.</span>
                         {% else %}
                             <i>n/a</i>
