@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'structure/_macros.html' import render_parent %}
 {% from '_macros.html' import render_search %}
 
 {% block title %}список родителей{% endblock %}
@@ -21,7 +20,27 @@
             <th></th>
         </tr>
         {% for parent in items %}
-            {{ render_parent(parent) }}
+            <tr>
+                <td>{{ parent.fio }}</td>
+                <td>{{ parent.phone }}</td>
+                <td>{{ parent.email }}</td>
+                <td>{{ parent.address }}</td>
+                <td>{{ parent.home_phone }}</td>
+                <td>
+                    <ul>
+                        {% for student in parent.children.all() %}
+                            <li>{{ student.fio }}</li>
+                        {% else %}
+                            <p><i>нет детей</i></p>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td>
+                    <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default"><span
+                            class="glyphicon glyphicon-pencil"></span></a>
+                </td>
+                {#    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}" class="btn btn-danger">удалить</a>#}
+            </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
         {% endfor %}

@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'users/_macros.html' import render_master %}
 {% from '_macros.html' import render_search %}
 
 {% block title %}список руководителей{% endblock %}
@@ -16,10 +15,19 @@
         <tr>
             <th>фио</th>
             <th>логин</th>
-            <th></th>
+            {% if current_user.system_role.name == role_master_name %}
+                <th></th>
+            {% endif %}
         </tr>
         {% for master in items %}
-            {{ render_master(master) }}
+            <tr>
+                <td>{{ master.fio }}</td>
+                <td>{{ master.system_user.login }}</td>
+                {% if current_user.system_role.name == role_master_name %}
+                    <td><a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default"><span
+                            class="glyphicon glyphicon-pencil"></span></a></td>
+                {% endif %}
+            </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
         {% endfor %}

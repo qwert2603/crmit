@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'structure/_macros.html' import render_group %}
 {% from '_macros.html' import render_search %}
 
 {% block title %}список групп{% endblock %}
@@ -22,7 +21,9 @@
             <th></th>
             <th></th>
             <th></th>
-            <th></th>
+            {% if current_user.system_role.name == role_master_name %}
+                <th></th>
+            {% endif %}
             <th></th>
             <th></th>
         </tr>
@@ -38,12 +39,16 @@
                 <td><a href="{{ url_for('structure.students_in_group',group_id=group.id) }}" class="btn btn-default">
                     список учеников
                 </a></td>
-                <td><a href="{{ url_for('structure.details',group_id=group.id) }}" class="btn btn-default">детали</a></td>
-                <td><a href="{{ url_for('structure.edit_group',group_id=group.id) }}" class="btn btn-default"><span
-                        class="glyphicon glyphicon-pencil"></span></a></td>
+                <td><a href="{{ url_for('structure.details',group_id=group.id) }}" class="btn btn-default">детали</a>
+                </td>
+                {% if current_user.system_role.name == role_master_name %}
+                    <td><a href="{{ url_for('structure.edit_group',group_id=group.id) }}" class="btn btn-default"><span
+                            class="glyphicon glyphicon-pencil"></span></a></td>
+                {% endif %}
                 <td><a href="{{ url_for('stat.group_stat',group_id=group.id) }}" class="btn btn-default"><span
                         class="glyphicon glyphicon-stats"></span></a></td>
-                <td><a href="{{ url_for('payments.payments_in_group',group_id=group.id) }}" class="btn btn-default">&#8381;</a></td>
+                <td><a href="{{ url_for('payments.payments_in_group',group_id=group.id) }}" class="btn btn-default">&#8381;</a>
+                </td>
                 {#        <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
             </tr>
         {% else %}

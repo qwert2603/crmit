@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'users/_macros.html' import render_teacher %}
 {% from '_macros.html' import render_search %}
 
 {% block title %}список преподавателей{% endblock %}
@@ -17,10 +16,28 @@
             <th>фио</th>
             <th>логин</th>
             <th>группы</th>
-            <th></th>
+            {% if current_user.system_role.name == role_master_name %}
+                <th></th>
+            {% endif %}
         </tr>
         {% for teacher in items %}
-            {{ render_teacher(teacher) }}
+            <tr>
+                <td>{{ teacher.fio }}</td>
+                <td>{{ teacher.system_user.login }}</td>
+                <td>
+                    <ul>
+                        {% for group in teacher.groups.all() %}
+                            <li>{{ group.name }}</li>
+                        {% else %}
+                            <p><i>нет групп</i></p>
+                        {% endfor %}
+                    </ul>
+                </td>
+                {% if current_user.system_role.name == role_master_name %}
+                    <td><a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default"><span
+                            class="glyphicon glyphicon-pencil"></span></a></td>
+                {% endif %}
+            </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
         {% endfor %}

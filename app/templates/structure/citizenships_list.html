@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'structure/_macros.html' import render_citizenship %}
 {% from '_macros.html' import render_search %}
 
 {% block title %}список гражданств{% endblock %}
@@ -16,10 +15,23 @@
         <tr>
             <th>название</th>
             <th>учеников</th>
-            <th></th>
+            {% if current_user.system_role.name == role_master_name %}
+                <th></th>
+            {% endif %}
         </tr>
         {% for citizenship in items %}
-            {{ render_citizenship(citizenship) }}
+            <tr>
+                <td>{{ citizenship.name }}</td>
+                <td>{{ citizenship.students.count() }}</td>
+                {% if current_user.system_role.name == role_master_name %}
+                    <td>
+                        <a href="{{ url_for('structure.edit_citizenship',id=citizenship.id) }}"
+                           class="btn btn-default"><span
+                                class="glyphicon glyphicon-pencil"></span></a>
+                    </td>
+                    {#    <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}" class="btn btn-danger">удалить</a>#}
+                {% endif %}
+            </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
         {% endfor %}

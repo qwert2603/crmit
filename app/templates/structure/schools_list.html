@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'structure/_macros.html' import render_school %}
 {% from '_macros.html' import render_search %}
 
 {% block title %}список школ{% endblock %}
@@ -16,11 +15,27 @@
         <tr>
             <th>название</th>
             <th>учеников</th>
-            <th></th>
-            <th></th>
+            {% if current_user.system_role.name == role_master_name %}
+                <th></th>
+                <th></th>
+            {% endif %}
         </tr>
         {% for school in items %}
-            {{ render_school(school) }}
+            <tr>
+                <td>{{ school.name }}</td>
+                <td>{{ school.students.count() }}</td>
+                {% if current_user.system_role.name == role_master_name %}
+                    <td>
+                        <a href="{{ url_for('structure.edit_school',id=school.id) }}" class="btn btn-default"><span
+                                class="glyphicon glyphicon-pencil"></span></a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('structure.delete_school',id=school.id) }}"
+                           class="btn btn-danger disabled"><span
+                                class="glyphicon glyphicon-remove"></span></a>
+                    </td>
+                {% endif %}
+            </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
         {% endfor %}

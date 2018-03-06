@@ -1,6 +1,5 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from 'structure/_macros.html' import render_section %}
 {% from '_macros.html' import render_search %}
 
 {% block title %}список секций{% endblock %}
@@ -17,10 +16,31 @@
             <th>название</th>
             <th>цена в месяц</th>
             <th>группы</th>
-            <th></th>
+            {% if current_user.system_role.name == role_master_name %}
+                <th></th>
+            {% endif %}
         </tr>
         {% for section in items %}
-            {{ render_section(section) }}
+            <tr>
+                <td>{{ section.name }}</td>
+                <td>{{ section.price }}</td>
+                <td>
+                    <ul>
+                        {% for group in section.groups.all() %}
+                            <li>{{ group.name }} ({{ group.teacher.fio }})</li>
+                        {% else %}
+                            <p><i>нет групп</i></p>
+                        {% endfor %}
+                    </ul>
+                </td>
+                {% if current_user.system_role.name == role_master_name %}
+                    <td>
+                        <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-default"><span
+                                class="glyphicon glyphicon-pencil"></span></a>
+                    </td>
+                    {#    <a href="{{ url_for('structure.delete_section',id=section.id) }}" class="btn btn-danger">удалить</a>#}
+                {% endif %}
+            </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
         {% endfor %}
