@@ -1,9 +1,8 @@
-from flask import render_template, request, flash, redirect, url_for, abort
+from flask import render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
-
 from app import db
-from app.decorators import check_master_or_teacher
-from app.init_model import role_teacher_name, role_master_name
+from app.decorators import check_access_group_write
+from app.init_model import role_master_name
 from app.lessons.utils import payments_dicts
 from app.models import Group, StudentInGroup, Student, Payment
 from app.payments import payments
@@ -11,16 +10,13 @@ from app.payments import payments
 
 @payments.route('/group/<int:group_id>', methods=['GET', 'POST'])
 @login_required
-@check_master_or_teacher
+@check_access_group_write()
 def payments_in_group(group_id):
     group = Group.query.get_or_404(group_id)
     students_in_group = group.students_in_group \
         .join(Student, Student.id == StudentInGroup.student_id) \
         .order_by(Student.fio) \
         .all()
-    if current_user.system_role.name == role_teacher_name:
-        if current_user.teacher.id != group.teacher_id:
-            abort(403)
     can_confirm = current_user.system_role.name == role_master_name
     if 'submit' in request.form:
         for month_number in range(group.start_month, group.end_month + 1):

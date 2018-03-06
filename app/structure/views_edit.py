@@ -81,11 +81,11 @@ def edit_parent(id):
     return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=False)
 
 
-@structure.route('/group/<int:id>', methods=['GET', 'POST'])
+@structure.route('/group/<int:group_id>', methods=['GET', 'POST'])
 @login_required
 @check_master
-def edit_group(id):
-    group = Group.query.get_or_404(id)
+def edit_group(group_id):
+    group = Group.query.get_or_404(group_id)
     form = GroupForm(group)
     if form.validate_on_submit():
         group.name = form.name.data
