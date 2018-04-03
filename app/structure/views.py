@@ -1,17 +1,18 @@
 from flask import render_template, request, url_for, redirect, flash
 from flask_login import login_required, current_user
 from app import db
-from app.decorators import check_access_group_write
+from app.decorators import check_master_or_teacher, check_access_group_write
 from app.init_model import role_master_name
 from app.models import Group, Student, StudentInGroup
 from app.structure import structure
 from app.structure.utils import max_enter_month_number_student_in_group, min_exit_month_number_student_in_group, \
     delete_attendings_was_not_out_of_months_period_student, delete_unconfirmed_payments_out_of_months_period_student
+from app.utils import can_user_write_group
 
 
 @structure.route('/students_in_group/<int:group_id>', methods=['GET', 'POST'])
 @login_required
-@check_access_group_write()
+@check_master_or_teacher
 def students_in_group(group_id):
     group = Group.query.get_or_404(group_id)
     students_in_group = group.students_in_group \
@@ -46,7 +47,7 @@ def students_in_group(group_id):
         .filter(Student.id.notin_(in_group_students_ids)) \
         .order_by(Student.fio).all()
     return render_template('structure/students_in_group.html', group=group, students_in_group=students_in_group,
-                           other_students=other_students)
+                           other_students=other_students, write_mode=can_user_write_group(current_user, group))
 
 
 @structure.route('/details/<int:group_id>', methods=['GET', 'POST'])

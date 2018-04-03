@@ -37,12 +37,10 @@
                 <td><a href="{{ url_for('lessons.months_list',group_id=group.id) }}" class="btn btn-default"><span
                         class="glyphicon glyphicon-calendar"></span></a></td>
                 <td>
-                    {% if can_user_write_group(current_user, group) %}
-                        <a href="{{ url_for('structure.students_in_group',group_id=group.id) }}"
-                           class="btn btn-default">
-                            список учеников
-                        </a>
-                    {% endif %}
+                    <a href="{{ url_for('structure.students_in_group',group_id=group.id) }}"
+                       class="btn btn-default">
+                        список учеников
+                    </a>
                 </td>
                 <td>
                     {% if can_user_write_group(current_user, group) %}

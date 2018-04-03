@@ -14,43 +14,56 @@
         <h1>ученики в {{ group.name }}</h1>
     </div>
 
-    <div class="col-md-12">
-        <form method="post">
+    {% if write_mode %}
 
-            <div class="form-group col-md-4">
-                <label class="control-label" for="in_group">в группе</label>
-                <select class="form-control" id="in_group" name="in_group" multiple="multiple" size="20">
-                    {% for student_in_group in students_in_group %}
-                        <option value="{{ student_in_group.student.id }}">
-                            {% if student_in_group.attendings_was.count() > 0 or student_in_group.payments_confirmed.count() > 0 %}
-                                (f)
-                            {% endif %}
-                            {{ student_in_group.student.fio }}
-                        </option>
-                    {% endfor %}
-                </select>
-            </div>
+        <div class="col-md-12">
+            <form method="post">
 
-            <div class="form-group col-md-4">
-                <label class="control-label" for="others">остальные</label>
-                <select class="form-control" id="others" multiple="multiple" size="20">
-                    {% for student in other_students %}
-                        <option value="{{ student.id }}">{{ student.fio }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+                <div class="form-group col-md-4">
+                    <label class="control-label" for="in_group">в группе</label>
+                    <select class="form-control" id="in_group" name="in_group" multiple="multiple" size="20">
+                        {% for student_in_group in students_in_group %}
+                            <option value="{{ student_in_group.student.id }}">
+                                {% if student_in_group.attendings_was.count() > 0 or student_in_group.payments_confirmed.count() > 0 %}
+                                    (f)
+                                {% endif %}
+                                {{ student_in_group.student.fio }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-            <div class="btn-group col-md-offset-4">
-                <p>
-                    <input class="btn btn-default" type="button" id="left" value="<"/>
-                    <input class="btn btn-default" type="button" id="right" value=">"/>
+                <div class="form-group col-md-4">
+                    <label class="control-label" for="others">остальные</label>
+                    <select class="form-control" id="others" multiple="multiple" size="20">
+                        {% for student in other_students %}
+                            <option value="{{ student.id }}">{{ student.fio }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="btn-group col-md-offset-4">
+                    <p>
+                        <input class="btn btn-default" type="button" id="left" value="<"/>
+                        <input class="btn btn-default" type="button" id="right" value=">"/>
+                    </p>
+                </div>
+
+                <p><input class="btn btn-default" type="submit" name="submit" value="сохранить" onclick="selectAll();">
                 </p>
-            </div>
+            </form>
+        </div>
 
-            <p><input class="btn btn-default" type="submit" name="submit" value="сохранить" onclick="selectAll();"></p>
-        </form>
-    </div>
+        {% include '_cancel_button.html' %}
 
-    {% include '_cancel_button.html' %}
+    {% else %}
+        <ul>
+            {% for student_in_group in students_in_group %}
+                <li>
+                    <a href="{{ url_for('users.student_details',id=student_in_group.student.id) }}">{{ student_in_group.student.fio }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% endif %}
 
 {% endblock %}
