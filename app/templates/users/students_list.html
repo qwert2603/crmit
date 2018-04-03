@@ -43,6 +43,7 @@
                         {% endfor %}
                     </ul>
                 </td>
+                {# todo: ? all teachers can edit all students #}
                 <td><a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-default"><span
                         class="glyphicon glyphicon-pencil"></span></a></td>
             </tr>

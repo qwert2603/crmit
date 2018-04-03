@@ -125,3 +125,13 @@ def compare_not_none(f, a1, a2):
     if a1 is None: return a2
     if a2 is None: return a1
     return f(a1, a2)
+
+
+def can_user_write_group(system_user, group):
+    if not system_user.is_authenticated: return False
+    from app.init_model import role_master_name, role_teacher_name
+    if system_user.system_role.name == role_master_name: return True
+    if system_user.system_role.name == role_teacher_name:
+        if system_user.teacher.id == group.teacher_id:
+            return True
+    return False

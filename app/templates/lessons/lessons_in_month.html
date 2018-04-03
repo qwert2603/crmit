@@ -27,9 +27,13 @@
             <th>ученик</th>
             {% for lesson in lessons %}
                 <th>
-                    <input form="save_form" type="date" name="l_{{ lesson.id }}" value="{{ lesson.date }}" required
-                           min="{{ start_date_of_month(group.start_month) }}"
-                           max="{{ end_date_of_month(group.end_month) }}">
+                    {% if write_mode %}
+                        <input form="save_form" type="date" name="l_{{ lesson.id }}" value="{{ lesson.date }}" required
+                               min="{{ start_date_of_month(group.start_month) }}"
+                               max="{{ end_date_of_month(group.end_month) }}">
+                    {% else %}
+                        {{ lesson.date }}
+                    {% endif %}
                 </th>
             {% endfor %}
             <th>оплата</th>
@@ -42,18 +46,24 @@
                     <td>
                         <input form="save_form" type="checkbox"
                                name="a_{{ lesson_id }}_{{ student_in_group.student_id }}"
-                               {% if attendings[lesson_id].get(student_in_group.student_id, False) %}checked{% endif %}>
+                               {% if attendings[lesson_id].get(student_in_group.student_id, False) %}checked{% endif %}
+                               {% if not write_mode %}disabled{% endif %}>
                     </td>
                 {% endfor %}
+                {# todo: ? hide all info about payments if not write mode#}
                 <td>
                     {% if confirmed.get(student_in_group.id) %}
                         {{ payments.get(student_in_group.id, 0) }} /
                         {{ group.section.price - student_in_group.discount }}
                         <span style="color: green; ">(подтв.)</span>
                     {% else %}
-                        <input max="{{ group.section.price - student_in_group.discount }}" min="0" form="save_form"
-                               type="number" name="p_{{ student_in_group.id }}"
-                               value="{{ payments.get(student_in_group.id, 0) }}">
+                        {% if write_mode %}
+                            <input max="{{ group.section.price - student_in_group.discount }}" min="0" form="save_form"
+                                   type="number" name="p_{{ student_in_group.id }}"
+                                   value="{{ payments.get(student_in_group.id, 0) }}">
+                        {% else %}
+                            {{ payments.get(student_in_group.id, 0) }}
+                        {% endif %}
                         / {{ group.section.price - student_in_group.discount }}
                     {% endif %}
                 </td>
@@ -62,7 +72,8 @@
                         <input type="checkbox" disabled {% if cash[student_in_group.id] %}checked{% endif %}>
                     {% else %}
                         <input form="save_form" type="checkbox" name="c_{{ student_in_group.id }}"
-                               {% if cash.get(student_in_group.id, True) %}checked{% endif %}>
+                               {% if cash.get(student_in_group.id, True) %}checked{% endif %}
+                               {% if not write_mode %}disabled{% endif %}>
                     {% endif %}
                 </td>
             </tr>
@@ -71,10 +82,12 @@
             <td></td>
             {% for lesson_id in lesson_ids %}
                 <td>
-                    <a href="{{ url_for('lessons.delete_lesson',lesson_id=lesson_id) }}"
-                       class="btn btn-danger {% if not removable_lessons.get(lesson_id, False) %}disabled{% endif %}">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
+                    {% if write_mode %}
+                        <a href="{{ url_for('lessons.delete_lesson',lesson_id=lesson_id) }}"
+                           class="btn btn-danger {% if not removable_lessons.get(lesson_id, False) %}disabled{% endif %}">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    {% endif %}
                 </td>
             {% endfor %}
             <td></td>
@@ -82,10 +95,12 @@
         </tr>
     </table>
 
-    <form method="post" id="save_form">
-        <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
-    </form>
+    {% if write_mode %}
+        <form method="post" id="save_form">
+            <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
+        </form>
 
-    <a href="{{ url_for('users.register_student') }}" class="btn btn-default">добавить ученика</a>
+        <a href="{{ url_for('users.register_student') }}" class="btn btn-default">добавить ученика</a>
+    {% endif %}
 
 {% endblock %}

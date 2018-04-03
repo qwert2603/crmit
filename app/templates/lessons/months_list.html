@@ -9,9 +9,11 @@
         <h1>занятия в {{ group.name }}</h1>
     </div>
 
-    <a href="{{ url_for('lessons.create_lesson',group_id=group.id) }}" class="btn btn-primary margined_button">
-        новое занятие
-    </a>
+    {% if can_user_write_group(current_user, group) %}
+        <a href="{{ url_for('lessons.create_lesson',group_id=group.id) }}" class="btn btn-primary margined_button">
+            новое занятие
+        </a>
+    {% endif %}
 
     <table class="table">
         <tr>
