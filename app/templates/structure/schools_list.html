@@ -31,8 +31,9 @@
                     </td>
                     <td>
                         <a href="{{ url_for('structure.delete_school',id=school.id) }}"
-                           class="btn btn-danger disabled"><span
-                                class="glyphicon glyphicon-remove"></span></a>
+                           class="btn btn-danger {% if school.students.count() > 0 %}disabled{% endif %}">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
                     </td>
                 {% endif %}
             </tr>

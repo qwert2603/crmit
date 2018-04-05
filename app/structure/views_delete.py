@@ -1,4 +1,4 @@
-from flask import redirect, url_for, flash
+from flask import redirect, url_for, flash, abort
 from flask_login import login_required
 
 from app import db
@@ -12,6 +12,7 @@ from app.structure import structure
 @check_master
 def delete_citizenship(id):
     citizenship = Citizenship.query.get_or_404(id)
+    if citizenship.students.count() > 0: abort(409)
     db.session.delete(citizenship)
     flash('гражданство удалено')
     return redirect(url_for('.citizenships_list'))
@@ -22,6 +23,7 @@ def delete_citizenship(id):
 @check_master
 def delete_section(id):
     section = Section.query.get_or_404(id)
+    if section.groups.count() > 0: abort(409)
     db.session.delete(section)
     flash('секция удалена')
     return redirect(url_for('.sections_list'))
@@ -32,6 +34,7 @@ def delete_section(id):
 @check_master
 def delete_school(id):
     school = School.query.get_or_404(id)
+    if school.students.count() > 0: abort(409)
     db.session.delete(school)
     flash('школа удалена')
     return redirect(url_for('.schools_list'))
@@ -42,6 +45,7 @@ def delete_school(id):
 @check_master
 def delete_parent(id):
     parent = Parent.query.get_or_404(id)
+    if parent.parent_of_students.count() > 0: abort(409)
     db.session.delete(parent)
     flash('родитель удален')
     return redirect(url_for('.parents_list'))

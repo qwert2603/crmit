@@ -18,6 +18,7 @@
             <th>домашний телефон</th>
             <th>дети</th>
             <th></th>
+            <th></th>
         </tr>
         {% for parent in items %}
             <tr>
@@ -40,7 +41,12 @@
                     <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default"><span
                             class="glyphicon glyphicon-pencil"></span></a>
                 </td>
-                {#    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}" class="btn btn-danger">удалить</a>#}
+                <td>
+                    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}"
+                       class="btn btn-danger {% if parent.parent_of_students.count() > 0 %}disabled{% endif %}">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </td>
             </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
