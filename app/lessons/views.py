@@ -3,8 +3,9 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.decorators import check_master_or_teacher, check_access_group_write
+from app.is_removable_check import is_lesson_removable
 from app.lessons import lessons
-from app.lessons.utils import payments_in_month_dicts, lessons_lists, dates_of_lessons_dict, removable_lessons_dict
+from app.lessons.utils import payments_in_month_dicts, lessons_lists, dates_of_lessons_dict
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
     end_date_of_month, can_user_write_group
@@ -93,11 +94,10 @@ def lessons_in_month(group_id, month_number):
         return redirect(url_for('lessons.lessons_in_month', group_id=group_id, month_number=month_number))
     pd = payments_in_month_dicts(group_id, month_number)
     ll = lessons_lists(group_id, month_number)
-    removable_lessons = removable_lessons_dict(group_id, month_number)
     return render_template('lessons/lessons_in_month.html', group=group, month_number=month_number,
                            month_name=month_name, students_in_group=students_in_group, payments=pd[0], confirmed=pd[1],
-                           cash=pd[2], lessons=ll[0], lesson_ids=ll[1], attendings=ll[2],
-                           removable_lessons=removable_lessons, write_mode=can_user_write_group(current_user, group))
+                           cash=pd[2], lessons=ll[0], attendings=ll[1],
+                           write_mode=can_user_write_group(current_user, group))
 
 
 @lessons.route('/create/<int:group_id>', methods=['GET', 'POST'])
@@ -119,13 +119,12 @@ def create_lesson(group_id):
 @login_required
 @check_master_or_teacher
 def delete_lesson(lesson_id):
-    lesson = Lesson.query.get(lesson_id)
+    lesson = Lesson.query.get_or_404(lesson_id)
     if not can_user_write_group(current_user, lesson.group): abort(403)
-    if lesson.attendings_was.count() > 0: abort(409)
-    month_number = number_of_month_for_date(lesson.date)
-    group_id = lesson.group_id
+    if not is_lesson_removable(lesson): abort(409)
     for a in lesson.attendings_was_not:
         db.session.delete(a)
     db.session.delete(lesson)
     flash('занятие {} удалено'.format(lesson.date))
-    return redirect(url_for('.lessons_in_month', group_id=group_id, month_number=month_number))
+    return redirect(url_for('.lessons_in_month', group_id=lesson.group_id,
+                            month_number=(number_of_month_for_date(lesson.date))))

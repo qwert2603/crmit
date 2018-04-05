@@ -42,11 +42,11 @@
         {% for student_in_group in students_in_group %}
             <tr>
                 <td>{{ student_in_group.student.fio }}</td>
-                {% for lesson_id in lesson_ids %}
+                {% for lesson in lessons %}
                     <td>
                         <input form="save_form" type="checkbox"
-                               name="a_{{ lesson_id }}_{{ student_in_group.student_id }}"
-                               {% if attendings[lesson_id].get(student_in_group.student_id, False) %}checked{% endif %}
+                               name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                               {% if attendings[lesson.id].get(student_in_group.student_id, False) %}checked{% endif %}
                                {% if not write_mode %}disabled{% endif %}>
                     </td>
                 {% endfor %}
@@ -80,11 +80,11 @@
         {% endfor %}
         <tr>
             <td></td>
-            {% for lesson_id in lesson_ids %}
+            {% for lesson in lessons %}
                 <td>
                     {% if write_mode %}
-                        <a href="{{ url_for('lessons.delete_lesson',lesson_id=lesson_id) }}"
-                           class="btn btn-danger {% if not removable_lessons.get(lesson_id, False) %}disabled{% endif %}">
+                        <a href="{{ url_for('lessons.delete_lesson',lesson_id=lesson.id) }}"
+                           class="btn btn-danger {% if not is_lesson_removable(lesson) %}disabled{% endif %}">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     {% endif %}

@@ -8,14 +8,12 @@ def lessons_lists(group_id, month_number):
     lessons = Lesson.lessons_in_group_in_month(group_id, month_number) \
         .order_by(Lesson.date) \
         .all()
-    lesson_ids = []
     attendings = dict()
     for l in lessons:
-        lesson_ids += [l.id]
         attendings[l.id] = dict()
         for a in l.attendings:
             attendings[l.id][a.student_id] = a.was
-    return [lessons, lesson_ids, attendings]
+    return [lessons, attendings]
 
 
 def payments_dicts(group):
@@ -52,14 +50,6 @@ def payments_in_month_dicts(group_id, month_number):
         confirmed[p.student_in_group_id] = p.confirmed
         cash[p.student_in_group_id] = p.cash
     return [values, confirmed, cash]
-
-
-def removable_lessons_dict(group_id, month_number):
-    removable = dict()
-    for l in Lesson.lessons_in_group_in_month(group_id, month_number):
-        if l.attendings_was.count() == 0:
-            removable[l.id] = True
-    return removable
 
 
 def dates_of_lessons_dict(group_id):
