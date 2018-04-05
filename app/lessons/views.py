@@ -115,10 +115,10 @@ def create_lesson(group_id):
     return render_template('lessons/create_lesson.html', group=group)
 
 
-@lessons.route('/delete/<int:lesson_id>')
+@lessons.route('/delete/<int:lesson_id>/<int:from_list>')
 @login_required
 @check_master_or_teacher
-def delete_lesson(lesson_id):
+def delete_lesson(lesson_id, from_list):
     lesson = Lesson.query.get_or_404(lesson_id)
     if not can_user_write_group(current_user, lesson.group): abort(403)
     if not is_lesson_removable(lesson): abort(409)
@@ -126,5 +126,9 @@ def delete_lesson(lesson_id):
         db.session.delete(a)
     db.session.delete(lesson)
     flash('занятие {} удалено'.format(lesson.date))
-    return redirect(url_for('.lessons_in_month', group_id=lesson.group_id,
+    if from_list != 0:
+        endpoint = '.lessons_list'
+    else:
+        endpoint = '.lessons_in_month'
+    return redirect(url_for(endpoint, group_id=lesson.group_id,
                             month_number=(number_of_month_for_date(lesson.date))))

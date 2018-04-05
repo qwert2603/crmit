@@ -83,7 +83,7 @@
             {% for lesson in lessons %}
                 <td>
                     {% if write_mode %}
-                        <a href="{{ url_for('lessons.delete_lesson',lesson_id=lesson.id) }}"
+                        <a href="{{ url_for('lessons.delete_lesson',lesson_id=lesson.id, from_list=0) }}"
                            class="btn btn-danger {% if not is_lesson_removable(lesson) %}disabled{% endif %}">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>

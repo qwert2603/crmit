@@ -41,6 +41,9 @@
             <th>группа</th>
             <th>преподаватель</th>
             <th>учеников</th>
+            {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
+                <th></th>
+            {% endif %}
         </tr>
         {% for lesson in lessons %}
             <tr>
@@ -53,6 +56,16 @@
                 <td>{{ lesson.teacher.fio }}</td>
                 <td>{{ lesson.attendings_was.count() }}
                     / {{ lesson.group.students_in_month(number_of_month_for_date(lesson.date)).count() }}</td>
+                {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
+                    <td>
+                        {% if can_user_write_group(current_user, lesson.group) %}
+                            <a href="{{ url_for('lessons.delete_lesson',lesson_id=lesson.id, from_list=1) }}"
+                               class="btn btn-danger {% if not is_lesson_removable(lesson) %}disabled{% endif %}">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        {% endif %}
+                    </td>
+                {% endif %}
             </tr>
         {% else %}
             <h3><i>нет занятий</i></h3>
