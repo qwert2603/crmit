@@ -2,7 +2,7 @@ from flask import redirect, url_for, flash, abort
 from flask_login import login_required
 
 from app import db
-from app.decorators import check_master
+from app.decorators import check_master, check_master_or_teacher
 from app.is_removable_check import is_citizenship_removable, is_parent_removable, is_school_removable, \
     is_section_removable, is_group_removable
 from app.models import Citizenship, Section, Parent, School, Group
@@ -44,7 +44,7 @@ def delete_school(id):
 
 @structure.route('/delete_parent/<int:id>')
 @login_required
-@check_master
+@check_master_or_teacher
 def delete_parent(id):
     parent = Parent.query.get_or_404(id)
     if not is_parent_removable(parent): abort(409)

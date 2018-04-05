@@ -1,3 +1,5 @@
+from flask_login import login_required
+
 from app.decorators import check_master_or_teacher
 from app.list_route import create_list_route
 from app.models import Master, Teacher, Student
@@ -5,6 +7,7 @@ from app.users import users
 
 
 @users.route('/masters')
+@login_required
 @check_master_or_teacher
 def masters_list():
     return create_list_route(
@@ -13,6 +16,7 @@ def masters_list():
 
 
 @users.route('/teachers')
+@login_required
 @check_master_or_teacher
 def teachers_list():
     return create_list_route(
@@ -21,6 +25,7 @@ def teachers_list():
 
 
 @users.route('/students')
+@login_required
 @check_master_or_teacher
 def students_list():
     return create_list_route(

@@ -17,6 +17,7 @@
             <th>логин</th>
             {% if current_user.system_role.name == role_master_name %}
                 <th></th>
+                <th></th>
             {% endif %}
         </tr>
         {% for master in items %}
@@ -24,8 +25,17 @@
                 <td>{{ master.fio }}</td>
                 <td>{{ master.system_user.login }}</td>
                 {% if current_user.system_role.name == role_master_name %}
-                    <td><a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default"><span
-                            class="glyphicon glyphicon-pencil"></span></a></td>
+                    <td>
+                        <a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ url_for('users.delete_master',id=master.id) }}"
+                           class="btn btn-danger {% if not is_master_removable(master) %}disabled{% endif %}">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
                 {% endif %}
             </tr>
         {% else %}

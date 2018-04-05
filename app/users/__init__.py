@@ -2,7 +2,7 @@ from flask import Blueprint
 
 users = Blueprint('users', __name__)
 
-from . import views, views_list, views_register, views_edit
+from . import views, views_list, views_register, views_edit, views_delete
 
 from flask_login import current_user
 from datetime import datetime
