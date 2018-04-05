@@ -43,7 +43,7 @@
                 </td>
                 <td>
                     <a href="{{ url_for('structure.delete_parent',id=parent.id) }}"
-                       class="btn btn-danger {% if parent.parent_of_students.count() > 0 %}disabled{% endif %}">
+                       class="btn btn-danger {% if not is_parent_removable(parent) %}disabled{% endif %}">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>
                 </td>

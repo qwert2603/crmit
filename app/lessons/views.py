@@ -117,9 +117,10 @@ def create_lesson(group_id):
 
 @lessons.route('/delete/<int:lesson_id>')
 @login_required
-@check_access_group_write()
+@check_master_or_teacher
 def delete_lesson(lesson_id):
     lesson = Lesson.query.get(lesson_id)
+    if not can_user_write_group(current_user, lesson.group): abort(403)
     if lesson.attendings_was.count() > 0: abort(409)
     month_number = number_of_month_for_date(lesson.date)
     group_id = lesson.group_id

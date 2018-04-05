@@ -26,6 +26,9 @@
             {% endif %}
             <th></th>
             <th></th>
+            {% if current_user.system_role.name == role_master_name %}
+                <th></th>
+            {% endif %}
         </tr>
         {% for group in items %}
             <tr>
@@ -49,17 +52,28 @@
                     {% endif %}
                 </td>
                 {% if current_user.system_role.name == role_master_name %}
-                    <td><a href="{{ url_for('structure.edit_group',group_id=group.id) }}" class="btn btn-default"><span
-                            class="glyphicon glyphicon-pencil"></span></a></td>
+                    <td>
+                        <a href="{{ url_for('structure.edit_group',group_id=group.id) }}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
                 {% endif %}
-                <td><a href="{{ url_for('stat.group_stat',group_id=group.id) }}" class="btn btn-default"><span
-                        class="glyphicon glyphicon-stats"></span></a></td>
+                <td>
+                    <a href="{{ url_for('stat.group_stat',group_id=group.id) }}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-stats"></span>
+                    </a>
+                </td>
                 <td>
                     {% if can_user_write_group(current_user, group) %}
                         <a href="{{ url_for('payments.payments_in_group',group_id=group.id) }}" class="btn btn-default">&#8381;</a>
                     {% endif %}
                 </td>
-                {#        <a href="{{ url_for('structure.delete_group',id=group.id) }}" class="btn btn-danger">удалить</a>#}
+                <td>
+                    <a href="{{ url_for('structure.delete_group',id=group.id) }}"
+                       class="btn btn-danger {% if not is_group_removable(group) %}disabled{% endif %}">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </td>
             </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}

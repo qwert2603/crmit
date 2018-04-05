@@ -5,6 +5,8 @@ from flask_migrate import Migrate
 from app import create_app, db
 import app.models as models
 from app.init_model import role_master_name, role_teacher_name, role_student_name
+from app.is_removable_check import is_section_removable, is_group_removable, is_parent_removable, is_school_removable, \
+    is_citizenship_removable
 from app.utils import start_date_of_month, end_date_of_month, number_of_month_for_date, get_month_name, \
     can_user_write_group
 
@@ -25,7 +27,10 @@ def make_shell_context():
 context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_teacher_name,
                     role_student_name=role_student_name, start_date_of_month=start_date_of_month,
                     end_date_of_month=end_date_of_month, number_of_month_for_date=number_of_month_for_date,
-                    get_month_name=get_month_name, can_user_write_group=can_user_write_group)
+                    get_month_name=get_month_name, can_user_write_group=can_user_write_group,
+                    is_section_removable=is_section_removable, is_group_removable=is_group_removable,
+                    is_parent_removable=is_parent_removable, is_school_removable=is_school_removable,
+                    is_citizenship_removable=is_citizenship_removable)
 
 
 @app.context_processor

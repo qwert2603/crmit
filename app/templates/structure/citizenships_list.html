@@ -32,7 +32,7 @@
                     </td>
                     <td>
                         <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}"
-                           class="btn btn-danger {% if citizenship.students.count() > 0 %}disabled{% endif %}">
+                           class="btn btn-danger {% if not is_citizenship_removable(citizenship) %}disabled{% endif %}">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
                     </td>
