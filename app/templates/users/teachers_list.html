@@ -18,6 +18,7 @@
             <th>группы</th>
             {% if current_user.system_role.name == role_master_name %}
                 <th></th>
+                <th></th>
             {% endif %}
         </tr>
         {% for teacher in items %}
@@ -34,8 +35,17 @@
                     </ul>
                 </td>
                 {% if current_user.system_role.name == role_master_name %}
-                    <td><a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default"><span
-                            class="glyphicon glyphicon-pencil"></span></a></td>
+                    <td>
+                        <a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
+                     <td>
+                        <a href="{{ url_for('users.delete_teacher',id=teacher.id) }}"
+                           class="btn btn-danger {% if not is_teacher_removable(teacher) %}disabled{% endif %}">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
                 {% endif %}
             </tr>
         {% else %}

@@ -18,6 +18,7 @@
             <th>родители</th>
             <th>группы</th>
             <th></th>
+            <th></th>
         </tr>
         {% for student in items %}
             <tr>
@@ -43,9 +44,18 @@
                         {% endfor %}
                     </ul>
                 </td>
-                {# todo: ? all teachers can edit all students #}
-                <td><a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-default"><span
-                        class="glyphicon glyphicon-pencil"></span></a></td>
+                {# todo: ? all teachers can remove / edit all students #}
+                <td>
+                    <a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-default">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('users.delete_student',id=student.id) }}"
+                       class="btn btn-danger {% if not is_student_removable(student) %}disabled{% endif %}">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </td>
             </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
