@@ -34,6 +34,10 @@
                     {% else %}
                         {{ lesson.date }}
                     {% endif %}
+                    {% if lesson.teacher.id != group.teacher.id %}
+                        <br/>
+                        {{ lesson.teacher.fio }}
+                    {% endif %}
                 </th>
             {% endfor %}
             <th>оплата</th>
