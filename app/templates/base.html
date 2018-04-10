@@ -9,6 +9,9 @@
 
 {% block scripts %}
     {{ super() }}
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+    {{ moment.lang("ru") }}
     <script src="{{ url_for('static', filename='nav.js') }}"></script>
 {% endblock %}
 

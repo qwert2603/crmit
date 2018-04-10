@@ -2,6 +2,7 @@
 
 {% block page_content %}
     <h3>{{ student.fio }}</h3>
+    <h4>последний визит: {{ moment(student.system_user.last_seen).fromNow(refresh=True) }}</h4>
     <h4>дата рождения: {{ student.birth_date }}</h4>
     <h4>место рождения: {{ student.birth_place }}</h4>
     <h4>регистрация: {{ student.registration_place }}</h4>
