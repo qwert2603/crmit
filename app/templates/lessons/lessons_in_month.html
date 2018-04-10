@@ -40,8 +40,10 @@
                     {% endif %}
                 </th>
             {% endfor %}
-            <th>оплата</th>
-            <th>нал.</th>
+            {% if write_mode %}
+                <th>оплата</th>
+                <th>нал.</th>
+            {% endif %}
         </tr>
         {% for student_in_group in students_in_group %}
             <tr>
@@ -54,32 +56,34 @@
                                {% if not write_mode %}disabled{% endif %}>
                     </td>
                 {% endfor %}
-                {# todo: ? hide all info about payments if not write mode#}
-                <td>
-                    {% if confirmed.get(student_in_group.id) %}
-                        {{ payments.get(student_in_group.id, 0) }} /
-                        {{ group.section.price - student_in_group.discount }}
-                        <span style="color: green; ">(подтв.)</span>
-                    {% else %}
-                        {% if write_mode %}
-                            <input max="{{ group.section.price - student_in_group.discount }}" min="0" form="save_form"
-                                   type="number" name="p_{{ student_in_group.id }}"
-                                   value="{{ payments.get(student_in_group.id, 0) }}">
+                {% if write_mode %}
+                    <td>
+                        {% if confirmed.get(student_in_group.id) %}
+                            {{ payments.get(student_in_group.id, 0) }} /
+                            {{ group.section.price - student_in_group.discount }}
+                            <span style="color: green; ">(подтв.)</span>
                         {% else %}
-                            {{ payments.get(student_in_group.id, 0) }}
+                            {% if write_mode %}
+                                <input max="{{ group.section.price - student_in_group.discount }}" min="0"
+                                       form="save_form"
+                                       type="number" name="p_{{ student_in_group.id }}"
+                                       value="{{ payments.get(student_in_group.id, 0) }}">
+                            {% else %}
+                                {{ payments.get(student_in_group.id, 0) }}
+                            {% endif %}
+                            / {{ group.section.price - student_in_group.discount }}
                         {% endif %}
-                        / {{ group.section.price - student_in_group.discount }}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if confirmed.get(student_in_group.id) %}
-                        <input type="checkbox" disabled {% if cash[student_in_group.id] %}checked{% endif %}>
-                    {% else %}
-                        <input form="save_form" type="checkbox" name="c_{{ student_in_group.id }}"
-                               {% if cash.get(student_in_group.id, True) %}checked{% endif %}
-                               {% if not write_mode %}disabled{% endif %}>
-                    {% endif %}
-                </td>
+                    </td>
+                    <td>
+                        {% if confirmed.get(student_in_group.id) %}
+                            <input type="checkbox" disabled {% if cash[student_in_group.id] %}checked{% endif %}>
+                        {% else %}
+                            <input form="save_form" type="checkbox" name="c_{{ student_in_group.id }}"
+                                   {% if cash.get(student_in_group.id, True) %}checked{% endif %}
+                                   {% if not write_mode %}disabled{% endif %}>
+                        {% endif %}
+                    </td>
+                {% endif %}
             </tr>
         {% endfor %}
         <tr>
@@ -94,8 +98,10 @@
                     {% endif %}
                 </td>
             {% endfor %}
-            <td></td>
-            <td></td>
+            {% if write_mode %}
+                <td></td> {# оплата #}
+                <td></td> {# нал. #}
+            {% endif %}
         </tr>
     </table>
 

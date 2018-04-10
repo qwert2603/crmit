@@ -68,12 +68,14 @@
                         <a href="{{ url_for('payments.payments_in_group',group_id=group.id) }}" class="btn btn-default">&#8381;</a>
                     {% endif %}
                 </td>
-                <td>
-                    <a href="{{ url_for('structure.delete_group',id=group.id) }}"
-                       class="btn btn-danger {% if not is_group_removable(group) %}disabled{% endif %}">
-                        <span class="glyphicon glyphicon-remove"></span>
-                    </a>
-                </td>
+                {% if current_user.system_role.name == role_master_name %}
+                    <td>
+                        <a href="{{ url_for('structure.delete_group',id=group.id) }}"
+                           class="btn btn-danger {% if not is_group_removable(group) %}disabled{% endif %}">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                {% endif %}
             </tr>
         {% else %}
             {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
