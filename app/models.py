@@ -71,6 +71,7 @@ class Parent(db.Model):
     address = db.Column(db.String(255), nullable=False)
     home_phone = db.Column(db.String(255), nullable=True)
     parent_of_students = db.relationship('ParentOfStudent', backref='parent', lazy='dynamic')
+    # notification_type : todo. one or many types?
 
     @property
     def children(self):

@@ -8,6 +8,9 @@ role_student_name = 'ученик'
 
 default_citizenship_name = 'Россия'
 
+notification_sms = 'по смс'  # todo: others?
+notification_vk = 'через ВКонтакте'
+
 
 def create_system_roles():
     role_master = SystemRole(name=role_master_name, details_table_name=Master.__tablename__)
@@ -31,7 +34,7 @@ def create_stub_models():
     create_default_citizenships()
 
     role_master = SystemRole.query.filter_by(name=role_master_name).first()
-    user_master = SystemUser(login='qwert2603', password='12', system_role=role_master)
+    user_master = SystemUser(login='ma1', password='12', system_role=role_master)
     master = Master(fio='Алекс', system_user=user_master)
     db.session.add(user_master)
     db.session.add(master)
