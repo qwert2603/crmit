@@ -21,10 +21,23 @@ class DevConfig(Config):
     DEBUG = True
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db_dev.sqlite')
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@192.168.1.26:5432/crmit'
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = 'natalykanatkina'
+    MAIL_PASSWORD = os.getenv('MAIL_PASSWORD')
+    MAIL_DEFAULT_SENDER = 'natalykanatkina@gmail.com'
 
 
 class ProdConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://kristallp_crm:<psw>@kristallp.mysql/kristallp_crm'  # todo
+    # todo: prod mail
+    MAIL_SERVER = 'smtp.gmail.com'
+    MAIL_PORT = 465
+    MAIL_USE_SSL = True
+    MAIL_USERNAME = 'natalykanatkina'
+    MAIL_PASSWORD = '<pws>'
+    MAIL_DEFAULT_SENDER = 'natalykanatkina@gmail.com'
 
 
 config = {

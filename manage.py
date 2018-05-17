@@ -1,6 +1,8 @@
 #!./venv/bin/python3
 
 import os
+
+from flask_mail import Mail
 from flask_migrate import Migrate
 from app import create_app, db
 import app.models as models
@@ -12,6 +14,7 @@ from app.utils import start_date_of_month, end_date_of_month, number_of_month_fo
 
 app = create_app(os.getenv('FLASK_CONFIG') or 'default')
 migrate = Migrate(app, db)
+mail = Mail(app)
 
 
 @app.shell_context_processor
