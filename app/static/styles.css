@@ -2,3 +2,11 @@
     margin-top: 12px;
     margin-bottom: 12px;
 }
+
+.group_select {
+    width: 200px;
+}
+
+.student_select {
+    width: 320px;
+}

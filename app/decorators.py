@@ -1,5 +1,5 @@
 from functools import wraps
-from flask import abort
+from flask import abort, request
 from flask_login import current_user
 from app.init_model import role_master_name, role_teacher_name
 from app.models import Group
@@ -35,7 +35,8 @@ def check_access_group_write():
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            if not can_user_write_group(current_user, Group.query.get_or_404(kwargs['group_id'])):
+            group_id = kwargs.get('group_id') or request.args.get('group_id', 0, type=int)
+            if not can_user_write_group(current_user, Group.query.get_or_404(group_id)):
                 abort(403)
             return f(*args, **kwargs)
 

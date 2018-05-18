@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+
+{% block title %}уведомления{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>уведомления</h1>
+    </div>
+
+    <form method="get" class="form-group" action="{{ url_for('notifications.send_notification') }}">
+        <div class="group_select">
+            <select class="form-control" id="group_id" name="group_id">
+                {% for group in groups %}
+                    <option value="{{ group.id }}">{{ group.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input class="btn btn-success margined_button" type="submit" value="новое уведомление">
+    </form>
+
+    <form method="get" class="form-group">
+        <div class="form-group">
+            <h3><label for="sender_id">отправитель</label></h3>
+            <select class="form-control" id="sender_id" name="sender_id">
+                <option value="0">все</option>
+                {% for sender in senders %}
+                    <option value="{{ sender.id }}" {% if sender.id==sender_id %}selected{% endif %}>
+                        {{ sender.details.fio }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <input class="btn btn-default" type="submit" value="искать">
+    </form>
+
+    <table class="table">
+        <tr>
+            <th>время</th>
+            <th>отправитель</th>
+            <th>получатель</th>
+            <th>тема</th>
+            <th>сообщение</th>
+            <th>конечный адрес</th>
+        </tr>
+        {% for notification in notifications %}
+            <tr>
+                <td>{{ moment(notification.send_time).format('LLL') }}</td>
+                <td>{{ notification.sender.details.fio }}</td>
+                <td>
+                    {% if notification.receiver_type == receiver_type_group %}
+                        {{ notification.group.name }}
+                    {% elif notification.receiver_type==receiver_type_student_in_group %}
+                        {{ notification.student_in_group.student.fio }}
+                    {% endif %}
+                </td>
+                <td>{{ notification.subject }}</td>
+                <td>{{ notification.body }}</td>
+                <td>{{ notification.receivers }}</td>
+            </tr>
+        {% else %}
+            <h3><i>нет уведомлений</i></h3>
+        {% endfor %}
+
+    </table>
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'notifications.notifications_list', sender_id=sender_id) }}
+    </div>
+{% endblock %}

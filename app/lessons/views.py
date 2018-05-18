@@ -120,6 +120,7 @@ def create_lesson(group_id):
 @check_master_or_teacher
 def delete_lesson(lesson_id, from_list):
     lesson = Lesson.query.get_or_404(lesson_id)
+    # can't use @check_access_group_write() because no 'group_id' param.
     if not can_user_write_group(current_user, lesson.group): abort(403)
     if not is_lesson_removable(lesson): abort(409)
     for a in lesson.attendings_was_not:

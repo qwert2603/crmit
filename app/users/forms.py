@@ -3,7 +3,6 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Valid
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional, Email
 
 from app.form import DateFieldWidget
-from app.init_model import default_citizenship_name
 from app.models import SystemUser, School, Citizenship, Parent
 
 

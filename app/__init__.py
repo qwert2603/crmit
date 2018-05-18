@@ -50,4 +50,7 @@ def create_app(config_name):
     from app.payments import payments as payments_blueprint
     app.register_blueprint(payments_blueprint, url_prefix='/payments')
 
+    from app.notifications import notifications as notifications_blueprint
+    app.register_blueprint(notifications_blueprint, url_prefix='/notifications')
+
     return app

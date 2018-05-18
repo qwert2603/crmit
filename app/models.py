@@ -28,6 +28,7 @@ class SystemUser(UserMixin, db.Model):
     master = db.relationship('Master', backref='system_user', uselist=False)
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)
     student = db.relationship('Student', backref='system_user', uselist=False)
+    notifications = db.relationship('Notification', backref='sender', lazy='dynamic')
 
     @property
     def details(self):
@@ -66,11 +67,12 @@ class Parent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fio = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=True)
+    email = db.Column(db.String(255), nullable=True)  # todo: set None, if string is empty
     passport = db.Column(db.String(255), nullable=False, unique=True)
     address = db.Column(db.String(255), nullable=False)
     home_phone = db.Column(db.String(255), nullable=True)
     parent_of_students = db.relationship('ParentOfStudent', backref='parent', lazy='dynamic')
+
     # notification_type : todo. one or many types?
 
     @property
@@ -288,6 +290,32 @@ class Attending(db.Model):
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False, index=True)
     was = db.Column(db.Boolean, nullable=False, default=False)
     unique = db.UniqueConstraint(student_id, lesson_id)
+
+
+receiver_type_group = 1
+receiver_type_student_in_group = 2
+
+
+class Notification(db.Model):
+    __tablename__ = 'notifications'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, index=True)
+    receiver_type = db.Column(db.Integer, nullable=False, index=True)
+    receiver_id = db.Column(db.Integer, nullable=False, index=True)
+    subject = db.Column(db.Text, nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    send_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    receivers = db.Column(db.Text, nullable=False)
+
+    @property
+    def group(self):
+        if self.receiver_type == receiver_type_group:
+            return Group.query.get(self.receiver_id)
+
+    @property
+    def student_in_group(self):
+        if self.receiver_type == receiver_type_student_in_group:
+            return StudentInGroup.query.get(self.receiver_id)
 
 
 class Candidate(db.Model):
