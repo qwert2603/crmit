@@ -8,9 +8,6 @@ role_student_name = 'ученик'
 
 default_citizenship_name = 'Россия'
 
-notification_sms = 'по смс'  # todo: others?
-notification_vk = 'через ВКонтакте'
-
 
 def create_system_roles():
     role_master = SystemRole(name=role_master_name, details_table_name=Master.__tablename__)

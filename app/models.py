@@ -62,6 +62,15 @@ class Citizenship(db.Model):
     students = db.relationship('Student', backref='citizenship', lazy='dynamic')
 
 
+# int is bit-shift in Parent#notification_types
+# todo: others?
+notification_types_list = [
+    [1, 'email'],
+    [2, 'ВКонтакте'],
+    [3, 'sms']
+]
+
+
 class Parent(db.Model):
     __tablename__ = 'parents'
     id = db.Column(db.Integer, primary_key=True)
@@ -71,9 +80,9 @@ class Parent(db.Model):
     passport = db.Column(db.String(255), nullable=False, unique=True)
     address = db.Column(db.String(255), nullable=False)
     home_phone = db.Column(db.String(255), nullable=True)
+    _vk_id = db.Column(db.String(255), name='vk_id', nullable=True)
+    notification_types = db.Column(db.Integer, nullable=False)
     parent_of_students = db.relationship('ParentOfStudent', backref='parent', lazy='dynamic')
-
-    # notification_type : todo. one or many types?
 
     @property
     def email(self):
@@ -88,10 +97,30 @@ class Parent(db.Model):
             self._email = None
 
     @property
+    def vk_id(self):
+        return self._vk_id
+
+    @vk_id.setter
+    def vk_id(self, new_vk_id):
+        new_vk_id = new_vk_id.strip()
+        if new_vk_id != '':
+            self._vk_id = new_vk_id
+        else:
+            self._vk_id = None
+
+    @property
     def children(self):
         return Student.query \
             .join(ParentOfStudent, ParentOfStudent.student_id == Student.id) \
             .filter(ParentOfStudent.parent_id == self.id)
+
+    @property
+    def notification_types_string(self):
+        result = list()
+        for nt in notification_types_list:
+            if self.notification_types & (1 << nt[0] - 1) != 0:
+                result.append(nt[1])
+        return result
 
 
 class Student(db.Model):

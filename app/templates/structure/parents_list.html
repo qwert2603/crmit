@@ -16,7 +16,9 @@
             <th>email</th>
             <th>адрес</th>
             <th>домашний телефон</th>
+            <th>ВКонтакте</th>
             <th>дети</th>
+            <th>уведомления</th>
             <th></th>
             <th></th>
         </tr>
@@ -27,6 +29,7 @@
                 <td>{{ parent.email or '' }}</td>
                 <td>{{ parent.address }}</td>
                 <td>{{ parent.home_phone or '' }}</td>
+                <td>{{ parent.vk_id or '' }}</td>
                 <td>
                     <ul>
                         {% for student in parent.children.all() %}
@@ -37,7 +40,14 @@
                     </ul>
                 </td>
                 <td>
-                    {# todo: ? all teachers can edit all parents #}
+                    <ul>
+                        {% for notification_type in parent.notification_types_string %}
+                            <li>{{ notification_type }}</li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                {# todo: ? all teachers can edit all parents #}
+                <td>
                     <a href="{{ url_for('structure.edit_parent',id=parent.id) }}" class="btn btn-default"><span
                             class="glyphicon glyphicon-pencil"></span></a>
                 </td>
