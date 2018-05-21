@@ -8,7 +8,7 @@ from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentO
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
 from app.users.forms import create_new_parent_id
-from app.utils import generate_login, password_from_date
+from app.utils import generate_login, password_from_date, notification_types_list_to_int
 
 
 @users.route('/register/master', methods=['GET', 'POST'])
@@ -66,14 +66,16 @@ def register_student():
         if form.mother.data == create_new_parent_id:
             mother = Parent(fio=form.m_fio.data, phone=form.m_phone.data, email=form.m_email.data,
                             passport=form.m_passport.data, address=form.m_address.data,
-                            home_phone=form.m_home_phone.data)
+                            home_phone=form.m_home_phone.data, vk_id=form.m_vk_id.data,
+                            notification_types=notification_types_list_to_int(form.m_notification_types.data))
             db.session.add(mother)
             db.session.add(ParentOfStudent(student=student, parent=mother, is_mother=True))
             flash('родитель {} создан'.format(form.m_fio.data))
         if form.father.data == create_new_parent_id:
             father = Parent(fio=form.f_fio.data, phone=form.f_phone.data, email=form.f_email.data,
                             passport=form.f_passport.data, address=form.f_address.data,
-                            home_phone=form.f_home_phone.data)
+                            home_phone=form.f_home_phone.data, vk_id=form.f_vk_id.data,
+                            notification_types=notification_types_list_to_int(form.f_notification_types.data))
             db.session.add(father)
             db.session.add(ParentOfStudent(student=student, parent=father, is_mother=False))
             flash('родитель {} создан'.format(form.f_fio.data))

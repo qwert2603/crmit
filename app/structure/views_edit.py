@@ -6,7 +6,8 @@ from app.structure import structure
 from app.structure.forms import CitizenshipForm, SectionForm, ParentForm, SchoolForm, GroupForm
 from app.structure.utils import delete_unconfirmed_payments_out_of_months_period, \
     correct_student_enter_exit_month_to_group_period
-from app.utils import year_from_month_number, month_from_month_number
+from app.utils import year_from_month_number, month_from_month_number, notification_types_list_to_int, \
+    notification_types_int_to_list
 
 
 @structure.route('/section/<int:id>', methods=['GET', 'POST'])
@@ -70,7 +71,7 @@ def edit_parent(id):
         parent.address = form.address.data
         parent.home_phone = form.home_phone.data
         parent.vk_id = form.vk_id.data
-        parent.notification_types = form.notification_types_int
+        parent.notification_types = notification_types_list_to_int(form.notification_types.data)
         flash('родитель {} изменен'.format(form.fio.data))
         return redirect(url_for('.parents_list'))
     if not form.is_submitted():
@@ -81,7 +82,7 @@ def edit_parent(id):
         form.address.data = parent.address
         form.home_phone.data = parent.home_phone
         form.vk_id.data = parent.vk_id
-        form.notification_types_int = parent.notification_types
+        form.notification_types.data = notification_types_int_to_list(parent.notification_types)
     return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=False)
 
 

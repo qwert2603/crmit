@@ -6,6 +6,7 @@ from app.decorators import check_master, check_master_or_teacher
 from app.models import Citizenship, Section, Parent, School, Group
 from app.structure import structure
 from app.structure.forms import CitizenshipForm, SectionForm, ParentForm, SchoolForm, GroupForm
+from app.utils import notification_types_list_to_int
 
 
 @structure.route('/citizenship', methods=['GET', 'POST'])
@@ -52,7 +53,8 @@ def add_parent():
     if form.validate_on_submit():
         db.session.add(Parent(fio=form.fio.data, phone=form.phone.data, email=form.email.data,
                               passport=form.passport.data, address=form.address.data, home_phone=form.home_phone.data,
-                              vk_id=form.vk_id.data, notification_types=form.notification_types_int))
+                              vk_id=form.vk_id.data,
+                              notification_types=notification_types_list_to_int(form.notification_types.data)))
         flash('родитель {} создан'.format(form.fio.data))
         return redirect(url_for('main.index'))
     return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=True)

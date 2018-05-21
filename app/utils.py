@@ -135,3 +135,20 @@ def can_user_write_group(system_user, group):
         if system_user.teacher.id == group.teacher_id:
             return True
     return False
+
+
+def notification_types_list_to_int(nt_list):
+    result = 0
+    for i in nt_list:
+        if i >= 0:
+            result += 1 << i
+    return result
+
+
+def notification_types_int_to_list(nt_int):
+    result = []
+    from app.models import notification_types_list
+    for i in range(0, len(notification_types_list)):
+        if nt_int & (1 << i) != 0:
+            result.append(i)
+    return result

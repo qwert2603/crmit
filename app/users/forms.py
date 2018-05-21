@@ -1,9 +1,11 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, SelectField, Label
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, SelectField, Label, \
+    SelectMultipleField
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional, Email
 
 from app.form import DateFieldWidget
-from app.models import SystemUser, School, Citizenship, Parent
+from app.models import SystemUser, School, Citizenship, Parent, notification_types_list
+from app.utils import notification_types_list_to_int
 
 
 class LoginForm(FlaskForm):
@@ -92,6 +94,8 @@ class RegistrationStudentForm(RegistrationForm):
     m_passport = StringField('новая мать: паспорт', validators=[Length(0, 255)])
     m_address = StringField('новая мать: адрес', validators=[Length(0, 255)])
     m_home_phone = StringField('новая мать: домашний телефон', validators=[Length(0, 32)])
+    m_vk_id = StringField('новая мать: ВКонтакте', validators=[Optional(), Length(0, 32)])
+    m_notification_types = SelectMultipleField('новая мать: уведомления', coerce=int, validators=[Optional()])
 
     f_fio = StringField('новый отец: фио',
                         validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
@@ -100,6 +104,8 @@ class RegistrationStudentForm(RegistrationForm):
     f_passport = StringField('новый отец: паспорт', validators=[Length(0, 255)])
     f_address = StringField('новый отец: адрес', validators=[Length(0, 255)])
     f_home_phone = StringField('новый отец: домашний телефон', validators=[Length(0, 32)])
+    f_vk_id = StringField('новый отец: ВКонтакте', validators=[Optional(), Length(0, 32)])
+    f_notification_types = SelectMultipleField('новый отец: уведомления', coerce=int, validators=[Optional()])
 
     def required_fields_values_new_mother(self):
         return [self.m_fio.data, self.m_phone.data, self.m_passport.data, self.m_address.data]
@@ -136,6 +142,8 @@ class RegistrationStudentForm(RegistrationForm):
             del self.fio
             del self.password
             del self.password_confirm
+            self.m_notification_types.choices = [[-1, 'нет']] + notification_types_list
+            self.f_notification_types.choices = [[-1, 'нет']] + notification_types_list
 
     def validate_school(self, field):
         if field.data <= 0:
@@ -159,6 +167,20 @@ class RegistrationStudentForm(RegistrationForm):
             if Parent.query.filter_by(passport=self.m_passport.data).first():
                 raise ValidationError('паспорт матери уже зарегистрирован!')
 
+    def validate_m_notification_types(self, field):
+        if self.mother.data != create_new_parent_id: return
+        ni_ints = notification_types_list_to_int(field.data)
+        if ni_ints & (1 << 0) != 0 and self.m_email.data.strip() == '': raise ValidationError('укажите email!')
+        if ni_ints & (1 << 1) != 0 and self.m_vk_id.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
+        # don't check phone here because it is required.
+
+    def validate_f_notification_types(self, field):
+        if self.father.data != create_new_parent_id: return
+        ni_ints = notification_types_list_to_int(field.data)
+        if ni_ints & (1 << 0) != 0 and self.f_email.data.strip() == '': raise ValidationError('укажите email!')
+        if ni_ints & (1 << 1) != 0 and self.f_vk_id.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
+        # don't check phone here because it is required.
+
     def delete_new_parents_fields(self):
         del self.m_fio
         del self.m_phone
@@ -166,9 +188,13 @@ class RegistrationStudentForm(RegistrationForm):
         del self.m_passport
         del self.m_address
         del self.m_home_phone
+        del self.m_vk_id
+        del self.m_notification_types
         del self.f_fio
         del self.f_phone
         del self.f_email
         del self.f_passport
         del self.f_address
         del self.f_home_phone
+        del self.f_vk_id
+        del self.f_notification_types
