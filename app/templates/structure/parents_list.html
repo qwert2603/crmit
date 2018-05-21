@@ -24,9 +24,9 @@
             <tr>
                 <td>{{ parent.fio }}</td>
                 <td>{{ parent.phone }}</td>
-                <td>{{ parent.email }}</td>
+                <td>{{ parent.email or '' }}</td>
                 <td>{{ parent.address }}</td>
-                <td>{{ parent.home_phone }}</td>
+                <td>{{ parent.home_phone or '' }}</td>
                 <td>
                     <ul>
                         {% for student in parent.children.all() %}

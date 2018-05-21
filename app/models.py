@@ -67,13 +67,25 @@ class Parent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fio = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(255), nullable=False)
-    email = db.Column(db.String(255), nullable=True)  # todo: set None, if string is empty
+    _email = db.Column(db.String(255), name='email', nullable=True)
     passport = db.Column(db.String(255), nullable=False, unique=True)
     address = db.Column(db.String(255), nullable=False)
     home_phone = db.Column(db.String(255), nullable=True)
     parent_of_students = db.relationship('ParentOfStudent', backref='parent', lazy='dynamic')
 
     # notification_type : todo. one or many types?
+
+    @property
+    def email(self):
+        return self._email
+
+    @email.setter
+    def email(self, new_email):
+        new_email = new_email.strip()
+        if new_email != '':
+            self._email = new_email
+        else:
+            self._email = None
 
     @property
     def children(self):
