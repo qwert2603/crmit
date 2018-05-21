@@ -51,7 +51,8 @@ def add_parent():
     form = ParentForm()
     if form.validate_on_submit():
         db.session.add(Parent(fio=form.fio.data, phone=form.phone.data, email=form.email.data,
-                              passport=form.passport.data, address=form.address.data, home_phone=form.home_phone.data))
+                              passport=form.passport.data, address=form.address.data, home_phone=form.home_phone.data,
+                              vk_id=form.vk_id.data, notification_types=form.notification_types_int))
         flash('родитель {} создан'.format(form.fio.data))
         return redirect(url_for('main.index'))
     return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=True)

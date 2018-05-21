@@ -65,9 +65,9 @@ class Citizenship(db.Model):
 # int is bit-shift in Parent#notification_types
 # todo: others?
 notification_types_list = [
-    [1, 'email'],
-    [2, 'ВКонтакте'],
-    [3, 'sms']
+    [0, 'email'],
+    [1, 'ВКонтакте'],
+    [2, 'sms']
 ]
 
 
@@ -118,7 +118,7 @@ class Parent(db.Model):
     def notification_types_string(self):
         result = list()
         for nt in notification_types_list:
-            if self.notification_types & (1 << nt[0] - 1) != 0:
+            if self.notification_types & (1 << nt[0]) != 0:
                 result.append(nt[1])
         return result
 

@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label
+from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label, SelectMultipleField
 from wtforms.validators import Length, DataRequired, Email, Regexp, Optional
-from app.models import Group, Section, Citizenship, School, Parent, Teacher
+from app.models import Group, Section, Citizenship, School, Parent, Teacher, notification_types_list
 from app.structure.utils import max_start_month_number_group, min_end_month_number_group
 from app.utils import month_names, number_of_month
 
@@ -12,7 +12,9 @@ class ParentForm(FlaskForm):
     email = StringField('email', validators=[Optional(), Length(0, 128), Email()])
     passport = StringField('паспорт', validators=[Length(1, 255)])
     address = StringField('адрес', validators=[Length(1, 255)])
-    home_phone = StringField('домашний телефон', validators=[Length(0, 32)])
+    home_phone = StringField('домашний телефон', validators=[Optional(), Length(0, 32)])
+    vk_id = StringField('ВКонтакте', validators=[Optional(), Length(0, 32)])
+    notification_types = SelectMultipleField('уведомления', coerce=int, validators=[Optional()])
     submit = SubmitField('создать')
 
     def __init__(self, parent=None, *args, **kwargs):
@@ -20,11 +22,33 @@ class ParentForm(FlaskForm):
         self.parent = parent
         if parent is not None:
             self.submit.label = Label(self.submit.id, 'сохранить')
+        self.notification_types.choices = [[-1, 'нет']] + notification_types_list
 
     def validate_passport(self, field):
         if (self.parent is None or self.passport.data != self.parent.passport) \
                 and Parent.query.filter_by(passport=field.data).first():
             raise ValidationError('этот паспорт уже зарегистрирован!')
+
+    def validate_notification_types(self, field):
+        ni_ints = self.notification_types_int
+        if ni_ints & (1 << 0) != 0 and self.email.data.strip() == '': raise ValidationError('укажите email!')
+        if ni_ints & (1 << 1) != 0 and self.vk_id.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
+        # don't check phone here because it is required.
+
+    @property
+    def notification_types_int(self):
+        result = 0
+        for i in self.notification_types.data:
+            if i >= 0: result += 1 << i
+        return result
+
+    @notification_types_int.setter
+    def notification_types_int(self, ni_ints):
+        result = []
+        for i in range(0, len(notification_types_list)):
+            if ni_ints & (1 << i) != 0:
+                result.append(i)
+        self.notification_types.data = result
 
 
 class SchoolForm(FlaskForm):
