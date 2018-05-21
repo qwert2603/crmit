@@ -39,7 +39,7 @@ def register_teacher():
         db.session.add(user_teacher)
         db.session.add(teacher)
         flash('преподаватель {} создан.'.format(form.login.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('main.index'))  # todo: redirect to list from all forms.
     return render_template('users/form_register_edit.html', form=form, class_name='преподавателя', creating=True)
 
 
@@ -80,5 +80,5 @@ def register_student():
         db.session.add(user_student)
         db.session.add(student)
         flash('ученик {} создан.'.format(fio))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('users.students_list'))
     return render_template('users/form_register_edit.html', form=form, class_name='ученика', creating=True)

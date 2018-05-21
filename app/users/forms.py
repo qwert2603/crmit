@@ -131,6 +131,7 @@ class RegistrationStudentForm(RegistrationForm):
             self.system_user = student.system_user
             self.delete_new_parents_fields()
         else:
+            # this fields are generated from last_name / first_name / second_name.
             del self.login
             del self.fio
             del self.password
