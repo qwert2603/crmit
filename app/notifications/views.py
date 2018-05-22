@@ -5,11 +5,10 @@ from sqlalchemy import or_
 from app import db
 from app.decorators import check_master_or_teacher, check_access_group_write
 from app.init_model import role_master_name
-from app.mail import send_email
-from app.models import Notification, SystemUser, Group, receiver_type_group, receiver_type_student_in_group, \
-    StudentInGroup
+from app.models import Notification, SystemUser, Group, receiver_type_group, receiver_type_student_in_group
 from app.notifications import notifications
 from app.notifications.forms import SendNotificationForm
+from app.notifications.utils import parents_of_student_in_group, parents_of_group, do_send_notification
 
 
 @notifications.route("/list")
@@ -46,23 +45,16 @@ def send_notification():
         if receiver_id == 0:
             receiver_id = group_id
             receiver_type = receiver_type_group
-            parents = []
-            for student in group.students:
-                for parent in student.parents:
-                    parents.append(parent)
+            parents = parents_of_group(receiver_id)
         else:
             receiver_type = receiver_type_student_in_group
-            parents = StudentInGroup.query.get_or_404(receiver_id).student.parents.all()
-        recipients = []
-        for parent in parents:
-            if parent.email is not None:
-                recipients.append(parent.email)
-        if len(recipients) > 0:
-            send_email(subject, body, recipients)
+            parents = parents_of_student_in_group(receiver_id)
+        receivers = do_send_notification(parents, subject, body)
+        if receivers is not None:
             db.session.add(Notification(sender_id=current_user.id, receiver_type=receiver_type, receiver_id=receiver_id,
-                                        subject=subject, body=body, receivers='\n'.join(recipients)))
+                                        subject=subject, body=body, receivers=receivers))
             flash('уведомление отправлено!')
         else:
-            flash('уведомление не отправлено, так как у родителей не указана почта!')
+            flash('уведомление не отправлено, так как у родителей не выбраны типы уведомлений!')
         return redirect(url_for('.notifications_list'))
     return render_template('notifications/send.html', group=group, form=form)

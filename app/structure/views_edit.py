@@ -70,7 +70,7 @@ def edit_parent(id):
         parent.passport = form.passport.data
         parent.address = form.address.data
         parent.home_phone = form.home_phone.data
-        parent.vk_id = form.vk_id.data
+        parent.vk_link = form.vk_link.data
         parent.notification_types = notification_types_list_to_int(form.notification_types.data)
         flash('родитель {} изменен'.format(form.fio.data))
         return redirect(url_for('.parents_list'))
@@ -81,7 +81,7 @@ def edit_parent(id):
         form.passport.data = parent.passport
         form.address.data = parent.address
         form.home_phone.data = parent.home_phone
-        form.vk_id.data = parent.vk_id
+        form.vk_link.data = parent.vk_link
         form.notification_types.data = notification_types_int_to_list(parent.notification_types)
     return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=False)
 

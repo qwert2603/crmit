@@ -62,13 +62,17 @@ class Citizenship(db.Model):
     students = db.relationship('Student', backref='citizenship', lazy='dynamic')
 
 
-# int is bit-shift in Parent#notification_types
 # todo: others?
+shift_email = 0
+shift_vk = 1
+shift_sms = 2
 notification_types_list = [
-    [0, 'email'],
-    [1, 'ВКонтакте'],
-    [2, 'sms']
+    [shift_email, 'email'],
+    [shift_vk, 'ВКонтакте'],
+    [shift_sms, 'sms']
 ]
+
+vk_link_prefix = 'vk.com/'
 
 
 class Parent(db.Model):
@@ -80,7 +84,7 @@ class Parent(db.Model):
     passport = db.Column(db.String(255), nullable=False, unique=True)
     address = db.Column(db.String(255), nullable=False)
     _home_phone = db.Column(db.String(255), name='home_phone', nullable=True)
-    _vk_id = db.Column(db.String(255), name='vk_id', nullable=True)
+    _vk_link = db.Column(db.String(255), name='vk_link', nullable=True)
     notification_types = db.Column(db.Integer, nullable=False)
     parent_of_students = db.relationship('ParentOfStudent', backref='parent', lazy='dynamic')
 
@@ -97,16 +101,16 @@ class Parent(db.Model):
             self._email = None
 
     @property
-    def vk_id(self):
-        return self._vk_id
+    def vk_link(self):
+        return self._vk_link
 
-    @vk_id.setter
-    def vk_id(self, new_vk_id):
-        new_vk_id = new_vk_id.strip()
-        if new_vk_id != '':
-            self._vk_id = new_vk_id
+    @vk_link.setter
+    def vk_link(self, new_vk_link):
+        new_vk_link = new_vk_link.strip()
+        if new_vk_link != '':
+            self._vk_link = new_vk_link
         else:
-            self._vk_id = None
+            self._vk_link = None
 
     @property
     def home_phone(self):

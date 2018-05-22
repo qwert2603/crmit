@@ -3,8 +3,8 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Valid
     SelectMultipleField
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional, Email
 
-from app.form import DateFieldWidget
-from app.models import SystemUser, School, Citizenship, Parent, notification_types_list
+from app.form import DateFieldWidget, VkLink
+from app.models import SystemUser, School, Citizenship, Parent, notification_types_list, shift_email, shift_vk
 from app.utils import notification_types_list_to_int
 
 
@@ -94,7 +94,7 @@ class RegistrationStudentForm(RegistrationForm):
     m_passport = StringField('новая мать: паспорт', validators=[Length(0, 255)])
     m_address = StringField('новая мать: адрес', validators=[Length(0, 255)])
     m_home_phone = StringField('новая мать: домашний телефон', validators=[Length(0, 32)])
-    m_vk_id = StringField('новая мать: ВКонтакте', validators=[Optional(), Length(0, 32)])
+    m_vk_link = StringField('новая мать: ВКонтакте', validators=[Optional(), Length(0, 64), VkLink()])
     m_notification_types = SelectMultipleField('новая мать: уведомления', coerce=int, validators=[Optional()])
 
     f_fio = StringField('новый отец: фио',
@@ -104,7 +104,7 @@ class RegistrationStudentForm(RegistrationForm):
     f_passport = StringField('новый отец: паспорт', validators=[Length(0, 255)])
     f_address = StringField('новый отец: адрес', validators=[Length(0, 255)])
     f_home_phone = StringField('новый отец: домашний телефон', validators=[Length(0, 32)])
-    f_vk_id = StringField('новый отец: ВКонтакте', validators=[Optional(), Length(0, 32)])
+    f_vk_link = StringField('новый отец: ВКонтакте', validators=[Optional(), Length(0, 64), VkLink()])
     f_notification_types = SelectMultipleField('новый отец: уведомления', coerce=int, validators=[Optional()])
 
     def required_fields_values_new_mother(self):
@@ -170,15 +170,15 @@ class RegistrationStudentForm(RegistrationForm):
     def validate_m_notification_types(self, field):
         if self.mother.data != create_new_parent_id: return
         ni_ints = notification_types_list_to_int(field.data)
-        if ni_ints & (1 << 0) != 0 and self.m_email.data.strip() == '': raise ValidationError('укажите email!')
-        if ni_ints & (1 << 1) != 0 and self.m_vk_id.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
+        if ni_ints & (1 << shift_email) != 0 and self.m_email.data.strip() == '': raise ValidationError('укажите email!')
+        if ni_ints & (1 << shift_vk) != 0 and self.m_vk_link.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
         # don't check phone here because it is required.
 
     def validate_f_notification_types(self, field):
         if self.father.data != create_new_parent_id: return
         ni_ints = notification_types_list_to_int(field.data)
-        if ni_ints & (1 << 0) != 0 and self.f_email.data.strip() == '': raise ValidationError('укажите email!')
-        if ni_ints & (1 << 1) != 0 and self.f_vk_id.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
+        if ni_ints & (1 << shift_email) != 0 and self.f_email.data.strip() == '': raise ValidationError('укажите email!')
+        if ni_ints & (1 << shift_vk) != 0 and self.f_vk_link.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
         # don't check phone here because it is required.
 
     def delete_new_parents_fields(self):
@@ -188,7 +188,7 @@ class RegistrationStudentForm(RegistrationForm):
         del self.m_passport
         del self.m_address
         del self.m_home_phone
-        del self.m_vk_id
+        del self.m_vk_link
         del self.m_notification_types
         del self.f_fio
         del self.f_phone
@@ -196,5 +196,5 @@ class RegistrationStudentForm(RegistrationForm):
         del self.f_passport
         del self.f_address
         del self.f_home_phone
-        del self.f_vk_id
+        del self.f_vk_link
         del self.f_notification_types

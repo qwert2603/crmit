@@ -1,7 +1,10 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label, SelectMultipleField
 from wtforms.validators import Length, DataRequired, Email, Regexp, Optional
-from app.models import Group, Section, Citizenship, School, Parent, Teacher, notification_types_list
+
+from app.form import VkLink
+from app.models import Group, Section, Citizenship, School, Parent, Teacher, notification_types_list, shift_email, \
+    shift_vk
 from app.structure.utils import max_start_month_number_group, min_end_month_number_group
 from app.utils import month_names, number_of_month, notification_types_list_to_int
 
@@ -13,7 +16,7 @@ class ParentForm(FlaskForm):
     passport = StringField('паспорт', validators=[Length(1, 255)])
     address = StringField('адрес', validators=[Length(1, 255)])
     home_phone = StringField('домашний телефон', validators=[Optional(), Length(0, 32)])
-    vk_id = StringField('ВКонтакте', validators=[Optional(), Length(0, 32)])
+    vk_link = StringField('ВКонтакте', validators=[Optional(), Length(0, 64), VkLink()])
     notification_types = SelectMultipleField('уведомления', coerce=int, validators=[Optional()])
     submit = SubmitField('создать')
 
@@ -31,8 +34,8 @@ class ParentForm(FlaskForm):
 
     def validate_notification_types(self, field):
         ni_ints = notification_types_list_to_int(self.notification_types.data)
-        if ni_ints & (1 << 0) != 0 and self.email.data.strip() == '': raise ValidationError('укажите email!')
-        if ni_ints & (1 << 1) != 0 and self.vk_id.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
+        if ni_ints & (1 << shift_email) != 0 and self.email.data.strip() == '': raise ValidationError('укажите email!')
+        if ni_ints & (1 << shift_vk) != 0 and self.vk_link.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
         # don't check phone here because it is required.
 
 

@@ -53,7 +53,7 @@ def add_parent():
     if form.validate_on_submit():
         db.session.add(Parent(fio=form.fio.data, phone=form.phone.data, email=form.email.data,
                               passport=form.passport.data, address=form.address.data, home_phone=form.home_phone.data,
-                              vk_id=form.vk_id.data,
+                              vk_link=form.vk_link.data,
                               notification_types=notification_types_list_to_int(form.notification_types.data)))
         flash('родитель {} создан'.format(form.fio.data))
         return redirect(url_for('.parents_list'))
