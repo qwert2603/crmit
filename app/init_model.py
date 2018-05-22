@@ -32,21 +32,22 @@ def create_stub_models():
 
     role_master = SystemRole.query.filter_by(name=role_master_name).first()
     user_master = SystemUser(login='ma1', password='12', system_role=role_master)
-    master = Master(fio='Алекс', system_user=user_master)
+    master = Master(fio='Руководитель Иван Иванович', system_user=user_master)
     db.session.add(user_master)
     db.session.add(master)
 
     role_teacher = SystemRole.query.filter_by(name=role_teacher_name).first()
     user_teacher = SystemUser(login='te1', password='12', system_role=role_teacher)
-    teacher = Teacher(fio='учитель первый', system_user=user_teacher)
+    teacher = Teacher(fio='Учитель Петр Петрович', system_user=user_teacher)
     db.session.add(user_teacher)
     db.session.add(teacher)
 
     school = School(name='школа №42')
 
     role_student = SystemRole.query.filter_by(name=role_student_name).first()
-    user_student = SystemUser(login='st1', password='12', system_role=role_student)
-    student = Student(fio='ученик первый', system_user=user_student, birth_place='birth place', birth_date='2002-08-31',
+    user_student = SystemUser(login='st1', password='31082002', system_role=role_student)
+    student = Student(fio='Ученик Алексей Алексеевич', system_user=user_student, birth_place='birth place',
+                      birth_date='2002-08-31',
                       registration_place='reg place', actual_address='act addr', citizenship_id=1, school=school)
     db.session.add(user_student)
     db.session.add(student)
