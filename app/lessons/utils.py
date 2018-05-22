@@ -77,5 +77,5 @@ def dates_of_lessons_dict(group_id):
     rows = db.engine.execute(sql)
     result = dict()
     for row in rows:
-        result[number_of_month(row['year'], row['month'] - 1)] = row['dates']
+        result[number_of_month(row[0], row[1] - 1)] = row[2]
     return result
