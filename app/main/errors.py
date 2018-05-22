@@ -10,7 +10,7 @@ def error404(e):
 
 @main.app_errorhandler(500)
 def error500(e):
-    return render_template('500.html'), 500
+    return render_template('500.html', e=e, type_e=type(e)), 500
 
 
 @main.app_errorhandler(403)

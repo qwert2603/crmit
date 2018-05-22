@@ -24,6 +24,7 @@ class VkLink(object):
         return True
 
 
+# todo:
 class Phone(object):
     def __call__(self, form, field, message=None):
         regex = re.compile('^89[0-9]{9}$', 0)
