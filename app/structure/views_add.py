@@ -3,7 +3,7 @@ from flask_login import login_required
 
 from app import db
 from app.decorators import check_master, check_master_or_teacher
-from app.models import Citizenship, Section, Parent, School, Group
+from app.models import Citizenship, Section, Parent, School, Group, vk_link_prefix
 from app.structure import structure
 from app.structure.forms import CitizenshipForm, SectionForm, ParentForm, SchoolForm, GroupForm
 from app.utils import notification_types_list_to_int
@@ -57,6 +57,8 @@ def add_parent():
                               notification_types=notification_types_list_to_int(form.notification_types.data)))
         flash('родитель {} создан'.format(form.fio.data))
         return redirect(url_for('.parents_list'))
+    if not form.is_submitted():
+        form.vk_link = vk_link_prefix  # todo:test and add this to creating student.
     return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=True)
 
 
