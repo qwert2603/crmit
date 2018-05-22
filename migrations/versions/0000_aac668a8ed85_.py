@@ -1,15 +1,15 @@
 """empty message
 
-Revision ID: 7e318f1226c4
+Revision ID: aac668a8ed85
 Revises: 
-Create Date: 2018-01-17 12:11:28.995873
+Create Date: 2018-05-22 17:08:02.238255
 
 """
 from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision = '7e318f1226c4'
+revision = 'aac668a8ed85'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -37,6 +37,8 @@ def upgrade():
                     sa.Column('passport', sa.String(length=255), nullable=False),
                     sa.Column('address', sa.String(length=255), nullable=False),
                     sa.Column('home_phone', sa.String(length=255), nullable=True),
+                    sa.Column('vk_link', sa.String(length=255), nullable=True),
+                    sa.Column('notification_types', sa.Integer(), nullable=False),
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('passport')
                     )
@@ -96,6 +98,21 @@ def upgrade():
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('system_user_id')
                     )
+    op.create_table('notifications',
+                    sa.Column('id', sa.Integer(), nullable=False),
+                    sa.Column('sender_id', sa.Integer(), nullable=False),
+                    sa.Column('receiver_type', sa.Integer(), nullable=False),
+                    sa.Column('receiver_id', sa.Integer(), nullable=False),
+                    sa.Column('subject', sa.Text(), nullable=False),
+                    sa.Column('body', sa.Text(), nullable=False),
+                    sa.Column('send_time', sa.DateTime(), nullable=False),
+                    sa.Column('receivers', sa.Text(), nullable=False),
+                    sa.ForeignKeyConstraint(['sender_id'], ['system_users.id'], ),
+                    sa.PrimaryKeyConstraint('id')
+                    )
+    op.create_index(op.f('ix_notifications_receiver_id'), 'notifications', ['receiver_id'], unique=False)
+    op.create_index(op.f('ix_notifications_receiver_type'), 'notifications', ['receiver_type'], unique=False)
+    op.create_index(op.f('ix_notifications_sender_id'), 'notifications', ['sender_id'], unique=False)
     op.create_table('students',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('fio', sa.String(length=255), nullable=False),
@@ -127,12 +144,15 @@ def upgrade():
                     sa.Column('name', sa.String(length=255), nullable=False),
                     sa.Column('section_id', sa.Integer(), nullable=False),
                     sa.Column('teacher_id', sa.Integer(), nullable=False),
-                    sa.Column('start_year', sa.Integer(), nullable=False),
+                    sa.Column('start_month', sa.Integer(), nullable=False),
+                    sa.Column('end_month', sa.Integer(), nullable=False),
                     sa.ForeignKeyConstraint(['section_id'], ['sections.id'], ),
                     sa.ForeignKeyConstraint(['teacher_id'], ['teachers.id'], ),
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('name')
                     )
+    op.create_index(op.f('ix_groups_end_month'), 'groups', ['end_month'], unique=False)
+    op.create_index(op.f('ix_groups_start_month'), 'groups', ['start_month'], unique=False)
     op.create_table('parent_of_students',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('student_id', sa.Integer(), nullable=False),
@@ -154,11 +174,14 @@ def upgrade():
                     sa.ForeignKeyConstraint(['teacher_id'], ['teachers.id'], ),
                     sa.PrimaryKeyConstraint('id')
                     )
+    op.create_index(op.f('ix_lessons_date'), 'lessons', ['date'], unique=False)
+    op.create_index(op.f('ix_lessons_group_id'), 'lessons', ['group_id'], unique=False)
+    op.create_index(op.f('ix_lessons_teacher_id'), 'lessons', ['teacher_id'], unique=False)
     op.create_table('student_in_groups',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('student_id', sa.Integer(), nullable=False),
                     sa.Column('group_id', sa.Integer(), nullable=False),
-                    sa.Column('discount', sa.Integer(), nullable=True),
+                    sa.Column('discount', sa.Integer(), nullable=False),
                     sa.Column('enter_month', sa.Integer(), nullable=False),
                     sa.Column('exit_month', sa.Integer(), nullable=False),
                     sa.ForeignKeyConstraint(['group_id'], ['groups.id'], ),
@@ -166,6 +189,10 @@ def upgrade():
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('student_id', 'group_id')
                     )
+    op.create_index(op.f('ix_student_in_groups_enter_month'), 'student_in_groups', ['enter_month'], unique=False)
+    op.create_index(op.f('ix_student_in_groups_exit_month'), 'student_in_groups', ['exit_month'], unique=False)
+    op.create_index(op.f('ix_student_in_groups_group_id'), 'student_in_groups', ['group_id'], unique=False)
+    op.create_index(op.f('ix_student_in_groups_student_id'), 'student_in_groups', ['student_id'], unique=False)
     op.create_table('attendings',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('lesson_id', sa.Integer(), nullable=False),
@@ -176,6 +203,8 @@ def upgrade():
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('student_id', 'lesson_id')
                     )
+    op.create_index(op.f('ix_attendings_lesson_id'), 'attendings', ['lesson_id'], unique=False)
+    op.create_index(op.f('ix_attendings_student_id'), 'attendings', ['student_id'], unique=False)
     op.create_table('payments',
                     sa.Column('id', sa.Integer(), nullable=False),
                     sa.Column('student_in_group_id', sa.Integer(), nullable=False),
@@ -187,19 +216,38 @@ def upgrade():
                     sa.PrimaryKeyConstraint('id'),
                     sa.UniqueConstraint('student_in_group_id', 'month')
                     )
+    op.create_index(op.f('ix_payments_month'), 'payments', ['month'], unique=False)
+    op.create_index(op.f('ix_payments_student_in_group_id'), 'payments', ['student_in_group_id'], unique=False)
     # ### end Alembic commands ###
 
 
 def downgrade():
     # ### commands auto generated by Alembic - please adjust! ###
+    op.drop_index(op.f('ix_payments_student_in_group_id'), table_name='payments')
+    op.drop_index(op.f('ix_payments_month'), table_name='payments')
     op.drop_table('payments')
+    op.drop_index(op.f('ix_attendings_student_id'), table_name='attendings')
+    op.drop_index(op.f('ix_attendings_lesson_id'), table_name='attendings')
     op.drop_table('attendings')
+    op.drop_index(op.f('ix_student_in_groups_student_id'), table_name='student_in_groups')
+    op.drop_index(op.f('ix_student_in_groups_group_id'), table_name='student_in_groups')
+    op.drop_index(op.f('ix_student_in_groups_exit_month'), table_name='student_in_groups')
+    op.drop_index(op.f('ix_student_in_groups_enter_month'), table_name='student_in_groups')
     op.drop_table('student_in_groups')
+    op.drop_index(op.f('ix_lessons_teacher_id'), table_name='lessons')
+    op.drop_index(op.f('ix_lessons_group_id'), table_name='lessons')
+    op.drop_index(op.f('ix_lessons_date'), table_name='lessons')
     op.drop_table('lessons')
     op.drop_table('parent_of_students')
+    op.drop_index(op.f('ix_groups_start_month'), table_name='groups')
+    op.drop_index(op.f('ix_groups_end_month'), table_name='groups')
     op.drop_table('groups')
     op.drop_table('teachers')
     op.drop_table('students')
+    op.drop_index(op.f('ix_notifications_sender_id'), table_name='notifications')
+    op.drop_index(op.f('ix_notifications_receiver_type'), table_name='notifications')
+    op.drop_index(op.f('ix_notifications_receiver_id'), table_name='notifications')
+    op.drop_table('notifications')
     op.drop_table('masters')
     op.drop_table('system_users')
     op.drop_table('section_preferences')

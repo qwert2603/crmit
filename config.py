@@ -30,6 +30,7 @@ class DevConfig(Config):
     VK_ACCESS_TOKEN = os.getenv('VK_ACCESS_TOKEN')
 
 
+# todo: all prod psws to separate file.
 class ProdConfig(Config):
     SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://kristallp_crm:<psw>@kristallp.mysql/kristallp_crm'  # todo
     # todo: prod mail
