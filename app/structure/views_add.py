@@ -17,7 +17,7 @@ def add_citizenship():
     if form.validate_on_submit():
         db.session.add(Citizenship(name=form.name.data))
         flash('гражданство {} создано'.format(form.name.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.citizenships_list'))
     return render_template('structure/form_add_edit.html', form=form, class_name='гражданства', creating=True)
 
 
@@ -29,7 +29,7 @@ def add_section():
     if form.validate_on_submit():
         db.session.add(Section(name=form.name.data, price=form.price.data))
         flash('секция {} создана'.format(form.name.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.sections_list'))
     return render_template('structure/form_add_edit.html', form=form, class_name='секции', creating=True)
 
 
@@ -41,7 +41,7 @@ def add_school():
     if form.validate_on_submit():
         db.session.add(School(name=form.name.data))
         flash('школа {} создана'.format(form.name.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.schools_list'))
     return render_template('structure/form_add_edit.html', form=form, class_name='школы', creating=True)
 
 
@@ -56,7 +56,7 @@ def add_parent():
                               vk_id=form.vk_id.data,
                               notification_types=notification_types_list_to_int(form.notification_types.data)))
         flash('родитель {} создан'.format(form.fio.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.parents_list'))
     return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=True)
 
 
@@ -69,5 +69,5 @@ def add_group():
         db.session.add(Group(name=form.name.data, section_id=form.section.data, teacher_id=form.teacher.data,
                              start_month=form.start_month(), end_month=form.end_month()))
         flash('группа {} создана'.format(form.name.data))
-        return redirect(url_for('main.index'))
+        return redirect(url_for('.groups_list'))
     return render_template('structure/form_add_edit.html', form=form, class_name='группы', creating=True)
