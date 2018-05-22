@@ -65,7 +65,7 @@ class Citizenship(db.Model):
 # todo: others?
 shift_email = 0
 shift_vk = 1
-shift_sms = 2
+shift_sms = 2 # todo
 notification_types_list = [
     [shift_email, 'email'],
     [shift_vk, 'ВКонтакте'],
