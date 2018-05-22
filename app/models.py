@@ -374,6 +374,10 @@ class Notification(db.Model):
         if self.receiver_type == receiver_type_student_in_group:
             return StudentInGroup.query.get(self.receiver_id)
 
+    @property
+    def receivers_html(self):
+        return '<ul>' + ''.join(['<li>{}</li>'.format(s) for s in self.receivers.split()]) + '</ul>'
+
 
 class Candidate(db.Model):
     __tablename__ = 'candidates'

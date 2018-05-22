@@ -57,7 +57,7 @@
                 </td>
                 <td>{{ notification.subject }}</td>
                 <td>{{ notification.body }}</td>
-                <td>{{ notification.receivers }}</td>{#todo: in lines#}
+                <td>{{ notification.receivers_html | safe }}</td>
             </tr>
         {% else %}
             <h3><i>нет уведомлений</i></h3>
