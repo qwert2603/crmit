@@ -79,7 +79,7 @@ class Parent(db.Model):
     _email = db.Column(db.String(255), name='email', nullable=True)
     passport = db.Column(db.String(255), nullable=False, unique=True)
     address = db.Column(db.String(255), nullable=False)
-    home_phone = db.Column(db.String(255), nullable=True)
+    _home_phone = db.Column(db.String(255), name='home_phone', nullable=True)
     _vk_id = db.Column(db.String(255), name='vk_id', nullable=True)
     notification_types = db.Column(db.Integer, nullable=False)
     parent_of_students = db.relationship('ParentOfStudent', backref='parent', lazy='dynamic')
@@ -107,6 +107,18 @@ class Parent(db.Model):
             self._vk_id = new_vk_id
         else:
             self._vk_id = None
+
+    @property
+    def home_phone(self):
+        return self._home_phone
+
+    @home_phone.setter
+    def home_phone(self, new_home_phone):
+        new_home_phone = new_home_phone.strip()
+        if new_home_phone != '':
+            self._home_phone = new_home_phone
+        else:
+            self._home_phone = None
 
     @property
     def children(self):
