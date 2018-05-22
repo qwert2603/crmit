@@ -58,7 +58,7 @@ def add_parent():
         flash('родитель {} создан'.format(form.fio.data))
         return redirect(url_for('.parents_list'))
     if not form.is_submitted():
-        form.vk_link = vk_link_prefix  # todo:test and add this to creating student.
+        form.vk_link.data = vk_link_prefix
     return render_template('structure/form_add_edit.html', form=form, class_name='родителя', creating=True)
 
 

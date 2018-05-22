@@ -4,7 +4,7 @@ from flask_login import login_required
 from app import db
 from app.decorators import check_master, check_master_or_teacher
 from app.init_model import role_master_name, role_teacher_name, role_student_name
-from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentOfStudent, Parent
+from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentOfStudent, Parent, vk_link_prefix
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
 from app.users.forms import create_new_parent_id
@@ -83,4 +83,7 @@ def register_student():
         db.session.add(student)
         flash('ученик {} создан.'.format(fio))
         return redirect(url_for('users.students_list'))
+    if not form.is_submitted():
+        form.m_vk_link.data = vk_link_prefix
+        form.f_vk_link.data = vk_link_prefix
     return render_template('users/form_register_edit.html', form=form, class_name='ученика', creating=True)
