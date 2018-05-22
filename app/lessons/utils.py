@@ -1,7 +1,7 @@
 from app import db
 from app.models import Lesson, Payment, StudentInGroup
 from app.utils import number_of_month
-from config import DB_TYPE_POSTGRES, DB_TYPE
+from config import DB_TYPE_POSTGRES
 
 
 def lessons_lists(group_id, month_number):
@@ -53,7 +53,8 @@ def payments_in_month_dicts(group_id, month_number):
 
 
 def dates_of_lessons_dict(group_id):
-    if DB_TYPE == DB_TYPE_POSTGRES:
+    from manage import app
+    if app.config['DB_TYPE'] == DB_TYPE_POSTGRES:
         sql = '''
                     SELECT
                         extract(YEAR FROM date)                                         AS year,

@@ -4,11 +4,9 @@ basedir = os.path.abspath(os.path.dirname(__file__))
 
 DB_TYPE_POSTGRES = 'postgres'
 DB_TYPE_MYSQL = 'mysql'
-DB_TYPE = DB_TYPE_POSTGRES
 
 
 class Config:
-    SECRET_KEY = '1918'  # todo
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
@@ -19,8 +17,10 @@ class Config:
 
 class DevConfig(Config):
     DEBUG = True
+    SECRET_KEY = '1918'
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db_dev.sqlite')
     SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@192.168.1.26:5432/crmit'
+    DB_TYPE = DB_TYPE_POSTGRES
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
@@ -30,15 +30,15 @@ class DevConfig(Config):
     VK_ACCESS_TOKEN = os.getenv('VK_ACCESS_TOKEN')
 
 
-# todo: all prod psws to separate file.
 class ProdConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://kristallp_crm:<psw>@kristallp.mysql/kristallp_crm'  # todo
-    # todo: prod mail
+    SECRET_KEY = '<key>'  # todo
+    SQLALCHEMY_DATABASE_URI = 'myql+mysqlconnector://kristallp_crm:<psw>@kristallp.mysql/kristallp_crm'  # todo
+    DB_TYPE = DB_TYPE_MYSQL
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
     MAIL_USE_SSL = True
     MAIL_USERNAME = 'natalykanatkina'
-    MAIL_PASSWORD = '<pws>'
+    MAIL_PASSWORD = '<pws>'  # todo
     MAIL_DEFAULT_SENDER = 'natalykanatkina@gmail.com'
     VK_ACCESS_TOKEN = '<token>'  # todo
 
