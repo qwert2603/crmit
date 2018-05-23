@@ -60,5 +60,6 @@ def delete_group(id):
     group = Group.query.get_or_404(id)
     if not is_group_removable(group): abort(409)
     db.session.delete(group)
+    # todo: delete notifications to this group.
     flash('группа удалена')
     return redirect(url_for('.groups_list'))

@@ -39,5 +39,6 @@ def delete_student(id):
     if not is_student_removable(student): abort(409)
     db.session.delete(student)
     db.session.delete(student.system_user)
+    # todo: delete notifications to this student.
     flash('ученик удалён')
     return redirect(url_for('.students_list'))
