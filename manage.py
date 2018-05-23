@@ -23,7 +23,8 @@ def make_shell_context():
                 Master=models.Master, Teacher=models.Teacher, Lesson=models.Lesson, Attending=models.Attending,
                 Candidate=models.Candidate, DayPreference=models.DayPreference,
                 SectionPreference=models.SectionPreference, ParentOfStudent=models.ParentOfStudent,
-                Citizenship=models.Citizenship, School=models.School, Section=models.Section)
+                Citizenship=models.Citizenship, School=models.School, Section=models.Section,
+                Notification=models.Notification)
 
 
 context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_teacher_name,
