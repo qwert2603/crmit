@@ -29,6 +29,7 @@ class SystemUser(UserMixin, db.Model):
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)
     student = db.relationship('Student', backref='system_user', uselist=False)
     notifications = db.relationship('Notification', backref='sender', lazy='dynamic')
+    # todo: enabled = db.Column(db.Boolean, nullable=False)
 
     @property
     def details(self):
@@ -65,7 +66,7 @@ class Citizenship(db.Model):
 # todo: others?
 shift_email = 0
 shift_vk = 1
-shift_sms = 2 # todo
+shift_sms = 2  # todo
 notification_types_list = [
     [shift_email, 'email'],
     [shift_vk, 'ВКонтакте'],
