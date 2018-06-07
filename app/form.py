@@ -24,10 +24,14 @@ class VkLink(object):
         return True
 
 
-# todo:
 class Phone(object):
+    def __init__(self, allow_empty):
+        self.allow_empty = allow_empty
+
     def __call__(self, form, field, message=None):
+        if self.allow_empty and field.data == '':
+            return True
         regex = re.compile('^89[0-9]{9}$', 0)
-        if regex.match(field.data[len(vk_link_prefix):] or ''):
+        if not regex.match(field.data):
             raise ValidationError('телефон в формате 89012223344')
         return True

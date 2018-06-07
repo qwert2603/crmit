@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Valid
     SelectMultipleField
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional, Email
 
-from app.form import DateFieldWidget, VkLink
+from app.form import DateFieldWidget, VkLink, Phone
 from app.models import SystemUser, School, Citizenship, Parent, notification_types_list, shift_email, shift_vk
 from app.utils import notification_types_list_to_int
 
@@ -90,7 +90,7 @@ class RegistrationStudentForm(RegistrationForm):
 
     m_fio = StringField('новая мать: фио',
                         validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
-    m_phone = StringField('новая мать: телефон', validators=[Length(0, 32)])
+    m_phone = StringField('новая мать: телефон', validators=[Phone(allow_empty=True)])
     m_email = StringField('новая мать: email', validators=[Optional(), Length(0, 128), Email()])
     m_passport = StringField('новая мать: паспорт', validators=[Optional(), Length(0, 255)])
     m_address = StringField('новая мать: адрес', validators=[Length(0, 255)])
@@ -100,7 +100,7 @@ class RegistrationStudentForm(RegistrationForm):
 
     f_fio = StringField('новый отец: фио',
                         validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
-    f_phone = StringField('новый отец: телефон', validators=[Length(0, 32)])
+    f_phone = StringField('новый отец: телефон', validators=[Phone(allow_empty=True)])
     f_email = StringField('новый отец: email', validators=[Optional(), Length(0, 128), Email()])
     f_passport = StringField('новый отец: паспорт', validators=[Optional(), Length(0, 255)])
     f_address = StringField('новый отец: адрес', validators=[Length(0, 255)])
