@@ -85,7 +85,4 @@ def register_student():
         db.session.add(student)
         flash('ученик {} создан.'.format(fio))
         return redirect(url_for('users.students_list'))
-    if not form.is_submitted():
-        form.m_vk_link.data = vk_link_prefix
-        form.f_vk_link.data = vk_link_prefix
     return render_template('users/form_register_edit.html', form=form, class_name='ученика', creating=True)
