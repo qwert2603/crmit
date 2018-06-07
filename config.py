@@ -19,7 +19,7 @@ class DevConfig(Config):
     DEBUG = True
     SECRET_KEY = '1918'
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'db_dev.sqlite')
-    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@192.168.1.26:5432/crmit'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://postgres:1234@127.0.0.1:5432/crmit'
     DB_TYPE = DB_TYPE_POSTGRES
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
