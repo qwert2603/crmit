@@ -275,6 +275,11 @@ class Group(db.Model):
         return self.students_in_group.filter(StudentInGroup.enter_month <= month_number,
                                              StudentInGroup.exit_month >= month_number)
 
+    @property
+    def notifications(self):
+        return Notification.query.filter(Notification.receiver_type == receiver_type_group,
+                                         Notification.receiver_id == self.id)
+
 
 class StudentInGroup(db.Model):
     __tablename__ = 'student_in_groups'
@@ -318,6 +323,11 @@ class StudentInGroup(db.Model):
     def min_exit_month_number(self):
         from app.structure.utils import min_exit_month_number_student_in_group
         return min_exit_month_number_student_in_group(self)
+
+    @property
+    def notifications(self):
+        return Notification.query.filter(Notification.receiver_type == receiver_type_student_in_group,
+                                         Notification.receiver_id == self.id)
 
 
 class Payment(db.Model):

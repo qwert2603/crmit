@@ -40,6 +40,7 @@ def students_in_group(group_id):
                     old_student_in_group.payments_not_confirmed.delete()
                     for a in old_student_in_group.attendings_was_not.all():
                         db.session.delete(a)
+                    old_student_in_group.notifications.delete()
                     db.session.delete(old_student_in_group)
         flash('список учеников в группе {} изменен.'.format(group.name))
         return redirect(url_for('structure.groups_list'))
