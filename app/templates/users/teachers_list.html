@@ -24,7 +24,13 @@
         </tr>
         {% for teacher in items %}
             <tr>
-                <td>{{ teacher.fio }}</td>
+                <td>
+                    {% if teacher.system_user.enabled %}
+                        {{ teacher.fio }}
+                    {% else %}
+                        <strike>{{ teacher.fio }}</strike><br/>(отключен)
+                    {% endif %}
+                </td>
                 <td>{{ teacher.system_user.login }}</td>
                 <td>
                     <ul>

@@ -19,7 +19,8 @@ login_manager.anonymous_user = AnonUser
 
 @login_manager.user_loader
 def load_user(user_id):
-    return SystemUser.query.get(int(user_id))
+    system_user = SystemUser.query.get(int(user_id))
+    if system_user is not None and system_user.enabled: return system_user
 
 
 def create_app(config_name):

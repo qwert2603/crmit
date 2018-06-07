@@ -31,6 +31,7 @@ class RegistrationForm(FlaskForm):
     password = PasswordField('пароль', validators=[Length(1, 255)])
     password_confirm = PasswordField('подтверждение пароля', validators=[
         DataRequired(), EqualTo('password', 'пароли должны совпадать')])
+    enabled = BooleanField('включен', default=True)
 
     system_user = None
 

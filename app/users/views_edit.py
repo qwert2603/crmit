@@ -1,5 +1,5 @@
 from flask import render_template, redirect, url_for, flash
-from flask_login import login_required
+from flask_login import login_required, current_user
 from app.decorators import check_master, check_master_or_teacher
 from app.models import Master, Teacher, Student, ParentOfStudent
 from app.users import users
@@ -16,11 +16,16 @@ def edit_master(id):
     if form.validate_on_submit():
         master.fio = form.fio.data
         master.system_user.login = form.login.data
+        if master.system_user_id == current_user.id:
+            flash('вы не можете отключить себя!')
+        else:
+            master.system_user.enabled = form.enabled.data
         flash('руководитель {} изменен'.format(form.fio.data))
         return redirect(url_for('.masters_list'))
     if not form.is_submitted():
         form.login.data = master.system_user.login
         form.fio.data = master.fio
+        form.enabled.data = master.system_user.enabled
     return render_template('users/form_register_edit.html', form=form, class_name='мастера', creating=False)
 
 
@@ -33,11 +38,13 @@ def edit_teacher(id):
     if form.validate_on_submit():
         teacher.fio = form.fio.data
         teacher.system_user.login = form.login.data
+        teacher.system_user.enabled = form.enabled.data
         flash('преподаватель {} изменен'.format(form.fio.data))
         return redirect(url_for('.teachers_list'))
     if not form.is_submitted():
         form.login.data = teacher.system_user.login
         form.fio.data = teacher.fio
+        form.enabled.data = teacher.system_user.enabled
     return render_template('users/form_register_edit.html', form=form, class_name='преподавателя', creating=False)
 
 
@@ -57,6 +64,7 @@ def edit_student(id):
         student.fio = form.fio.data
         student.system_user.login = form.login.data
         student.system_user.password = password_from_date(form.birth_date.data)
+        student.system_user.enabled = form.enabled.data
         student.birth_date = form.birth_date.data
         student.birth_place = form.birth_place.data
         student.registration_place = form.registration_place.data
@@ -76,6 +84,7 @@ def edit_student(id):
     if not form.is_submitted():
         form.login.data = student.system_user.login
         form.fio.data = student.fio
+        form.enabled.data = student.system_user.enabled
         form.birth_date.data = student.birth_date
         form.birth_place.data = student.birth_place
         form.registration_place.data = student.registration_place

@@ -14,8 +14,12 @@ def login():
     if form.validate_on_submit():
         user = SystemUser.query.filter(SystemUser.login == form.login.data).first()
         if user is not None and user.verify_password(form.password.data):
-            login_user(user, form.remember_me.data)
-            return redirect(request.args.get('next') or url_for('main.index'))
+            if user.enabled:
+                login_user(user, form.remember_me.data)
+                return redirect(request.args.get('next') or url_for('main.index'))
+            else:
+                flash('ваш аккаунт был отключен!')
+                return redirect(url_for('.login'))
         flash('неверный логин или пароль!')
     return render_template('users/login.html', form=form)
 

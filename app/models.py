@@ -25,12 +25,11 @@ class SystemUser(UserMixin, db.Model):
     password_hash = db.Column(db.String(255), nullable=False, unique=True)
     system_role_id = db.Column(db.Integer, db.ForeignKey('system_roles.id'), nullable=False)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    enabled = db.Column(db.Boolean, nullable=False)
     master = db.relationship('Master', backref='system_user', uselist=False)
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)
     student = db.relationship('Student', backref='system_user', uselist=False)
     notifications = db.relationship('Notification', backref='sender', lazy='dynamic')
-
-    # todo: enabled = db.Column(db.Boolean, nullable=False)
 
     @property
     def details(self):

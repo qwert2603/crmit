@@ -23,7 +23,13 @@
         </tr>
         {% for master in items %}
             <tr>
-                <td>{{ master.fio }}</td>
+                  <td>
+                    {% if master.system_user.enabled %}
+                        {{ master.fio }}
+                    {% else %}
+                        <strike>{{ master.fio }}</strike><br/>(отключен)
+                    {% endif %}
+                </td>
                 <td>{{ master.system_user.login }}</td>
                 <td>{{ moment(master.system_user.last_seen).fromNow(refresh=True) }}</td>
                 {% if current_user.system_role.name == role_master_name %}

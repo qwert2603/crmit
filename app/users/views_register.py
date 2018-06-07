@@ -18,7 +18,8 @@ def register_master():
     form = RegistrationMasterForm()
     if form.validate_on_submit():
         role_master = SystemRole.query.filter_by(name=role_master_name).first()
-        user_master = SystemUser(login=form.login.data, password=form.password.data, system_role=role_master)
+        user_master = SystemUser(login=form.login.data, password=form.password.data, system_role=role_master,
+                                 enabled=form.enabled.data)
         master = Master(fio=form.fio.data, system_user=user_master)
         db.session.add(user_master)
         db.session.add(master)
@@ -34,7 +35,8 @@ def register_teacher():
     form = RegistrationTeacherForm()
     if form.validate_on_submit():
         role_teacher = SystemRole.query.filter_by(name=role_teacher_name).first()
-        user_teacher = SystemUser(login=form.login.data, password=form.password.data, system_role=role_teacher)
+        user_teacher = SystemUser(login=form.login.data, password=form.password.data, system_role=role_teacher,
+                                  enabled=form.enabled.data)
         teacher = Teacher(fio=form.fio.data, system_user=user_teacher)
         db.session.add(user_teacher)
         db.session.add(teacher)
@@ -53,7 +55,7 @@ def register_student():
         role_student = SystemRole.query.filter_by(name=role_student_name).first()
         user_student = SystemUser(
             login=generate_login(form.last_name.data, form.first_name.data, form.second_name.data),
-            password=password_from_date(form.birth_date.data), system_role=role_student)
+            password=password_from_date(form.birth_date.data), system_role=role_student, enabled=form.enabled.data)
         student = Student(fio=fio, system_user=user_student, birth_date=form.birth_date.data,
                           birth_place=form.birth_place.data, registration_place=form.registration_place.data,
                           actual_address=form.actual_address.data, additional_info=form.additional_info.data,
