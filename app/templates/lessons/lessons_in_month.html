@@ -42,6 +42,7 @@
             {% endfor %}
             {% if write_mode %}
                 <th>оплата</th>
+                <th>комментарий</th>
                 <th>нал.</th>
             {% endif %}
         </tr>
@@ -61,17 +62,26 @@
                         {% if confirmed.get(student_in_group.id) %}
                             {{ payments.get(student_in_group.id, 0) }} /
                             {{ group.section.price - student_in_group.discount }}
-                            <span style="color: green; ">(подтв.)</span>
+                            <span style="color: green; ">(подт.)</span>
                         {% else %}
                             {% if write_mode %}
                                 <input max="{{ group.section.price - student_in_group.discount }}" min="0"
                                        form="save_form"
                                        type="number" name="p_{{ student_in_group.id }}"
                                        value="{{ payments.get(student_in_group.id, 0) }}">
-                            {% else %}
-                                {{ payments.get(student_in_group.id, 0) }}
                             {% endif %}
                             / {{ group.section.price - student_in_group.discount }}
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if confirmed.get(student_in_group.id) %}
+                            <span style="font-size: smaller">
+                                    <i>{{ comments.get(student_in_group.id) }}</i>
+                            </span>
+                        {% else %}
+                            <input form="save_form" name="comment_{{ student_in_group.id }}"
+                                   maxlength="32" value="{{ comments.get(student_in_group.id, '') }}"
+                                   style="width: 72px; font-size: smaller">
                         {% endif %}
                     </td>
                     <td>
@@ -79,8 +89,7 @@
                             <input type="checkbox" disabled {% if cash[student_in_group.id] %}checked{% endif %}>
                         {% else %}
                             <input form="save_form" type="checkbox" name="c_{{ student_in_group.id }}"
-                                   {% if cash.get(student_in_group.id, True) %}checked{% endif %}
-                                   {% if not write_mode %}disabled{% endif %}>
+                                   {% if cash.get(student_in_group.id, True) %}checked{% endif %}>
                         {% endif %}
                     </td>
                 {% endif %}
@@ -100,6 +109,7 @@
             {% endfor %}
             {% if write_mode %}
                 <td></td> {# оплата #}
+                <td></td> {# комментарий #}
                 <td></td> {# нал. #}
             {% endif %}
         </tr>

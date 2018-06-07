@@ -71,13 +71,15 @@ def lessons_in_month(group_id, month_number):
             if new_value > max_value: new_value = max_value
             payment = payments.get(student_in_group.id)
             is_cash = 'c_{}'.format(student_in_group.id) in request.form
+            comment = request.form.get('comment_{}'.format(student_in_group.id), '')
             if payment is not None:
                 if not payment.confirmed:
                     payment.value = new_value
                     payment.cash = is_cash
+                    payment.comment = comment
             else:
                 db.session.add(Payment(student_in_group=student_in_group, month=month_number, value=new_value,
-                                       cash=is_cash))
+                                       cash=is_cash, comment=comment))
             attendings = dict()
             for l in ls:
                 attendings[l.id] = dict()
@@ -96,7 +98,7 @@ def lessons_in_month(group_id, month_number):
     ll = lessons_lists(group_id, month_number)
     return render_template('lessons/lessons_in_month.html', group=group, month_number=month_number,
                            month_name=month_name, students_in_group=students_in_group, payments=pd[0], confirmed=pd[1],
-                           cash=pd[2], lessons=ll[0], attendings=ll[1],
+                           cash=pd[2], comments=pd[3], lessons=ll[0], attendings=ll[1],
                            write_mode=can_user_write_group(current_user, group))
 
 

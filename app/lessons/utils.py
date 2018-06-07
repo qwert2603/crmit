@@ -20,6 +20,7 @@ def payments_dicts(group):
     values = dict()
     confirmed = dict()
     cash = dict()
+    comments = dict()
     confirmed_count_months = dict()
     confirmed_count_students = dict()
     students_in_group = group.students_in_group.all()
@@ -30,12 +31,13 @@ def payments_dicts(group):
         values[m] = in_month_dicts[0]
         confirmed[m] = in_month_dicts[1]
         cash[m] = in_month_dicts[2]
+        comments[m] = in_month_dicts[3]
         confirmed_count_months[m] = 0
         for s in students_in_group:
             if confirmed.get(m, dict()).get(s.id):
                 confirmed_count_students[s.id] += 1
                 confirmed_count_months[m] += 1
-    return [values, confirmed, cash, confirmed_count_months, confirmed_count_students]
+    return [values, confirmed, cash, comments, confirmed_count_months, confirmed_count_students]
 
 
 def payments_in_month_dicts(group_id, month_number):
@@ -45,11 +47,13 @@ def payments_in_month_dicts(group_id, month_number):
     values = dict()
     confirmed = dict()
     cash = dict()
+    comments = dict()
     for p in ps:
         values[p.student_in_group_id] = p.value
         confirmed[p.student_in_group_id] = p.confirmed
         cash[p.student_in_group_id] = p.cash
-    return [values, confirmed, cash]
+        comments[p.student_in_group_id] = p.comment
+    return [values, confirmed, cash, comments]
 
 
 def dates_of_lessons_dict(group_id):
