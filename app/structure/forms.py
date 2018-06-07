@@ -13,7 +13,7 @@ class ParentForm(FlaskForm):
     fio = StringField('фио', validators=[Length(1, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
     phone = StringField('телефон', validators=[Length(1, 32)])
     email = StringField('email', validators=[Optional(), Length(0, 128), Email()])
-    passport = StringField('паспорт', validators=[Length(1, 255)])
+    passport = StringField('паспорт', validators=[Optional(), Length(0, 255)])
     address = StringField('адрес', validators=[Length(1, 255)])
     home_phone = StringField('домашний телефон', validators=[Optional(), Length(0, 32)])
     vk_link = StringField('ВКонтакте', validators=[Optional(), Length(0, 64), VkLink()])
@@ -29,13 +29,15 @@ class ParentForm(FlaskForm):
 
     def validate_passport(self, field):
         if (self.parent is None or self.passport.data != self.parent.passport) \
-                and Parent.query.filter_by(passport=field.data).first():
+                and Parent.query.filter_by(_passport=field.data).first():
             raise ValidationError('этот паспорт уже зарегистрирован!')
 
     def validate_notification_types(self, field):
         ni_ints = notification_types_list_to_int(self.notification_types.data)
-        if ni_ints & (1 << shift_email) != 0 and self.email.data.strip() == '': raise ValidationError('укажите email!')
-        if ni_ints & (1 << shift_vk) != 0 and self.vk_link.data.strip() == '': raise ValidationError('укажите ВКонтакте!')
+        if ni_ints & (1 << shift_email) != 0 and self.email.data.strip() == '':
+            raise ValidationError('укажите email!')
+        if ni_ints & (1 << shift_vk) != 0 and self.vk_link.data.strip() == '':
+            raise ValidationError('укажите ВКонтакте!')
         # don't check phone here because it is required.
 
 

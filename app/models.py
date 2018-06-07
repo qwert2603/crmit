@@ -29,6 +29,7 @@ class SystemUser(UserMixin, db.Model):
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)
     student = db.relationship('Student', backref='system_user', uselist=False)
     notifications = db.relationship('Notification', backref='sender', lazy='dynamic')
+
     # todo: enabled = db.Column(db.Boolean, nullable=False)
 
     @property
@@ -82,7 +83,7 @@ class Parent(db.Model):
     fio = db.Column(db.String(255), nullable=False)
     phone = db.Column(db.String(255), nullable=False)
     _email = db.Column(db.String(255), name='email', nullable=True)
-    passport = db.Column(db.String(255), nullable=False, unique=True)
+    _passport = db.Column(db.String(255), name='passport', nullable=True, unique=True)
     address = db.Column(db.String(255), nullable=False)
     _home_phone = db.Column(db.String(255), name='home_phone', nullable=True)
     _vk_link = db.Column(db.String(255), name='vk_link', nullable=True)
@@ -124,6 +125,18 @@ class Parent(db.Model):
             self._home_phone = new_home_phone
         else:
             self._home_phone = None
+
+    @property
+    def passport(self):
+        return self._passport
+
+    @passport.setter
+    def passport(self, new_passport):
+        new_passport = new_passport.strip()
+        if new_passport != '':
+            self._passport = new_passport
+        else:
+            self._passport = None
 
     @property
     def children(self):
@@ -315,6 +328,7 @@ class Payment(db.Model):
     value = db.Column(db.Integer, nullable=False)
     cash = db.Column(db.Boolean, nullable=False, default=True)
     confirmed = db.Column(db.Boolean, nullable=False, default=False)
+    comment = db.Column(db.String(32), nullable=False)
     unique = db.UniqueConstraint(student_in_group_id, month)
 
 
