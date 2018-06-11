@@ -85,7 +85,7 @@ class RegistrationStudentForm(RegistrationForm):
     known_from = StringField('откуда узнал(а) о ЦМИТ', validators=[Length(0, 255)])
     school = SelectField('школа', coerce=int, validators=[DataRequired()])
     citizenship = SelectField('гражданство', coerce=int, validators=[DataRequired()])
-    mother = SelectField('мать', coerce=int, validators=[Optional()])  # todo: search
+    mother = SelectField('мать', coerce=int, validators=[Optional()])
     father = SelectField('отец', coerce=int, validators=[Optional()])
 
     m_fio = StringField('новая мать: фио',

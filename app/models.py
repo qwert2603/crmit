@@ -63,10 +63,9 @@ class Citizenship(db.Model):
     students = db.relationship('Student', backref='citizenship', lazy='dynamic')
 
 
-# todo: others?
 shift_email = 0
 shift_vk = 1
-shift_sms = 2  # todo
+shift_sms = 2
 notification_types_list = [
     [shift_email, 'email'],
     [shift_vk, 'ВКонтакте'],
@@ -201,7 +200,7 @@ class ParentOfStudent(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False)
     parent_id = db.Column(db.Integer, db.ForeignKey('parents.id'), nullable=False)
-    is_mother = db.Column(db.Boolean, nullable=False)  # todo: parent_kind???
+    is_mother = db.Column(db.Boolean, nullable=False)
     unique = db.UniqueConstraint(student_id, parent_id, is_mother)
     unique_2 = db.UniqueConstraint(student_id, parent_id)
     unique_3 = db.UniqueConstraint(student_id, is_mother)
