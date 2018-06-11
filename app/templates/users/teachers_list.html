@@ -16,6 +16,7 @@
             <th>фио</th>
             <th>логин</th>
             <th>группы</th>
+            <th>телефон</th>
             <th>последний визит</th>
             {% if current_user.system_role.name == role_master_name %}
                 <th></th>
@@ -41,6 +42,7 @@
                         {% endfor %}
                     </ul>
                 </td>
+                <td>{{ teacher.phone }}</td>
                 <td>{{ moment(teacher.system_user.last_seen).fromNow(refresh=True) }}</td>
                 {% if current_user.system_role.name == role_master_name %}
                     <td>

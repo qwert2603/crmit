@@ -17,6 +17,7 @@
             <th>школа</th>
             <th>родители</th>
             <th>группы</th>
+            <th>телефон для связи</th>
             <th>последний визит</th>
             <th></th>
             <th></th>
@@ -24,7 +25,7 @@
         {% for student in items %}
             <tr>
                 <td><a href="{{ url_for('users.student_details',id=student.id) }}">
-                      {% if student.system_user.enabled %}
+                    {% if student.system_user.enabled %}
                         {{ student.fio }}
                     {% else %}
                         <strike>{{ student.fio }}</strike><br/>(отключен)
@@ -50,6 +51,15 @@
                             <p><i>нет групп</i></p>
                         {% endfor %}
                     </ul>
+                </td>
+                <td>
+                    {% if student.contact_phone == contact_phone_student %}
+                        {{ student.phone }} (ученик)
+                    {% elif student.contact_phone == contact_phone_mother %}
+                        {{ student.mother.phone }} (мать)
+                    {% elif student.contact_phone == contact_phone_father %}
+                        {{ student.father.phone }} (отец)
+                    {% endif %}
                 </td>
                 <td>{{ moment(student.system_user.last_seen).fromNow(refresh=True) }}</td>
                 {# todo: ? all teachers can remove / edit all students #}

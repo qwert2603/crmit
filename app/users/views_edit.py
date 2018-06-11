@@ -37,6 +37,7 @@ def edit_teacher(id):
     form = RegistrationTeacherForm(teacher)
     if form.validate_on_submit():
         teacher.fio = form.fio.data
+        teacher.phone = form.phone.data
         teacher.system_user.login = form.login.data
         teacher.system_user.enabled = form.enabled.data
         flash('преподаватель {} изменен'.format(form.fio.data))
@@ -44,6 +45,7 @@ def edit_teacher(id):
     if not form.is_submitted():
         form.login.data = teacher.system_user.login
         form.fio.data = teacher.fio
+        form.phone.data = teacher.phone
         form.enabled.data = teacher.system_user.enabled
     return render_template('users/form_register_edit.html', form=form, class_name='преподавателя', creating=False)
 
@@ -73,6 +75,10 @@ def edit_student(id):
         student.known_from = form.known_from.data
         student.school_id = form.school.data
         student.citizenship_id = form.citizenship.data
+        student.grade = form.grade.data
+        student.shift = form.shift.data
+        student.phone = form.phone.data
+        student.contact_phone = form.contact_phone.data
         new_mother_id = form.mother.data
         if new_mother_id == -1: new_mother_id = None
         new_father_id = form.father.data
@@ -92,6 +98,10 @@ def edit_student(id):
         form.additional_info.data = student.additional_info
         form.known_from.data = student.known_from
         form.school.data = student.school_id
+        form.grade.data = student.grade
+        form.shift.data = student.shift
+        form.phone.data = student.phone
+        form.contact_phone.data = student.contact_phone
         form.citizenship.data = student.citizenship_id
         form.mother.data = mother_id
         form.father.data = father_id

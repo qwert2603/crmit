@@ -151,6 +151,17 @@ class Parent(db.Model):
         return result
 
 
+contact_phone_student = 1
+contact_phone_mother = 2
+contact_phone_father = 3
+
+contact_phone_variants = [
+    [contact_phone_student, 'телефон ученика'],
+    [contact_phone_mother, 'телефон матери'],
+    [contact_phone_father, 'телефон отца']
+]
+
+
 class Student(db.Model):
     __tablename__ = 'students'
     id = db.Column(db.Integer, primary_key=True)
@@ -164,9 +175,25 @@ class Student(db.Model):
     school_id = db.Column(db.Integer, db.ForeignKey('schools.id'), nullable=False)
     citizenship_id = db.Column(db.Integer, db.ForeignKey('citizenships.id'), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, unique=True)
+    grade = db.Column(db.String(32), nullable=False)
+    shift = db.Column(db.String(32), nullable=False)
+    _phone = db.Column(db.String(255), name='phone', nullable=True)
+    contact_phone = db.Column(db.Integer, nullable=False)
     students_in_groups = db.relationship('StudentInGroup', backref='student', lazy='dynamic')
     attendings = db.relationship('Attending', backref='student', lazy='dynamic')
     parent_of_students = db.relationship('ParentOfStudent', backref='student', lazy='dynamic')
+
+    @property
+    def phone(self):
+        return self._phone
+
+    @phone.setter
+    def phone(self, new_phone):
+        new_phone = new_phone.strip()
+        if new_phone != '':
+            self._phone = new_phone
+        else:
+            self._phone = None
 
     @property
     def parents(self):
@@ -235,6 +262,7 @@ class Teacher(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     fio = db.Column(db.String(255), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, unique=True)
+    phone = db.Column(db.String(255), nullable=False)
     groups = db.relationship('Group', backref='teacher', lazy='dynamic')
     lessons = db.relationship('Lesson', backref='teacher', lazy='dynamic')
 

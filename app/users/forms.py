@@ -4,7 +4,8 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Valid
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional, Email
 
 from app.form import DateFieldWidget, VkLink, Phone
-from app.models import SystemUser, School, Citizenship, Parent, notification_types_list, shift_email, shift_vk
+from app.models import SystemUser, School, Citizenship, Parent, notification_types_list, shift_email, shift_vk, \
+    contact_phone_variants, contact_phone_student, contact_phone_mother, contact_phone_father
 from app.utils import notification_types_list_to_int
 
 
@@ -58,6 +59,7 @@ class RegistrationMasterForm(RegistrationForm):
 
 
 class RegistrationTeacherForm(RegistrationForm):
+    phone = StringField('телефон', validators=[Phone(allow_empty=False)])
     submit = SubmitField('создать преподавателя')
 
     def __init__(self, teacher=None, *args, **kwargs):
@@ -83,8 +85,12 @@ class RegistrationStudentForm(RegistrationForm):
     actual_address = StringField('фактический адрес проживания', validators=[Length(1, 255)])
     additional_info = StringField('дополнительная информация', validators=[Length(0, 255)])
     known_from = StringField('откуда узнал(а) о ЦМИТ', validators=[Length(0, 255)])
-    school = SelectField('школа', coerce=int, validators=[DataRequired()])
     citizenship = SelectField('гражданство', coerce=int, validators=[DataRequired()])
+    school = SelectField('школа', coerce=int, validators=[DataRequired()])
+    grade = StringField('класс', validators=[Length(0, 31)])
+    shift = StringField('смена', validators=[Length(0, 31)])
+    phone = StringField('телефон', validators=[Phone(allow_empty=True)])
+    contact_phone = SelectField('телефон для связи', coerce=int, validators=[DataRequired()])
     mother = SelectField('мать', coerce=int, validators=[Optional()])
     father = SelectField('отец', coerce=int, validators=[Optional()])
 
@@ -122,6 +128,7 @@ class RegistrationStudentForm(RegistrationForm):
         if student is None:
             schools = [(-1, 'выберите школу')] + schools
         self.school.choices = schools
+        self.contact_phone.choices = contact_phone_variants
         self.citizenship.choices = [(c.id, c.name) for c in Citizenship.query.order_by(Citizenship.id).all()]
         parents = [(no_parent_id, 'нет')] + [(p.id, p.fio) for p in Parent.query.order_by(Parent.fio).all()]
         if student is None:
@@ -149,6 +156,14 @@ class RegistrationStudentForm(RegistrationForm):
     def validate_school(self, field):
         if field.data <= 0:
             raise ValidationError('школа не выбрана!')
+
+    def validate_contact_phone(self, field):
+        if field.data == contact_phone_student and self.phone.data == '':
+            raise ValidationError('укажите телефон ученика!')
+        if field.data == contact_phone_mother and self.mother.data == no_parent_id:
+            raise ValidationError('мать не указана!')
+        if field.data == contact_phone_father and self.father.data == no_parent_id:
+            raise ValidationError('отец не указан!')
 
     def validate_father(self, field):
         if field.data > 0 and field.data == self.mother.data:

@@ -37,7 +37,7 @@ def register_teacher():
         role_teacher = SystemRole.query.filter_by(name=role_teacher_name).first()
         user_teacher = SystemUser(login=form.login.data, password=form.password.data, system_role=role_teacher,
                                   enabled=form.enabled.data)
-        teacher = Teacher(fio=form.fio.data, system_user=user_teacher)
+        teacher = Teacher(fio=form.fio.data, system_user=user_teacher, phone=form.phone.data)
         db.session.add(user_teacher)
         db.session.add(teacher)
         flash('преподаватель {} создан.'.format(form.login.data))
@@ -60,7 +60,8 @@ def register_student():
                           birth_place=form.birth_place.data, registration_place=form.registration_place.data,
                           actual_address=form.actual_address.data, additional_info=form.additional_info.data,
                           known_from=form.known_from.data, school_id=form.school.data,
-                          citizenship_id=form.citizenship.data)
+                          citizenship_id=form.citizenship.data, grade=form.grade.data, shift=form.shift.data,
+                          phone=form.phone.data, contact_phone=form.contact_phone.data)
         if form.mother.data > 0:
             db.session.add(ParentOfStudent(student=student, parent_id=form.mother.data, is_mother=True))
         if form.father.data > 0:

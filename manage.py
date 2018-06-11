@@ -36,7 +36,10 @@ context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_te
                     is_citizenship_removable=is_citizenship_removable, is_master_removable=is_master_removable,
                     is_teacher_removable=is_teacher_removable, is_student_removable=is_student_removable,
                     is_lesson_removable=is_lesson_removable, receiver_type_group=models.receiver_type_group,
-                    receiver_type_student_in_group=models.receiver_type_student_in_group)
+                    receiver_type_student_in_group=models.receiver_type_student_in_group,
+                    contact_phone_variants=models.contact_phone_variants,
+                    contact_phone_student=models.contact_phone_student,
+                    contact_phone_mother=models.contact_phone_mother, contact_phone_father=models.contact_phone_father)
 
 
 @app.context_processor
