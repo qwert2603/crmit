@@ -48,7 +48,9 @@
         </tr>
         {% for student_in_group in students_in_group %}
             <tr>
-                <td>{{ student_in_group.student.fio }}</td>
+                <td><a href="{{ url_for('users.student_details',id=student_in_group.student_id) }}">
+                    {{ student_in_group.student.fio }}
+                </a></td>
                 {% for lesson in lessons %}
                     <td>
                         <input form="save_form" type="checkbox"
