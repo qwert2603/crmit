@@ -87,8 +87,8 @@ class RegistrationStudentForm(RegistrationForm):
     known_from = StringField('откуда узнал(а) о ЦМИТ', validators=[Length(0, 255)])
     citizenship = SelectField('гражданство', coerce=int, validators=[DataRequired()])
     school = SelectField('школа', coerce=int, validators=[DataRequired()])
-    grade = StringField('класс', validators=[Length(0, 31)])
-    shift = StringField('смена', validators=[Length(0, 31)])
+    grade = StringField('класс', validators=[Length(1, 31)])
+    shift = StringField('смена', validators=[Length(1, 31)])
     phone = StringField('телефон', validators=[Phone(allow_empty=True)])
     contact_phone = SelectField('телефон для связи', coerce=int, validators=[DataRequired()])
     mother = SelectField('мать', coerce=int, validators=[Optional()])
@@ -173,7 +173,7 @@ class RegistrationStudentForm(RegistrationForm):
                 raise ValidationError('заполните поля в "новый родитель - отец"!')
             if Parent.query.filter_by(_passport=self.f_passport.data).first():
                 raise ValidationError('паспорт отца уже зарегистрирован!')
-            if self.f_passport.data == self.m_passport.data:
+            if self.mother == create_new_parent_id and self.f_passport.data == self.m_passport.data:
                 raise ValidationError('паспорта родителей совпадают!')
 
     def validate_mother(self, field):

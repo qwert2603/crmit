@@ -37,7 +37,8 @@ def delete_teacher(id):
 def delete_student(id):
     student = Student.query.get_or_404(id)
     if not is_student_removable(student): abort(409)
+    student.parent_of_students.delete()
     db.session.delete(student)
     db.session.delete(student.system_user)
-    flash('ученик удалён')
+    flash('ученик {} удалён'.format(student.fio))
     return redirect(url_for('.students_list'))
