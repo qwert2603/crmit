@@ -1,13 +1,13 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
-{% from '_macros.html' import render_search %}
+{% from '_macros.html' import render_search_with_group %}
 
 {% block title %}список учеников{% endblock %}
 
 {% block page_content %}
     <a href="{{ url_for('users.register_student') }}" class="btn btn-default">добавить ученика</a>
 
-    {{ render_search(search) }}
+    {{ render_search_with_group(search, groups, selected_group) }}
 
     <table class="table">
         <tr>

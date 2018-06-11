@@ -265,6 +265,13 @@ class Group(db.Model):
             .join(StudentInGroup, StudentInGroup.student_id == Student.id) \
             .filter(StudentInGroup.group_id == self.id)
 
+    @property
+    def parents(self):
+        return Parent.query \
+            .join(ParentOfStudent, ParentOfStudent.parent_id == Parent.id) \
+            .join(StudentInGroup, StudentInGroup.student_id == ParentOfStudent.student_id) \
+            .filter(StudentInGroup.group_id == self.id)
+
     def students_in_month(self, month_number):
         return self.students.filter(StudentInGroup.enter_month <= month_number,
                                     StudentInGroup.exit_month >= month_number)

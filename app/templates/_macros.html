@@ -42,3 +42,29 @@
 
     {% if search %}результаты поиска по запросу "<b>{{ search }}</b>"{% endif %}
 {% endmacro %}
+
+{% macro render_search_with_group(search, groups, selected_group) %}
+    <form method="get" class="form-group">
+        <h3><label for="group_id">группа</label></h3>
+        <select class="form-control" id="group_id" name="group_id">
+            <option value="0">все</option>
+            {% for group in groups %}
+                <option value="{{ group.id }}" {% if group.id==selected_group.id %}selected{% endif %}>
+                    {{ group.name }}
+                </option>
+            {% endfor %}
+        </select>
+
+        <div class="form-group">
+            <h2><label for="search">поиск</label></h2>
+            <input class="form-control" id="search" name="search" type="text" value="{{ search }}">
+        </div>
+
+        <input class="btn btn-default" type="submit" value="искать">
+    </form>
+
+    {% if search or selected_group %}результаты поиска
+        {% if search %}по запросу "<b>{{ search }}</b>"{% endif %}
+        {% if selected_group %}в группе <b>{{ selected_group.name }}</b>{% endif %}
+    {% endif %}
+{% endmacro %}
