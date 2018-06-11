@@ -27,13 +27,14 @@
                     <td>
                         {% if can_edit_discount %}
                             <input form="save_form" type="number" name="d_{{ student_in_group.id }}"
-                                   value="{{ student_in_group.discount }}" min="0" max="{{ group.section.price }}">
+                                   value="{{ student_in_group.discount }}" min="0" max="{{ group.section.price }}"
+                                   class="form-control">
                         {% else %}
                             {{ student_in_group.discount }}
                         {% endif %}
                     </td>
                     <td>
-                        <select form="save_form" name="enter_{{ student_in_group.id }}">
+                        <select form="save_form" name="enter_{{ student_in_group.id }}" class="form-control">
                             {% for m in range(
                                 group.start_month,
                                 (student_in_group.max_enter_month_number or group.end_month) + 1
@@ -44,7 +45,7 @@
                         </select>
                     </td>
                     <td>
-                        <select form="save_form" name="exit_{{ student_in_group.id }}">
+                        <select form="save_form" name="exit_{{ student_in_group.id }}" class="form-control">
                             {% for m in range(
                                 student_in_group.min_exit_month_number or group.start_month,
                                 group.end_month + 1

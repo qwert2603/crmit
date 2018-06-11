@@ -50,14 +50,17 @@ def payments_in_group(group_id):
     pd = payments_dicts(group)
     total_payments = 0
     confirmed_payments = 0
+    non_zero_payments = 0
     students_in_month = dict()
     for month_number in range(group.start_month, group.end_month + 1):
         students_count = group.students_in_group_in_month(month_number).count()
         total_payments += students_count
         confirmed_payments += pd[4][month_number]
+        non_zero_payments += pd[6][month_number]
         students_in_month[month_number] = students_count
     return render_template('payments/payments_in_group.html', group=group, students_in_group=students_in_group,
                            payments=pd[0], confirmed=pd[1], cash=pd[2], comments=pd[3], confirmed_count_months=pd[4],
-                           confirmed_count_students=pd[5], total_payments=total_payments,
-                           confirmed_payments=confirmed_payments, students_in_month=students_in_month,
+                           confirmed_count_students=pd[5], non_zero_count_months=pd[6], non_zero_count_students=pd[7],
+                           total_payments=total_payments, confirmed_payments=confirmed_payments,
+                           non_zero_payments=non_zero_payments, students_in_month=students_in_month,
                            can_confirm=can_confirm)
