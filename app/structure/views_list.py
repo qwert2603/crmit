@@ -1,7 +1,7 @@
 from flask import request, render_template
 from flask_login import login_required
 
-from app.decorators import check_master_or_teacher
+from app.decorators import check_master_or_teacher, check_master
 from app.models import Citizenship, Section, Parent, School, Group
 from app.structure import structure
 from app.list_route import create_list_route
@@ -9,7 +9,7 @@ from app.list_route import create_list_route
 
 @structure.route('/citizenships')
 @login_required
-@check_master_or_teacher
+@check_master
 def citizenships_list():
     return create_list_route(
         lambda search: Citizenship.query.filter(Citizenship.name.ilike('%{}%'.format(search))).order_by(
@@ -57,7 +57,7 @@ def sections_list():
 
 @structure.route('/schools')
 @login_required
-@check_master_or_teacher
+@check_master
 def schools_list():
     return create_list_route(
         lambda search: School.query.filter(School.name.ilike('%{}%'.format(search))).order_by(School.name),
