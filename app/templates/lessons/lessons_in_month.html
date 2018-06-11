@@ -96,6 +96,17 @@
             </tr>
         {% endfor %}
         <tr>
+            <td><b>всего</b></td>
+            {% for lesson in lessons %}
+                <td>{{ lesson.attendings_was.count() }}</td>
+            {% endfor %}
+            {% if write_mode %}
+                <td></td> {# оплата #}
+                <td></td> {# комментарий #}
+                <td></td> {# нал. #}
+            {% endif %}
+        </tr>
+        <tr>
             <td></td>
             {% for lesson in lessons %}
                 <td>
