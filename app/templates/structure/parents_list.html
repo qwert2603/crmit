@@ -33,7 +33,11 @@
                 <td>
                     <ul>
                         {% for student in parent.children.all() %}
-                            <li>{{ student.fio }}</li>
+                            <li>
+                                <a href="{{ url_for('users.student_details',id=student.id) }}">
+                                    {{ student.fio }}
+                                </a>
+                            </li>
                         {% else %}
                             <p><i>нет детей</i></p>
                         {% endfor %}

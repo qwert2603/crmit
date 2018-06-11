@@ -1,4 +1,6 @@
 {% extends 'base.html' %}
+{% from '_macros.html' import render_contact_phone with context %}
+{% from '_macros.html' import render_parent with context %}
 
 {% block page_content %}
     <h3>
@@ -16,11 +18,15 @@
     {% if student.additional_info %} <h4>доп. инфо: {{ student.additional_info }}</h4>{% endif %}
     {% if student.known_from %}<h4>узнал(а) о ЦМИТ: {{ student.known_from }}</h4>{% endif %}
     <h4>школа: {{ student.school.name }}</h4>
+    <h4>класс: {{ student.grade }}</h4>
+    <h4>смена: {{ student.shift }}</h4>
+    {% if student.phone %}<h4>телефон: {{ student.phone }}</h4>{% endif %}
+    <h4>телефон для связи: {{ render_contact_phone(student) }}</h4>
     <h4>гражданство: {{ student.citizenship.name }}</h4>
     родители:
     <ul>
         {% for parent in student.parents.all() %}
-            <li>{{ parent.fio }}</li>
+            <li>{{ render_parent(parent) }}</li>
         {% else %}
             <p><i>нет родитей</i></p>
         {% endfor %}

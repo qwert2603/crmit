@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
 {% from '_macros.html' import render_search_with_group %}
+{% from '_macros.html' import render_contact_phone with context %}
 
 {% block title %}список учеников{% endblock %}
 
@@ -52,15 +53,7 @@
                         {% endfor %}
                     </ul>
                 </td>
-                <td>
-                    {% if student.contact_phone == contact_phone_student %}
-                        {{ student.phone }} (ученик)
-                    {% elif student.contact_phone == contact_phone_mother %}
-                        {{ student.mother.phone }} (мать)
-                    {% elif student.contact_phone == contact_phone_father %}
-                        {{ student.father.phone }} (отец)
-                    {% endif %}
-                </td>
+                <td>{{ render_contact_phone(student) }}</td>
                 <td>{{ moment(student.system_user.last_seen).fromNow(refresh=True) }}</td>
                 {# todo: ? all teachers can remove / edit all students #}
                 <td>

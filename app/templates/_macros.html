@@ -68,3 +68,26 @@
         {% if selected_group %}в группе <b>{{ selected_group.name }}</b>{% endif %}
     {% endif %}
 {% endmacro %}
+
+{% macro render_contact_phone(student) %}
+    {% if student.contact_phone == contact_phone_student %}
+        {{ student.phone }} (ученик)
+    {% elif student.contact_phone == contact_phone_mother %}
+        {{ student.mother.phone }} (мать)
+    {% elif student.contact_phone == contact_phone_father %}
+        {{ student.father.phone }} (отец)
+    {% else %}
+        omg
+    {% endif %}
+{% endmacro %}
+
+{% macro render_parent(parent) %}
+    <h5>{{ parent.fio }}</h5>
+    <h5>адрес: {{ parent.address }}</h5>
+    <h5>телефон: {{ parent.phone }}</h5>
+    {% if parent.email %} <h5>email: {{ parent.email }}</h5>{% endif %}
+    {% if parent.passport %} <h5>паспорт: {{ parent.passport }}</h5>{% endif %}
+    {% if parent.vk_link %} <h5>ВКонтакте: {{ parent.vk_link }}</h5>{% endif %}
+    {% if parent.home_phone %} <h5>домашний телефон: {{ parent.home_phone }}</h5>{% endif %}
+    <h5>уведомления: {{ ' / '.join(parent.notification_types_string) or 'нет' }}</h5>
+{% endmacro %}
