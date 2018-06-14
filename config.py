@@ -32,7 +32,7 @@ class DevConfig(Config):
 
 class ProdConfig(Config):
     SECRET_KEY = '<key>'  # todo
-    SQLALCHEMY_DATABASE_URI = 'myql+mysqlconnector://kristallp_crm:<psw>@kristallp.mysql/kristallp_crm'  # todo
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://kristallp_crm:<psw>@kristallp.mysql/kristallp_crm'  # todo
     DB_TYPE = DB_TYPE_MYSQL
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
