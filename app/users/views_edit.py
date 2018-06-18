@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 from app.decorators import check_master, check_master_or_teacher
+from app.init_model import developer_login
 from app.models import Master, Teacher, Student, ParentOfStudent
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
@@ -12,6 +13,9 @@ from app.utils import password_from_date
 @check_master
 def edit_master(id):
     master = Master.query.get_or_404(id)
+    if master.system_user.login == developer_login:
+        flash('разрабочика нельзя редактировать!')
+        return redirect(url_for('.masters_list'))
     form = RegistrationMasterForm(master)
     if form.validate_on_submit():
         master.fio = form.fio.data

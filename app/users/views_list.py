@@ -2,8 +2,9 @@ from flask import request, render_template
 from flask_login import login_required
 
 from app.decorators import check_master_or_teacher
+from app.init_model import developer_login
 from app.list_route import create_list_route
-from app.models import Master, Teacher, Student, Group
+from app.models import Master, Teacher, Student, Group, SystemUser
 from app.users import users
 
 
@@ -12,7 +13,11 @@ from app.users import users
 @check_master_or_teacher
 def masters_list():
     return create_list_route(
-        lambda search: Master.query.filter(Master.fio.ilike('%{}%'.format(search))).order_by(Master.fio),
+        lambda search: Master.query
+            .join(SystemUser, SystemUser.id == Master.system_user_id)
+            .filter(SystemUser.login != developer_login)
+            .filter(Master.fio.ilike('%{}%'.format(search)))
+            .order_by(Master.fio),
         'users/masters_list.html')
 
 
@@ -38,8 +43,8 @@ def students_list():
     else:
         selected_group = None
         pagination = Student.query
-    pagination = pagination\
-        .filter(Student.fio.ilike('%{}%'.format(search))).order_by(Student.fio)\
+    pagination = pagination \
+        .filter(Student.fio.ilike('%{}%'.format(search))).order_by(Student.fio) \
         .paginate(page, per_page=20, error_out=False)
     return render_template('users/students_list.html', pagination=pagination, items=pagination.items, search=search,
                            groups=Group.query.order_by(Group.name).all(), selected_group=selected_group)

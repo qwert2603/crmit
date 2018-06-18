@@ -8,6 +8,8 @@ role_student_name = 'ученик'
 
 default_citizenship_name = 'Россия'
 
+developer_login = 'qwert2603'
+
 
 def create_system_roles():
     role_master = SystemRole(name=role_master_name, details_table_name=Master.__tablename__)

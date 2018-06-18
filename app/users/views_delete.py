@@ -1,6 +1,7 @@
 from flask import flash, redirect, url_for, abort
 from flask_login import login_required
 from app import db
+from app.init_model import developer_login
 from app.is_removable_check import is_master_removable, is_teacher_removable, is_student_removable
 from app.models import Master, Teacher, Student
 from app.users import users
@@ -12,6 +13,9 @@ from app.decorators import check_master, check_master_or_teacher
 @check_master
 def delete_master(id):
     master = Master.query.get_or_404(id)
+    if master.system_user.login == developer_login:
+        flash('разрабочика нельзя удалить!')
+        return redirect(url_for('.masters_list'))
     if not is_master_removable(master): abort(409)
     db.session.delete(master)
     db.session.delete(master.system_user)
