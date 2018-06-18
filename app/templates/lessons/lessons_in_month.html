@@ -27,13 +27,7 @@
             <th>ученик</th>
             {% for lesson in lessons %}
                 <th>
-                    {% if write_mode %}
-                        <input form="save_form" type="date" name="l_{{ lesson.id }}" value="{{ lesson.date }}" required
-                               min="{{ start_date_of_month(group.start_month) }}"
-                               max="{{ end_date_of_month(group.end_month) }}">
-                    {% else %}
-                        {{ lesson.date }}
-                    {% endif %}
+                    {{ lesson.date.day }}
                     {% if lesson.teacher.id != group.teacher.id %}
                         <br/>
                         {{ lesson.teacher.fio }}

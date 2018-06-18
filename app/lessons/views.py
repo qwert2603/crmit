@@ -53,11 +53,6 @@ def lessons_in_month(group_id, month_number):
         .all()
     if 'submit' in request.form:
         ls = Lesson.lessons_in_group_in_month(group_id, month_number).all()
-        for l in ls:
-            new_date = parse_date_or_none(request.form.get('l_{}'.format(l.id))).date()
-            if new_date is not None \
-                    and start_date_of_month(group.start_month) <= new_date <= end_date_of_month(group.end_month):
-                l.date = new_date
         ps = Payment.query \
             .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
             .filter(StudentInGroup.group_id == group_id, Payment.month == month_number)
