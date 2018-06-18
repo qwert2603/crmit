@@ -1,14 +1,21 @@
 import datetime
 
 
-def generate_login(last_name, first_name, second_name):
+def generate_login_student(last_name, first_name, second_name):
     login = ''
     login += translit(first_name[0])
     if len(second_name) > 0:
         login += translit(second_name[0])
     for c in last_name:
         login += translit(c)
-    return login
+    from app import SystemUser
+    if not SystemUser.query.filter_by(login=login).first():
+        return login
+    else:
+        suffix = 2
+        while SystemUser.query.filter_by(login=login + str(suffix)).first():
+            suffix = suffix + 1
+        return login + str(suffix)
 
 
 def translit(c):

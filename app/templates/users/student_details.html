@@ -10,6 +10,7 @@
             <strike>{{ student.fio }}</strike> (отключен)
         {% endif %}
     </h3>
+    <h4>логин: {{ student.system_user.login }}</h4>
     <h4>последний визит: {{ moment(student.system_user.last_seen).fromNow(refresh=True) }}</h4>
     <h4>дата рождения: {{ student.birth_date }}</h4>
     <h4>место рождения: {{ student.birth_place }}</h4>
