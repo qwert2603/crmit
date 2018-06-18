@@ -1,8 +1,10 @@
+import datetime
 from flask import request, render_template, abort, flash, url_for, redirect
 from flask_login import login_required, current_user
 
 from app import db
 from app.decorators import check_master_or_teacher, check_access_group_write
+from app.init_model import role_teacher_name
 from app.is_removable_check import is_lesson_removable
 from app.lessons import lessons
 from app.lessons.utils import payments_in_month_dicts, lessons_lists, dates_of_lessons_dict
@@ -102,14 +104,18 @@ def lessons_in_month(group_id, month_number):
 @check_access_group_write()
 def create_lesson(group_id):
     group = Group.query.get_or_404(group_id)
+    current_date = datetime.date.today()
     if 'submit' in request.form:
         date = parse_date_or_none(request.form.get('date')).date()
         if date is None or date < start_date_of_month(group.start_month) or date > end_date_of_month(group.end_month):
             abort(409)
+        if current_user.system_role.name == role_teacher_name and date < current_date:
+            abort(409)
         db.session.add(Lesson(group_id=group_id, teacher_id=group.teacher_id, date=date))
         flash('занятие создано: {}'.format(date))
         return redirect(url_for('.lessons_in_month', group_id=group_id, month_number=number_of_month_for_date(date)))
-    return render_template('lessons/create_lesson.html', group=group)
+    return render_template('lessons/create_lesson.html', group=group,
+                           current_date=current_date)
 
 
 @lessons.route('/delete/<int:lesson_id>/<int:from_list>')

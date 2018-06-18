@@ -11,8 +11,8 @@
     <form method="post" class="form-group col-md-4">
         <div class="form-group">
             <h4><label for="date">дата</label></h4>
-            <input class="form-control" id="date" name="date" type="date" required value="today"
-                   min="{{ start_date_of_month(group.start_month) }}"
+            <input class="form-control" id="date" name="date" type="date" required value="{{ current_date }}"
+                   min="{% if current_user.system_role.name == role_master_name %}{{ start_date_of_month(group.start_month) }}{% else %}{{ current_date }}{% endif %}"
                    max="{{ end_date_of_month(group.end_month) }}">
         </div>
         <input class="btn btn-default" type="submit" name="submit" value="создать">
