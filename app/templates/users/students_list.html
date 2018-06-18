@@ -15,7 +15,7 @@
             <th>фио</th>
             <th>логин</th>
             <th>дата рождения</th>
-            <th>школа</th>
+            <th>школа / класс / смена</th>
             <th>родители</th>
             <th>группы</th>
             <th>телефон для связи</th>
@@ -34,7 +34,7 @@
                 </a></td>
                 <td>{{ student.system_user.login }}</td>
                 <td>{{ student.birth_date }}</td>
-                <td>{{ student.school.name }}</td>
+                <td>{{ student.school.name }} / {{ student.grade }} / {{ student.shift }}</td>
                 <td>
                     <ul>
                         {% for parent in student.parents.all() %}
