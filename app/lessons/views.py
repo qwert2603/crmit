@@ -7,8 +7,9 @@ from app.decorators import check_master_or_teacher, check_access_group_write
 from app.init_model import role_teacher_name
 from app.is_removable_check import is_lesson_removable
 from app.lessons import lessons
-from app.lessons.utils import payments_in_month_dicts, lessons_lists, dates_of_lessons_dict
+from app.lessons.utils import lessons_lists, dates_of_lessons_dict
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student
+from app.payments.utils import payments_in_month_dicts
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
     end_date_of_month, can_user_write_group
 

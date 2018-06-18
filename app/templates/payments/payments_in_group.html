@@ -84,8 +84,28 @@
         </tr>
     </table>
 
-    <form method="post" id="save_form">
-        <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
-    </form>
+    {% if current_user.system_role.name == role_teacher_name %}
+        <div class="col-md-4">
+            <h4>сумма неподтвержденных платежей:</h4>
+            <table class="table">
+                {% for group in sum_not_confirmed_by_group %}
+                    <tr>
+                        <td>{{ group['name'] }}</td>
+                        <th>{{ group['sum_not_confirmed'] }}</th>
+                    </tr>
+                {% endfor %}
+                <tr>
+                    <td>во всех Ваших группах</td>
+                    <th>{{ sum_not_confirmed_all }}</th>
+                </tr>
+            </table>
+        </div>
+    {% endif %}
+
+    <div class="col-md-12">
+        <form method="post" id="save_form">
+            <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
+        </form>
+    </div>
 
 {% endblock %}

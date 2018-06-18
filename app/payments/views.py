@@ -2,10 +2,10 @@ from flask import render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
 from app import db
 from app.decorators import check_access_group_write
-from app.init_model import role_master_name
-from app.lessons.utils import payments_dicts
+from app.init_model import role_master_name, role_teacher_name
 from app.models import Group, StudentInGroup, Student, Payment
 from app.payments import payments
+from app.payments.utils import payments_dicts, get_sum_not_confirmed_teacher, get_sum_not_confirmed_by_group
 
 
 @payments.route('/group/<int:group_id>', methods=['GET', 'POST'])
@@ -58,9 +58,16 @@ def payments_in_group(group_id):
         confirmed_payments += pd[4][month_number]
         non_zero_payments += pd[6][month_number]
         students_in_month[month_number] = students_count
+    if current_user.system_role.name == role_teacher_name:
+        sum_not_confirmed_by_group = get_sum_not_confirmed_by_group(current_user.teacher.id)
+        sum_not_confirmed_all = get_sum_not_confirmed_teacher(current_user.teacher.id)
+    else:
+        sum_not_confirmed_by_group = None
+        sum_not_confirmed_all = None
     return render_template('payments/payments_in_group.html', group=group, students_in_group=students_in_group,
                            payments=pd[0], confirmed=pd[1], cash=pd[2], comments=pd[3], confirmed_count_months=pd[4],
                            confirmed_count_students=pd[5], non_zero_count_months=pd[6], non_zero_count_students=pd[7],
                            total_payments=total_payments, confirmed_payments=confirmed_payments,
                            non_zero_payments=non_zero_payments, students_in_month=students_in_month,
-                           can_confirm=can_confirm)
+                           can_confirm=can_confirm, sum_not_confirmed_by_group=sum_not_confirmed_by_group,
+                           sum_not_confirmed_all=sum_not_confirmed_all)
