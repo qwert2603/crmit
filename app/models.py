@@ -82,7 +82,7 @@ class Parent(db.Model):
     phone = db.Column(db.String(255), nullable=False)
     _email = db.Column(db.String(255), name='email', nullable=True)
     _passport = db.Column(db.String(255), name='passport', nullable=True, unique=True)
-    address = db.Column(db.String(255), nullable=False)
+    _address = db.Column(db.String(255), name='address', nullable=True)
     _home_phone = db.Column(db.String(255), name='home_phone', nullable=True)
     _vk_link = db.Column(db.String(255), name='vk_link', nullable=True)
     notification_types = db.Column(db.Integer, nullable=False)
@@ -135,6 +135,18 @@ class Parent(db.Model):
             self._passport = new_passport
         else:
             self._passport = None
+
+    @property
+    def address(self):
+        return self._address
+
+    @address.setter
+    def address(self, new_address):
+        new_address = new_address.strip()
+        if new_address != '':
+            self._address = new_address
+        else:
+            self._address = None
 
     @property
     def children(self):

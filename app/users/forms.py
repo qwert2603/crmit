@@ -99,7 +99,7 @@ class RegistrationStudentForm(RegistrationForm):
     m_phone = StringField('новая мать: телефон', validators=[Phone(allow_empty=True)])
     m_email = StringField('новая мать: email', validators=[Optional(), Length(0, 128), Email()])
     m_passport = StringField('новая мать: паспорт', validators=[Optional(), Length(0, 255)])
-    m_address = StringField('новая мать: адрес', validators=[Length(0, 255)])
+    m_address = StringField('новая мать: адрес', validators=[Optional(), Length(0, 255)])
     m_home_phone = StringField('новая мать: домашний телефон', validators=[Length(0, 32)])
     m_vk_link = StringField('новая мать: ВКонтакте', validators=[Optional(), Length(0, 64), VkLink()])
     m_notification_types = SelectMultipleField('новая мать: уведомления', coerce=int, validators=[Optional()])
@@ -109,16 +109,16 @@ class RegistrationStudentForm(RegistrationForm):
     f_phone = StringField('новый отец: телефон', validators=[Phone(allow_empty=True)])
     f_email = StringField('новый отец: email', validators=[Optional(), Length(0, 128), Email()])
     f_passport = StringField('новый отец: паспорт', validators=[Optional(), Length(0, 255)])
-    f_address = StringField('новый отец: адрес', validators=[Length(0, 255)])
+    f_address = StringField('новый отец: адрес', validators=[Optional(), Length(0, 255)])
     f_home_phone = StringField('новый отец: домашний телефон', validators=[Length(0, 32)])
     f_vk_link = StringField('новый отец: ВКонтакте', validators=[Optional(), Length(0, 64), VkLink()])
     f_notification_types = SelectMultipleField('новый отец: уведомления', coerce=int, validators=[Optional()])
 
     def required_fields_values_new_mother(self):
-        return [self.m_fio.data, self.m_phone.data, self.m_address.data]
+        return [self.m_fio.data, self.m_phone.data]
 
     def required_fields_values_new_father(self):
-        return [self.f_fio.data, self.f_phone.data, self.f_address.data]
+        return [self.f_fio.data, self.f_phone.data]
 
     submit = SubmitField('создать ученика')
 

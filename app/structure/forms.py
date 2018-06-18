@@ -14,7 +14,7 @@ class ParentForm(FlaskForm):
     phone = StringField('телефон', validators=[Phone(allow_empty=False)])
     email = StringField('email', validators=[Optional(), Length(0, 128), Email()])
     passport = StringField('паспорт', validators=[Optional(), Length(0, 255)])
-    address = StringField('адрес', validators=[Length(1, 255)])
+    address = StringField('адрес', validators=[Optional(), Length(0, 255)])
     home_phone = StringField('домашний телефон', validators=[Optional(), Length(0, 32)])
     vk_link = StringField('ВКонтакте', validators=[Optional(), Length(0, 64), VkLink()])
     notification_types = SelectMultipleField('уведомления', coerce=int, validators=[Optional()])
