@@ -29,7 +29,7 @@
                         {% if group %}
                             {% if group.teacher == current_user.teacher %}
                                 <a href="{{ url_for('structure.groups_list',search=group.name) }}">
-                                    {{ group.name }}
+                                    <b>{{ group.name }}</b>
                                 </a>
                             {% else %}
                                 <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
