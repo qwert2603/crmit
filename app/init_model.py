@@ -1,6 +1,6 @@
 from app import db
 from app.models import SystemRole, SystemUser, Master, Teacher, Section, Group, Student, Citizenship, School, \
-    StudentInGroup, Payment
+    StudentInGroup, Payment, ScheduleTime
 
 role_master_name = 'руководитель'
 role_teacher_name = 'преподаватель'
@@ -31,6 +31,7 @@ def create_default_citizenships():
 def create_stub_models():
     create_system_roles()
     create_default_citizenships()
+    create_schedule_times()
 
     role_master = SystemRole.query.filter_by(name=role_master_name).first()
     user_master = SystemUser(login='ma1', password='12', system_role=role_master)
@@ -67,4 +68,10 @@ def create_stub_models():
     db.session.add(student_in_group)
     db.session.add(Payment(student_in_group=student_in_group, month=1, value=800))
 
+    db.session.commit()
+
+
+def create_schedule_times():
+    for i in range(0, 12):
+        db.session.add(ScheduleTime())
     db.session.commit()

@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block title %}расписание{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>расписание</h1>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>время</th>
+            {% for day_of_week in days_of_week %}
+                <th>{{ day_of_week }}</th>
+            {% endfor %}
+        </tr>
+        {% for time in schedule_times %}
+            <tr>
+                {% if time.time %}
+                    <th>{{ time.time }}</th>
+                {% else %}
+                    <td>n/a</td>
+                {% endif %}
+                {% for day_of_week in days_of_week %}
+                    {% set day_index = loop.index0 %}
+                    <td>
+                        {% set group = schedule_groups.get(time.id, dict()).get(day_index).group %}
+                        {% if group %}
+                            {% if group.teacher == current_user.teacher %}
+                                <a href="{{ url_for('structure.groups_list',search=group.name) }}">
+                                    {{ group.name }}
+                                </a>
+                            {% else %}
+                                <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
+                                    {{ group.name }}
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}

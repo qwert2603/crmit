@@ -54,4 +54,7 @@ def create_app(config_name):
     from app.notifications import notifications as notifications_blueprint
     app.register_blueprint(notifications_blueprint, url_prefix='/notifications')
 
+    from app.schedule import schedule as schedule_blueprint
+    app.register_blueprint(schedule_blueprint, url_prefix='/schedule')
+
     return app

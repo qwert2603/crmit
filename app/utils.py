@@ -159,3 +159,6 @@ def notification_types_int_to_list(nt_int):
         if nt_int & (1 << i) != 0:
             result.append(i)
     return result
+
+
+days_of_week_names = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']

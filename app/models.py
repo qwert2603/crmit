@@ -298,6 +298,7 @@ class Group(db.Model):
     end_month = db.Column(db.Integer, nullable=False, index=True)
     students_in_group = db.relationship('StudentInGroup', backref='group', lazy='dynamic')
     lessons = db.relationship('Lesson', backref='group', lazy='dynamic')
+    schedule_groups = db.relationship('ScheduleGroup', backref='group', lazy='dynamic')
 
     @property
     def students(self):
@@ -472,3 +473,19 @@ class DayPreference(db.Model):
     day = db.Column(db.Integer, nullable=False)
     candidate_id = db.Column(db.Integer, db.ForeignKey('candidates.id'), nullable=False)
     unique = db.UniqueConstraint(candidate_id, day)
+
+
+class ScheduleTime(db.Model):
+    __tablename__ = 'schedule_times'
+    id = db.Column(db.Integer, primary_key=True)
+    time = db.Column(db.String(8), nullable=True)
+    schedule_groups = db.relationship('ScheduleGroup', backref='schedule_time', lazy='dynamic')
+
+
+class ScheduleGroup(db.Model):
+    __tablename__ = 'schedule_groups'
+    id = db.Column(db.Integer, primary_key=True)
+    schedule_time_id = db.Column(db.Integer, db.ForeignKey('schedule_times.id'), nullable=False)
+    day_of_week = db.Column(db.Integer, nullable=False)
+    group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=True)
+    unique = db.UniqueConstraint(schedule_time_id, day_of_week)

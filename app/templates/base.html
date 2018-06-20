@@ -41,11 +41,13 @@
                         <li><a href="{{ url_for('lessons.lessons_list') }}">занятия</a></li>
 
                         <li><a href="{{ url_for('notifications.notifications_list') }}">уведомления</a></li>
+
+                        <li><a href="{{ url_for('schedule.timetable') }}">расписание</a></li>
                     {% endif %}
 
                     {% if current_user.system_role.name == role_master_name %}
                         <li><a href="{{ url_for('structure.schools_list') }}">школы</a></li>
-                        <li><a href="{{ url_for('structure.citizenships_list') }}">гражданства</a></li>
+                        <li><a href="{{ url_for('structure.citizenships_list') }}">гр-ва</a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

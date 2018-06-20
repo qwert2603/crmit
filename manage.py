@@ -24,7 +24,7 @@ def make_shell_context():
                 Candidate=models.Candidate, DayPreference=models.DayPreference,
                 SectionPreference=models.SectionPreference, ParentOfStudent=models.ParentOfStudent,
                 Citizenship=models.Citizenship, School=models.School, Section=models.Section,
-                Notification=models.Notification)
+                Notification=models.Notification, ScheduleTime=models.ScheduleTime, ScheduleGroup=models.ScheduleGroup)
 
 
 context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_teacher_name,
