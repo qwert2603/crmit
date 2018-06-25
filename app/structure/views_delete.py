@@ -16,7 +16,7 @@ def delete_citizenship(id):
     citizenship = Citizenship.query.get_or_404(id)
     if not is_citizenship_removable(citizenship): abort(409)
     db.session.delete(citizenship)
-    flash('гражданство удалено')
+    flash('гражданство {} удалено'.format(citizenship.name))
     return redirect(url_for('.citizenships_list'))
 
 
@@ -27,7 +27,7 @@ def delete_section(id):
     section = Section.query.get_or_404(id)
     if not is_section_removable(section): abort(409)
     db.session.delete(section)
-    flash('секция удалена')
+    flash('секция {} удалена'.format(section.name))
     return redirect(url_for('.sections_list'))
 
 
@@ -38,7 +38,7 @@ def delete_school(id):
     school = School.query.get_or_404(id)
     if not is_school_removable(school): abort(409)
     db.session.delete(school)
-    flash('школа удалена')
+    flash('школа {} удалена'.format(school.name))
     return redirect(url_for('.schools_list'))
 
 
@@ -49,7 +49,7 @@ def delete_parent(id):
     parent = Parent.query.get_or_404(id)
     if not is_parent_removable(parent): abort(409)
     db.session.delete(parent)
-    flash('родитель удален')
+    flash('родитель {} удален'.format(parent.fio))
     return redirect(url_for('.parents_list'))
 
 
@@ -61,5 +61,5 @@ def delete_group(id):
     if not is_group_removable(group): abort(409)
     group.notifications.delete()
     db.session.delete(group)
-    flash('группа удалена')
+    flash('группа {} удалена'.format(group.name))
     return redirect(url_for('.groups_list'))

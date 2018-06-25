@@ -19,7 +19,7 @@ def delete_master(id):
     if not is_master_removable(master): abort(409)
     db.session.delete(master)
     db.session.delete(master.system_user)
-    flash('руководитель удалён')
+    flash('руководитель {} удалён'.format(master.fio))
     return redirect(url_for('.masters_list'))
 
 
@@ -31,7 +31,7 @@ def delete_teacher(id):
     if not is_teacher_removable(teacher): abort(409)
     db.session.delete(teacher)
     db.session.delete(teacher.system_user)
-    flash('преподаватель удалён')
+    flash('преподаватель {} удалён'.format(teacher.fio))
     return redirect(url_for('.teachers_list'))
 
 

@@ -56,7 +56,7 @@
                             class="glyphicon glyphicon-pencil"></span></a>
                 </td>
                 <td>
-                    <a href="{{ url_for('structure.delete_parent',id=parent.id) }}"
+                    <a onclick="askDelete('{{ parent.fio }}', '{{ url_for('structure.delete_parent',id=parent.id) }}')"
                        class="btn btn-danger {% if not is_parent_removable(parent) %}disabled{% endif %}">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>

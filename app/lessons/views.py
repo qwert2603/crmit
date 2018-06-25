@@ -130,10 +130,10 @@ def delete_lesson(lesson_id, from_list):
     for a in lesson.attendings_was_not:
         db.session.delete(a)
     db.session.delete(lesson)
-    flash('занятие {} удалено'.format(lesson.date))
+    flash('занятие {} в {} удалено'.format(lesson.date, lesson.group.name))
     if from_list != 0:
         endpoint = '.lessons_list'
     else:
         endpoint = '.lessons_in_month'
-    return redirect(url_for(endpoint, group_id=lesson.group_id,
+    return redirect(url_for(endpoint, group_id=lesson.group_id if from_list == 0 else None,
                             month_number=(number_of_month_for_date(lesson.date))))

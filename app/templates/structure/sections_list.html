@@ -40,7 +40,7 @@
                                 class="glyphicon glyphicon-pencil"></span></a>
                     </td>
                     <td>
-                        <a href="{{ url_for('structure.delete_section',id=section.id) }}"
+                        <a onclick="askDelete('{{ section.name }}', '{{ url_for('structure.delete_section',id=section.id) }}')"
                            class="btn btn-danger {% if not is_section_removable(section) %}disabled{% endif %}">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>

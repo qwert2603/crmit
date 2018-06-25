@@ -31,7 +31,7 @@
                                 class="glyphicon glyphicon-pencil"></span></a>
                     </td>
                     <td>
-                        <a href="{{ url_for('structure.delete_citizenship',id=citizenship.id) }}"
+                        <a onclick="askDelete('{{ citizenship.name }}', '{{ url_for('structure.delete_citizenship',id=citizenship.id) }}')"
                            class="btn btn-danger {% if not is_citizenship_removable(citizenship) %}disabled{% endif %}">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>

@@ -51,7 +51,7 @@
                         </a>
                     </td>
                     <td>
-                        <a href="{{ url_for('users.delete_teacher',id=teacher.id) }}"
+                        <a onclick="askDelete('{{ teacher.fio }}', '{{ url_for('users.delete_teacher',id=teacher.id) }}')"
                            class="btn btn-danger {% if not is_teacher_removable(teacher) %}disabled{% endif %}">
                             <span class="glyphicon glyphicon-remove"></span>
                         </a>
