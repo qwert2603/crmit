@@ -1,6 +1,8 @@
+import datetime
+
 from app import db
 from app.models import Lesson
-from app.utils import number_of_month
+from app.utils import number_of_month, end_date_of_month
 from config import DB_TYPE_POSTGRES
 
 
@@ -75,3 +77,30 @@ def empty_past_lessons():
     for row in rows:
         result.append(PastEmptyLesson(row[0], row[1], row[2]))
     return result
+
+
+def fill_group_by_schedule(group, new_dows):
+    existing_lessons = group.lessons.filter(Lesson.date > datetime.date.today()).all()
+    for lesson in existing_lessons:
+        for a in lesson.attendings:
+            db.session.delete(a)
+        db.session.delete(lesson)
+    for date in days_of_dows(start_date=datetime.date.today() + datetime.timedelta(days=1),
+                             end_date=end_date_of_month(group.end_month), dows=new_dows):
+        db.session.add(Lesson(group_id=group.id, teacher_id=group.teacher_id, date=date))
+
+
+def days_of_dows(start_date, end_date, dows):
+    result = []
+    date = start_date
+    while date <= end_date:
+        if date.weekday() in dows:
+            result.append(date)
+        date = date + datetime.timedelta(days=1)
+    return result
+
+# from app.lessons.utils import days_of_dows
+# import datetime
+
+# days_of_dows(datetime.datetime.strptime('01062018', "%d%m%Y"), datetime.datetime.strptime('31072018', "%d%m%Y"),
+#              {1, 4, 5})

@@ -10,3 +10,9 @@
 .student_select {
     width: 320px;
 }
+
+.red_text {
+    margin-top: 32px;
+    font-size: 22px;
+    color: red;
+}

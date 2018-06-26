@@ -7,11 +7,11 @@ from app.decorators import check_master_or_teacher, check_access_group_write, ch
 from app.init_model import role_teacher_name
 from app.is_removable_check import is_lesson_removable
 from app.lessons import lessons
-from app.lessons.utils import lessons_lists, dates_of_lessons_dict, empty_past_lessons
-from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student
+from app.lessons.utils import lessons_lists, dates_of_lessons_dict, empty_past_lessons, fill_group_by_schedule
+from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student, ScheduleGroup
 from app.payments.utils import payments_in_month_dicts
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
-    end_date_of_month, can_user_write_group
+    end_date_of_month, can_user_write_group, days_of_week_names, parse_int_or_none
 
 
 @lessons.route('/list')
@@ -148,10 +148,38 @@ def delete_empty_past_lessons():
         for k in request.form:
             if k[:2] == 'l_':
                 count += 1
-                lesson = Lesson.query.get(int(k[2:]))
+                lesson_id = parse_int_or_none(k[2:])
+                if lesson_id is None:
+                    abort(409)
+                lesson = Lesson.query.get(lesson_id)
                 for a in lesson.attendings_was_not:
                     db.session.delete(a)
                 db.session.delete(lesson)
         flash('удалено занятий: {}'.format(count))
         return redirect(url_for('.lessons_list'))
     return render_template('lessons/delete_empty_past.html', lessons=empty_past_lessons())
+
+
+@lessons.route('/fill_by_schedule/<int:group_id>', methods=['GET', 'POST'])
+@login_required
+@check_access_group_write()
+def fill_by_schedule(group_id):
+    group = Group.query.get_or_404(group_id)
+    if 'submit' in request.form:
+        new_dows = []
+        for k in request.form:
+            if k[:4] == 'dow_':
+                dow = parse_int_or_none(k[4:])
+                if dow is None:
+                    abort(409)
+                new_dows.append(dow)
+        fill_group_by_schedule(group, new_dows)
+        flash('расписание сформировано')
+        return redirect(url_for('.months_list', group_id=group_id))
+    checked_days = db.session.query(ScheduleGroup.day_of_week) \
+        .distinct() \
+        .filter(ScheduleGroup.group_id == group_id) \
+        .all()
+    checked_days = [r[0] for r in checked_days]
+    return render_template('lessons/fill_by_schedule.html', group=group, days_of_week_names=days_of_week_names,
+                           checked_days=checked_days)

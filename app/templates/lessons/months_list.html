@@ -13,6 +13,10 @@
         <a href="{{ url_for('lessons.create_lesson',group_id=group.id) }}" class="btn btn-primary margined_button">
             новое занятие
         </a>
+
+        <a href="{{ url_for('lessons.fill_by_schedule',group_id=group.id) }}" class="btn btn-info margined_button">
+            сформировать расписание
+        </a>
     {% endif %}
 
     <table class="table">

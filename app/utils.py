@@ -127,6 +127,13 @@ def parse_date_or_none(date_str):
         return None
 
 
+def parse_int_or_none(int_str):
+    try:
+        return int(int_str)
+    except ValueError:
+        return None
+
+
 def compare_not_none(f, a1, a2):
     if a1 is None and a2 is None: return None
     if a1 is None: return a2

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ group.name }}. формирование расписания{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ group.name }}. формирование расписания</h1>
+    </div>
+
+    <form method="post">
+
+        {% for day_of_week in days_of_week_names %}
+            <div class="checkbox">
+                <label>
+                    <input class="checkbox-inline" type="checkbox" name="dow_{{ loop.index0 }}"
+                           {% if loop.index0 in checked_days %}checked{% endif %}>
+                    {{ day_of_week }}
+                </label>
+            </div>
+
+        {% endfor %}
+
+        <input class="btn btn-info" type="submit" name="submit" value="сформировать">
+
+    </form>
+
+    <div class="red_text">ранее созданные занятия на будущие дни будут удалены!</div>
+
+{% endblock %}
