@@ -44,3 +44,34 @@ def dates_of_lessons_dict(group_id):
     for row in rows:
         result[number_of_month(row[0], row[1] - 1)] = row[2]
     return result
+
+
+class PastEmptyLesson:
+    def __init__(self, id, date, group_name):
+        self.id = id
+        self.date = date
+        self.group_name = group_name
+
+
+def empty_past_lessons():
+    sql = '''
+            SELECT
+              lessons.id   lesson_id,
+              lessons.date lesson_date,
+              groups.name  group_name
+            FROM lessons
+              LEFT JOIN (SELECT *
+                         FROM attendings
+                         WHERE attendings.was = TRUE) a ON a.lesson_id = lessons.id
+              JOIN groups ON groups.id = lessons.group_id
+            WHERE lessons.date < date(now())
+            GROUP BY lessons.id, groups.name
+            HAVING count(a.id) = 0
+            ORDER BY lesson_date DESC
+            LIMIT 100
+    '''
+    rows = db.engine.execute(sql)
+    result = []
+    for row in rows:
+        result.append(PastEmptyLesson(row[0], row[1], row[2]))
+    return result

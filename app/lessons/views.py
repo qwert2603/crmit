@@ -3,11 +3,11 @@ from flask import request, render_template, abort, flash, url_for, redirect
 from flask_login import login_required, current_user
 
 from app import db
-from app.decorators import check_master_or_teacher, check_access_group_write
+from app.decorators import check_master_or_teacher, check_access_group_write, check_master
 from app.init_model import role_teacher_name
 from app.is_removable_check import is_lesson_removable
 from app.lessons import lessons
-from app.lessons.utils import lessons_lists, dates_of_lessons_dict
+from app.lessons.utils import lessons_lists, dates_of_lessons_dict, empty_past_lessons
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student
 from app.payments.utils import payments_in_month_dicts
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
@@ -137,3 +137,21 @@ def delete_lesson(lesson_id, from_list):
         endpoint = '.lessons_in_month'
     return redirect(url_for(endpoint, group_id=lesson.group_id if from_list == 0 else None,
                             month_number=(number_of_month_for_date(lesson.date))))
+
+
+@lessons.route('/delete_empty_past', methods=['GET', 'POST'])
+@login_required
+@check_master
+def delete_empty_past_lessons():
+    if 'submit' in request.form:
+        count = 0
+        for k in request.form:
+            if k[:2] == 'l_':
+                count += 1
+                lesson = Lesson.query.get(int(k[2:]))
+                for a in lesson.attendings_was_not:
+                    db.session.delete(a)
+                db.session.delete(lesson)
+        flash('удалено занятий: {}'.format(count))
+        return redirect(url_for('.lessons_list'))
+    return render_template('lessons/delete_empty_past.html', lessons=empty_past_lessons())

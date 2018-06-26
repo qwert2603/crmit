@@ -76,4 +76,8 @@
     <div class="footer">
         {{ pagination_widget(pagination, 'lessons.lessons_list', group_id=group_id) }}
     </div>
+
+    <a class="btn btn-danger margined_button" href="{{ url_for('lessons.delete_empty_past_lessons') }}">
+        удалить пустые занятия в прошлом
+    </a>
 {% endblock %}

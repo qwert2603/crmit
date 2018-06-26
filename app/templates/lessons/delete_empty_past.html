@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% set title = 'удаление пустых занятий' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <form method="post">
+        {% for lesson in lessons %}
+            <div class="checkbox">
+                <label>
+                    <input class="checkbox-inline" type="checkbox" name="l_{{ lesson.id }}">
+                    {{ lesson.date }} в {{ lesson.group_name }}
+                </label>
+            </div>
+            {% if loop.index==100 %}
+                <p><i>показаны первые 100 занятий</i></p>
+            {% endif %}
+        {% else %}
+            <p><i>в прошлом нет пустых занятий</i></p>
+        {% endfor %}
+
+        <input class="btn btn-danger" type="submit" name="submit" value="удалить"
+               {% if not lessons %}disabled{% endif %}>
+
+    </form>
+
+{% endblock %}
