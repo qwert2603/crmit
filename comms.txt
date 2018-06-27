@@ -15,3 +15,5 @@ venv/bin/python ~/.local/bin/flask db upgrade
 venv/bin/pip3 install mysql-connector-python
 venv/bin/pip3 install mysql-python
 venv/bin/pip3 install -r requiments.txt
+
+tar -xvf crmit_0_8.tar.gz

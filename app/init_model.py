@@ -34,13 +34,13 @@ def create_stub_models():
     create_schedule_times()
 
     role_master = SystemRole.query.filter_by(name=role_master_name).first()
-    user_master = SystemUser(login='ma1', password='12', system_role=role_master)
+    user_master = SystemUser(login='ma1', password='12', system_role=role_master, enabled=True)
     master = Master(fio='Руководитель Иван Иванович', system_user=user_master)
     db.session.add(user_master)
     db.session.add(master)
 
     role_teacher = SystemRole.query.filter_by(name=role_teacher_name).first()
-    user_teacher = SystemUser(login='te1', password='12', system_role=role_teacher)
+    user_teacher = SystemUser(login='te1', password='12', system_role=role_teacher, enabled=True)
     teacher = Teacher(fio='Учитель Петр Петрович', system_user=user_teacher)
     db.session.add(user_teacher)
     db.session.add(teacher)
@@ -48,7 +48,7 @@ def create_stub_models():
     school = School(name='школа №42')
 
     role_student = SystemRole.query.filter_by(name=role_student_name).first()
-    user_student = SystemUser(login='st1', password='31082002', system_role=role_student)
+    user_student = SystemUser(login='st1', password='31082002', system_role=role_student, enabled=True)
     student = Student(fio='Ученик Алексей Алексеевич', system_user=user_student, birth_place='birth place',
                       birth_date='2002-08-31',
                       registration_place='reg place', actual_address='act addr', citizenship_id=1, school=school)
