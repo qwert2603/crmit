@@ -91,7 +91,9 @@ class RegistrationStudentForm(RegistrationForm):
     shift = StringField('смена', validators=[Length(1, 31)])
     phone = StringField('телефон', validators=[Phone(allow_empty=True)])
     contact_phone = SelectField('телефон для связи', coerce=int, validators=[DataRequired()])
+    mother_search = StringField('мать. поиск', validators=[Optional()])
     mother = SelectField('мать', coerce=int, validators=[Optional()])
+    father_search = StringField('отец. поиск', validators=[Optional()])
     father = SelectField('отец', coerce=int, validators=[Optional()])
 
     m_fio = StringField('новая мать: фио',
