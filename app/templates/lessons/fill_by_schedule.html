@@ -8,7 +8,7 @@
         <h1>{{ group.name }}. формирование расписания</h1>
     </div>
 
-    <form method="post">
+    <form method="post" class="col-md-12">
 
         {% for day_of_week in days_of_week_names %}
             <div class="checkbox">
@@ -25,6 +25,8 @@
 
     </form>
 
-    <div class="red_text">ранее созданные занятия на будущие дни будут удалены!</div>
+    {% include '_cancel_button.html' %}
+
+    <div class="red_text col-md-12">ранее созданные занятия на будущие дни будут удалены!</div>
 
 {% endblock %}

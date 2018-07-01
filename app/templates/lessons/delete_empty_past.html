@@ -10,7 +10,7 @@
         <h1>{{ title }}</h1>
     </div>
 
-    <form method="post">
+    <form method="post" class="col-md-12">
         {% for lesson in lessons %}
             <div class="checkbox">
                 <label>
@@ -25,9 +25,11 @@
             <p><i>в прошлом нет пустых занятий</i></p>
         {% endfor %}
 
-        <input class="btn btn-danger" type="submit" name="submit" value="удалить"
+        <input class="btn btn-warning" type="submit" name="submit" value="удалить"
                {% if not lessons %}disabled{% endif %}>
 
     </form>
+
+    {% include '_cancel_button.html' %}
 
 {% endblock %}
