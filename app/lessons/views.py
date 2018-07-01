@@ -85,9 +85,9 @@ def lessons_in_month(group_id, month_number):
                 for a in l.attendings:
                     attendings[l.id][a.student_id] = a
             for l in ls:
-                new_was = 'a_{}_{}'.format(l.id, student_in_group.student_id) in request.form
                 attending = attendings[l.id].get(student_in_group.student_id)
-                new_state = attending_was if new_was else attending_was_not
+                a_key = 'a_{}_{}'.format(l.id, student_in_group.student_id)
+                new_state = request.form.get(a_key, attending_was_not, type=int)
                 if attending is not None:
                     attending.state = new_state
                 else:

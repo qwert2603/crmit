@@ -47,10 +47,16 @@
                 </a></td>
                 {% for lesson in lessons %}
                     <td>
-                        <input form="save_form" type="checkbox"
-                               name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
-                               {% if attendings_states[lesson.id].get(student_in_group.student_id, attending_was_not) == attending_was %}checked{% endif %}
-                               {% if not write_mode %}disabled{% endif %}>
+                        {% set state=attendings_states[lesson.id].get(student_in_group.student_id, attending_was_not) %}
+                        <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                               {% if not write_mode %}disabled{% endif %} value="{{ attending_was_not }}"
+                               {% if state == attending_was_not %}checked{% endif %}/>
+                        <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                               {% if not write_mode %}disabled{% endif %} value="{{ attending_was }}"
+                               {% if state == attending_was %}checked{% endif %}/>
+                        <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                               {% if not write_mode %}disabled{% endif %} value="{{ attending_was_not_ill }}"
+                               {% if state == attending_was_not_ill %}checked{% endif %}/>
                     </td>
                 {% endfor %}
                 {% if write_mode %}
