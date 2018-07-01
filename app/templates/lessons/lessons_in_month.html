@@ -61,10 +61,10 @@
                         <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
                                {% if not write_mode %}disabled{% endif %} value="{{ attending_was_not_ill }}"
                                style="display: none" {% if state == attending_was_not_ill %}checked{% endif %}/>
-                        <div>
-                            <div class="state_text" style="display: none; color: red">не был</div>
-                            <div class="state_text" style="display: none; color: green">был</div>
-                            <div class="state_text" style="display: none; color: orange">болел</div>
+                        <div style="width: 50px">
+                            <div class="state_text label label-default" style="display: none">не был</div>
+                            <div class="state_text label label-success" style="display: none">был</div>
+                            <div class="state_text label label-warning" style="display: none">болел</div>
                         </div>
                     </td>
                 {% endfor %}
