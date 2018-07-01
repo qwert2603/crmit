@@ -52,8 +52,16 @@
                         {{ lesson.date }}
                     </a>
                 </td>
-                <td>{{ lesson.group.name }}</td>
-                <td>{{ lesson.teacher.fio }}</td>
+                <td>
+                    <a href="{{ url_for('structure.groups_list',search=lesson.group.name) }}">
+                        {{ lesson.group.name }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('users.teachers_list',search=lesson.teacher.fio) }}">
+                        {{ lesson.teacher.fio }}
+                    </a>
+                </td>
                 <td>{{ lesson.attendings_was.count() }}
                     / {{ lesson.group.students_in_month(number_of_month_for_date(lesson.date)).count() }}</td>
                 {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}

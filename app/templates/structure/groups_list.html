@@ -33,8 +33,16 @@
         {% for group in items %}
             <tr>
                 <td>{{ group.name }}</td>
-                <td>{{ group.section.name }}</td>
-                <td>{{ group.teacher.fio }}</td>
+                <td>
+                    <a href="{{ url_for('structure.sections_list',search=group.section.name) }}">
+                        {{ group.section.name }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
+                        {{ group.teacher.fio }}
+                    </a>
+                </td>
                 <td>{{ group.students.count() }}</td>
                 <td>{{ get_month_name(group.start_month) }} — {{ get_month_name(group.end_month) }}</td>
                 <td><a href="{{ url_for('lessons.months_list',group_id=group.id) }}" class="btn btn-default"><span
@@ -47,7 +55,7 @@
                 </td>
                 <td>
                     {% if can_user_write_group(current_user, group) %}
-                        <a href="{{ url_for('structure.details',group_id=group.id) }}"
+                        <a href="{{ url_for('structure.group_details',group_id=group.id) }}"
                            class="btn btn-default">детали</a>
                     {% endif %}
                 </td>

@@ -38,7 +38,11 @@
                 <td>
                     <ul>
                         {% for parent in student.parents.all() %}
-                            <li>{{ parent.fio }}</li>
+                            <li>
+                                <a href="{{ url_for('structure.parents_list',search=parent.fio) }}">
+                                    {{ parent.fio }}
+                                </a>
+                            </li>
                         {% else %}
                             <p><i>нет родитей</i></p>
                         {% endfor %}
@@ -47,7 +51,11 @@
                 <td>
                     <ul>
                         {% for group in student.groups.all() %}
-                            <li>{{ group.name }}</li>
+                            <li>
+                                <a href="{{ url_for('structure.groups_list',search=group.name) }}">
+                                    {{ group.name }}
+                                </a>
+                            </li>
                         {% else %}
                             <p><i>нет групп</i></p>
                         {% endfor %}

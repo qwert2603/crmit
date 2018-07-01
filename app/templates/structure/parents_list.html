@@ -26,10 +26,18 @@
             <tr>
                 <td>{{ parent.fio }}</td>
                 <td>{{ parent.phone }}</td>
-                <td>{{ parent.email or '' }}</td>
+                <td>
+                    <a href="mailto://{{ parent.email or '' }}">
+                        {{ parent.email or '' }}
+                    </a>
+                </td>
                 <td>{{ parent.address or '' }}</td>
                 <td>{{ parent.home_phone or '' }}</td>
-                <td>{{ parent.vk_link or '' }}</td>
+                <td>
+                    <a href="https://{{ parent.vk_link or '' }}">
+                        {{ parent.vk_link or '' }}
+                    </a>
+                </td>
                 <td>
                     <ul>
                         {% for student in parent.children.all() %}

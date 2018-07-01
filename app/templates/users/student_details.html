@@ -35,7 +35,13 @@
     группы:
     <ul>
         {% for group in student.groups.all() %}
-            <li>{{ group.name }} (учеников: {{ group.students.count() }})</li>
+            <li>
+                <a href="{{ url_for('structure.groups_list',search=group.name) }}">
+                    {{ group.name }}
+                </a>
+                (<a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">{{ group.teacher.fio }}</a>
+                ; учеников: {{ group.students.count() }})
+            </li>
         {% else %}
             <p><i>нет групп</i></p>
         {% endfor %}

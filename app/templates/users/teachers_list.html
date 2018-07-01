@@ -36,7 +36,11 @@
                 <td>
                     <ul>
                         {% for group in teacher.groups.all() %}
-                            <li>{{ group.name }}</li>
+                            <li>
+                                <a href="{{ url_for('structure.groups_list',search=group.name) }}">
+                                    {{ group.name }}
+                                </a>
+                            </li>
                         {% else %}
                             <p><i>нет групп</i></p>
                         {% endfor %}

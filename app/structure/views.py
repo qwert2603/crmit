@@ -51,10 +51,10 @@ def students_in_group(group_id):
                            other_students=other_students, write_mode=can_user_write_group(current_user, group))
 
 
-@structure.route('/details/<int:group_id>', methods=['GET', 'POST'])
+@structure.route('/group_details/<int:group_id>', methods=['GET', 'POST'])
 @login_required
 @check_access_group_write()
-def details(group_id):
+def group_details(group_id):
     group = Group.query.get_or_404(group_id)
     students_in_group = group.students_in_group \
         .join(Student, Student.id == StudentInGroup.student_id) \
@@ -96,5 +96,5 @@ def details(group_id):
                         student_in_group.discount = new_discount
         flash('скидки и месяцы входа/выхода в группе {} изменены.'.format(group.name))
         return redirect(url_for('structure.groups_list'))
-    return render_template('structure/details.html', group=group, students_in_group=students_in_group,
+    return render_template('structure/group_details.html', group=group, students_in_group=students_in_group,
                            can_edit_discount=can_edit_discount)

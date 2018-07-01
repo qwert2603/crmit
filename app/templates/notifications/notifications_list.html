@@ -47,12 +47,26 @@
         {% for notification in notifications %}
             <tr>
                 <td>{{ moment(notification.send_time).format('LLL') }}</td>
-                <td>{{ notification.sender.details.fio }}</td>
+                <td>
+                    {% if notification.sender.system_role.name == role_master_name %}
+                        <a href="{{ url_for('users.masters_list',search=notification.sender.details.fio) }}">
+                            {{ notification.sender.details.fio }}
+                        </a>
+                    {% elif notification.sender.system_role.name == role_teacher_name %}
+                        <a href="{{ url_for('users.teachers_list',search=notification.sender.details.fio) }}">
+                            {{ notification.sender.details.fio }}
+                        </a>
+                    {% endif %}
+                </td>
                 <td>
                     {% if notification.receiver_type == receiver_type_group %}
-                        {{ notification.group.name }}
+                        <a href="{{ url_for('structure.groups_list',search=notification.group.name) }}">
+                            {{ notification.group.name }}
+                        </a>
                     {% elif notification.receiver_type==receiver_type_student_in_group %}
-                        {{ notification.student_in_group.student.fio }}
+                        <a href="{{ url_for('users.student_details',id=notification.student_in_group.student_id) }}">
+                            {{ notification.student_in_group.student.fio }}
+                        </a>
                     {% endif %}
                 </td>
                 <td>{{ notification.subject }}</td>

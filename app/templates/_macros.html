@@ -82,12 +82,20 @@
 {% endmacro %}
 
 {% macro render_parent(parent) %}
-    <h5>{{ parent.fio }}</h5>
+    <h5>
+        <a href="{{ url_for('structure.parents_list',search=parent.fio) }}">
+            {{ parent.fio }}
+        </a>
+    </h5>
     <h5>телефон: {{ parent.phone }}</h5>
     {% if parent.address %}<h5>адрес: {{ parent.address }}</h5>{% endif %}
-    {% if parent.email %}<h5>email: {{ parent.email }}</h5>{% endif %}
+    {% if parent.email %}
+        <h5>email: <a href="mailto://{{ parent.email }}">{{ parent.email }}</a></h5>
+    {% endif %}
     {% if parent.passport %}<h5>паспорт: {{ parent.passport }}</h5>{% endif %}
-    {% if parent.vk_link %}<h5>ВКонтакте: {{ parent.vk_link }}</h5>{% endif %}
+    {% if parent.vk_link %}
+        <h5>ВКонтакте: <a href="https://{{ parent.vk_link }}">{{ parent.vk_link }}</a></h5>
+    {% endif %}
     {% if parent.home_phone %}<h5>домашний телефон: {{ parent.home_phone }}</h5>{% endif %}
     <h5>уведомления: {{ ' / '.join(parent.notification_types_string) or 'нет' }}</h5>
 {% endmacro %}
