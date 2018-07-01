@@ -16,5 +16,7 @@ function makeSearch(searchInputId, selectId) {
     };
 }
 
-makeSearch('mother_search', 'mother');
-makeSearch('father_search', 'father');
+if (document.getElementById('mother_search')) {
+    makeSearch('mother_search', 'mother');
+    makeSearch('father_search', 'father');
+}
