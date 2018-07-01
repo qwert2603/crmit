@@ -39,7 +39,9 @@ context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_te
                     receiver_type_student_in_group=models.receiver_type_student_in_group,
                     contact_phone_variants=models.contact_phone_variants,
                     contact_phone_student=models.contact_phone_student,
-                    contact_phone_mother=models.contact_phone_mother, contact_phone_father=models.contact_phone_father)
+                    contact_phone_mother=models.contact_phone_mother, contact_phone_father=models.contact_phone_father,
+                    attending_was_not=models.attending_was_not, attending_was=models.attending_was,
+                    attending_was_not_ill=models.attending_was_not_ill)
 
 
 @app.context_processor

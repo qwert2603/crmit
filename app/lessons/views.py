@@ -8,7 +8,8 @@ from app.init_model import role_teacher_name
 from app.is_removable_check import is_lesson_removable
 from app.lessons import lessons
 from app.lessons.utils import lessons_lists, dates_of_lessons_dict, empty_past_lessons, fill_group_by_schedule
-from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student, ScheduleGroup
+from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student, ScheduleGroup, \
+    attending_was_not, attending_was
 from app.payments.utils import payments_in_month_dicts
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
     end_date_of_month, can_user_write_group, days_of_week_names, parse_int_or_none
@@ -86,17 +87,18 @@ def lessons_in_month(group_id, month_number):
             for l in ls:
                 new_was = 'a_{}_{}'.format(l.id, student_in_group.student_id) in request.form
                 attending = attendings[l.id].get(student_in_group.student_id)
+                new_state = attending_was if new_was else attending_was_not
                 if attending is not None:
-                    attending.was = new_was
+                    attending.state = new_state
                 else:
-                    db.session.add(Attending(lesson=l, student=student_in_group.student, was=new_was))
+                    db.session.add(Attending(lesson=l, student=student_in_group.student, state=new_state))
         flash('посещения и оплата в группе {} за {} сохранены.'.format(group.name, month_name))
         return redirect(url_for('lessons.lessons_in_month', group_id=group_id, month_number=month_number))
     pd = payments_in_month_dicts(group_id, month_number)
     ll = lessons_lists(group_id, month_number)
     return render_template('lessons/lessons_in_month.html', group=group, month_number=month_number,
                            month_name=month_name, students_in_group=students_in_group, payments=pd[0], confirmed=pd[1],
-                           cash=pd[2], comments=pd[3], lessons=ll[0], attendings=ll[1],
+                           cash=pd[2], comments=pd[3], lessons=ll[0], attendings_states=ll[1],
                            write_mode=can_user_write_group(current_user, group))
 
 

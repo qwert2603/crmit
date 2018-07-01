@@ -1,5 +1,6 @@
 from datetime import datetime
 from flask_login import AnonymousUserMixin, UserMixin
+from sqlalchemy import or_
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 from app.utils import end_date_of_month, start_date_of_month
@@ -346,11 +347,12 @@ class StudentInGroup(db.Model):
 
     @property
     def attendings_was(self):
-        return self.attendings.filter(Attending.was == True)
+        return self.attendings.filter(Attending.state == attending_was)
 
     @property
     def attendings_was_not(self):
-        return self.attendings.filter(Attending.was == False)
+        return self.attendings \
+            .filter(or_(Attending.state == attending_was_not, Attending.state == attending_was_not_ill))
 
     @property
     def payments_confirmed(self):
@@ -398,11 +400,12 @@ class Lesson(db.Model):
 
     @property
     def attendings_was(self):
-        return self.attendings.filter(Attending.was == True)
+        return self.attendings.filter(Attending.state == attending_was)
 
     @property
     def attendings_was_not(self):
-        return self.attendings.filter(Attending.was == False)
+        return self.attendings \
+            .filter(or_(Attending.state == attending_was_not, Attending.state == attending_was_not_ill))
 
     @staticmethod
     def lessons_in_group_in_month(group_id, month_number):
@@ -411,12 +414,17 @@ class Lesson(db.Model):
                                    Lesson.date <= end_date_of_month(month_number))
 
 
+attending_was_not = 0
+attending_was = 1
+attending_was_not_ill = 2
+
+
 class Attending(db.Model):
     __tablename__ = 'attendings'
     id = db.Column(db.Integer, primary_key=True)
     lesson_id = db.Column(db.Integer, db.ForeignKey('lessons.id'), nullable=False, index=True)
     student_id = db.Column(db.Integer, db.ForeignKey('students.id'), nullable=False, index=True)
-    was = db.Column(db.Boolean, nullable=False, default=False)
+    state = db.Column(db.Integer, nullable=False)
     unique = db.UniqueConstraint(student_id, lesson_id)
 
 

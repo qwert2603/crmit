@@ -1,6 +1,7 @@
 from sqlalchemy import func, or_
 from app import db
-from app.models import Payment, StudentInGroup, Lesson, Attending
+from app.models import Payment, StudentInGroup, Lesson, Attending, attending_was, attending_was_not, \
+    attending_was_not_ill
 from app.utils import number_of_month_for_date, compare_not_none, start_date_of_month, end_date_of_month
 
 
@@ -62,7 +63,7 @@ def max_enter_month_number_student_in_group(student_in_group):
     min_attending_date = db.session.query(func.min(Lesson.date)) \
         .filter(Lesson.group_id == student_in_group.group_id) \
         .join(Attending, Attending.lesson_id == Lesson.id) \
-        .filter(Attending.student_id == student_in_group.student_id, Attending.was == True) \
+        .filter(Attending.student_id == student_in_group.student_id, Attending.state == attending_was) \
         .scalar()
     min_attending_month = None
     if min_attending_date is not None: min_attending_month = number_of_month_for_date(min_attending_date)
@@ -78,7 +79,7 @@ def min_exit_month_number_student_in_group(student_in_group):
     max_attending_date = db.session.query(func.max(Lesson.date)) \
         .filter(Lesson.group_id == student_in_group.group_id) \
         .join(Attending, Attending.lesson_id == Lesson.id) \
-        .filter(Attending.student_id == student_in_group.student_id, Attending.was == True) \
+        .filter(Attending.student_id == student_in_group.student_id, Attending.state == attending_was) \
         .scalar()
     max_attending_month = None
     if max_attending_date is not None: max_attending_month = number_of_month_for_date(max_attending_date)
@@ -96,7 +97,8 @@ def delete_unconfirmed_payments_out_of_months_period_student(student_in_group):
 
 def delete_attendings_was_not_out_of_months_period_student(student_in_group):
     attendings_was_not = Attending.query \
-        .filter(Attending.student_id == student_in_group.student_id, Attending.was == False) \
+        .filter(Attending.student_id == student_in_group.student_id) \
+        .filter(or_(Attending.state == attending_was_not, Attending.state == attending_was_not_ill)) \
         .join(Lesson, Lesson.id == Attending.lesson_id) \
         .filter(Lesson.group_id == student_in_group.group_id) \
         .filter(or_(Lesson.date < start_date_of_month(student_in_group.enter_month),

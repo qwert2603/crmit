@@ -49,7 +49,7 @@
                     <td>
                         <input form="save_form" type="checkbox"
                                name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
-                               {% if attendings[lesson.id].get(student_in_group.student_id, False) %}checked{% endif %}
+                               {% if attendings_states[lesson.id].get(student_in_group.student_id, attending_was_not) == attending_was %}checked{% endif %}
                                {% if not write_mode %}disabled{% endif %}>
                     </td>
                 {% endfor %}

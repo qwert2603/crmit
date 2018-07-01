@@ -1,7 +1,7 @@
 import datetime
 
 from app import db
-from app.models import Lesson
+from app.models import Lesson, attending_was
 from app.utils import number_of_month, end_date_of_month
 from config import DB_TYPE_POSTGRES
 
@@ -10,12 +10,12 @@ def lessons_lists(group_id, month_number):
     lessons = Lesson.lessons_in_group_in_month(group_id, month_number) \
         .order_by(Lesson.date) \
         .all()
-    attendings = dict()
+    attendings_states = dict()
     for l in lessons:
-        attendings[l.id] = dict()
+        attendings_states[l.id] = dict()
         for a in l.attendings:
-            attendings[l.id][a.student_id] = a.was
-    return [lessons, attendings]
+            attendings_states[l.id][a.student_id] = a.state
+    return [lessons, attendings_states]
 
 
 def dates_of_lessons_dict(group_id):
@@ -64,14 +64,14 @@ def empty_past_lessons():
             FROM lessons
               LEFT JOIN (SELECT *
                          FROM attendings
-                         WHERE attendings.was = TRUE) a ON a.lesson_id = lessons.id
+                         WHERE attendings.state = {}) a ON a.lesson_id = lessons.id
               JOIN groups ON groups.id = lessons.group_id
             WHERE lessons.date < date(now())
             GROUP BY lessons.id, groups.name
             HAVING count(a.id) = 0
             ORDER BY lesson_date DESC
             LIMIT 100
-    '''
+    '''.format(attending_was)
     rows = db.engine.execute(sql)
     result = []
     for row in rows:
