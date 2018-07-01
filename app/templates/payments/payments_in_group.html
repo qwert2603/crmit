@@ -4,7 +4,7 @@
 
 {% block page_content %}
     <div class="page-header">
-        <h1>{{ group.name }}. оплата</h1>
+        <h1><a href="{{ url_for('structure.groups_list',search=group.name) }}">{{ group.name }}</a>. оплата</h1>
     </div>
 
     <table class="table">
@@ -90,8 +90,12 @@
             <table class="table">
                 {% for group in sum_not_confirmed_by_group %}
                     <tr>
-                        <td>{{ group['name'] }}</td>
-                        <th>{{ group['sum_not_confirmed'] }}</th>
+                        <td>
+                            <a href="{{ url_for('structure.groups_list',search=group.name) }}">
+                                {{ group.name }}
+                            </a>
+                        </td>
+                        <th>{{ group.sum_not_confirmed }}</th>
                     </tr>
                 {% endfor %}
                 <tr>

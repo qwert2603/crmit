@@ -5,7 +5,9 @@
 {% block page_content %}
 
     <div class="page-header">
-        <h1>занятия в {{ group.name }} за {{ month_name }}</h1>
+        <h1>занятия в
+            <a href="{{ url_for('structure.groups_list',search=group.name) }}">{{ group.name }}</a>
+            за {{ month_name }}</h1>
     </div>
 
     <a href="{{ url_for('lessons.lessons_in_month', group_id=group.id, month_number=month_number - 1) }}"

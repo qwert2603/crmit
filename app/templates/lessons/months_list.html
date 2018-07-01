@@ -6,7 +6,7 @@
 {% block page_content %}
 
     <div class="page-header">
-        <h1>занятия в {{ group.name }}</h1>
+        <h1>занятия в <a href="{{ url_for('structure.groups_list',search=group.name) }}">{{ group.name }}</a></h1>
     </div>
 
     {% if can_user_write_group(current_user, group) %}
