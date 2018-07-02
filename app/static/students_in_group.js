@@ -1,5 +1,5 @@
 function moveItems(origin, dest) {
-    var find = $(origin).find(':selected');
+    const find = $(origin).find(':selected');
     // prefix '(f)' is always first in selected.
     // i hope.
     const label = find['0'].label;
@@ -20,9 +20,9 @@ $('#right').on('click', function () {
 });
 
 function selectAll() {
-    var in_group = document.getElementById("in_group");
+    const in_group = document.getElementById("in_group");
 
-    for (var i = 0; i < in_group.options.length; i++) {
+    for (let i = 0; i < in_group.options.length; i++) {
         in_group.options[i].selected = true;
     }
 }
