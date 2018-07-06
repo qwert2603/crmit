@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% set page_title = 'быстрое создание ученика' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>{{ page_title }}</h1>
+    </div>
+    <div class="col-md-8">
+        {{ wtf.quick_form(form) }}
+    </div>
+
+    {% include '_cancel_button.html' %}
+{% endblock %}

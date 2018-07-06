@@ -3,10 +3,12 @@ from flask_login import login_required
 
 from app import db
 from app.decorators import check_master, check_master_or_teacher
-from app.init_model import role_master_name, role_teacher_name, role_student_name
-from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentOfStudent, Parent, vk_link_prefix
+from app.init_model import role_master_name, role_teacher_name, role_student_name, default_citizenship_id
+from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentOfStudent, Parent, StudentInGroup, Group, \
+    contact_phone_student
 from app.users import users
-from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
+from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm, \
+    RegistrationStudentFastForm
 from app.users.forms import create_new_parent_id
 from app.utils import generate_login_student, password_from_date, notification_types_list_to_int
 
@@ -87,3 +89,31 @@ def register_student():
         flash('ученик {} создан.'.format(fio))
         return redirect(url_for('users.students_list'))
     return render_template('users/form_register_edit.html', form=form, class_name='ученика', creating=True)
+
+
+@users.route('/register/student/fast/<int:group_id>/<int:month_number>', methods=['GET', 'POST'])
+@login_required
+@check_master_or_teacher
+def register_student_fast(group_id, month_number):
+    group = Group.query.get_or_404(group_id)
+    form = RegistrationStudentFastForm()
+    if form.validate_on_submit():
+        na_text = 'не указано'
+        fio = '{} {} {}'.format(form.last_name.data, form.first_name.data, form.second_name.data).strip()
+        role_student = SystemRole.query.filter_by(name=role_student_name).first()
+        user_student = SystemUser(
+            login=generate_login_student(form.last_name.data, form.first_name.data, form.second_name.data),
+            password=password_from_date(form.birth_date.data), system_role=role_student, enabled=True)
+        additional_info = 'телефон родителя: {}; \nимя родителя: {}'.format(form.parent_phone.data, form.parent_name.data)
+        student = Student(fio=fio, system_user=user_student, birth_date=form.birth_date.data,
+                          birth_place=na_text, registration_place=na_text, actual_address=na_text,
+                          additional_info=additional_info, known_from=na_text, school_id=form.school.data,
+                          citizenship_id=default_citizenship_id, grade=form.grade.data, shift=form.shift.data,
+                          phone=na_text, contact_phone=contact_phone_student, filled=False)
+        db.session.add(user_student)
+        db.session.add(student)
+        db.session.add(StudentInGroup(student=student, group=group, enter_month=group.start_month,
+                                      exit_month=group.end_month))
+        flash('ученик {} создан и добавлен в группу {}.'.format(fio, group.name))
+        return redirect(url_for('lessons.lessons_in_month', group_id=group_id, month_number=month_number))
+    return render_template('users/form_register_student_fast.html', form=form)

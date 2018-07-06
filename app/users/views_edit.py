@@ -83,6 +83,7 @@ def edit_student(id):
         student.shift = form.shift.data
         student.phone = form.phone.data
         student.contact_phone = form.contact_phone.data
+        student.filled = True
         new_mother_id = form.mother.data
         if new_mother_id == -1: new_mother_id = None
         new_father_id = form.father.data

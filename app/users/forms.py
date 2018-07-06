@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField, ValidationError, SelectField, Label, \
-    SelectMultipleField
+    SelectMultipleField, TextAreaField
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional, Email
 
 from app.form import DateFieldWidget, VkLink, Phone
@@ -83,7 +83,7 @@ class RegistrationStudentForm(RegistrationForm):
     birth_place = StringField('место рождения', validators=[Length(1, 255)])
     registration_place = StringField('адрес регистрации', validators=[Length(1, 255)])
     actual_address = StringField('фактический адрес проживания', validators=[Length(1, 255)])
-    additional_info = StringField('дополнительная информация', validators=[Length(0, 255)])
+    additional_info = TextAreaField('дополнительная информация', validators=[Length(0, 255)])
     known_from = StringField('откуда узнал(а) о ЦМИТ', validators=[Length(0, 255)])
     citizenship = SelectField('гражданство', coerce=int, validators=[DataRequired()])
     school = SelectField('школа', coerce=int, validators=[DataRequired()])
@@ -220,3 +220,27 @@ class RegistrationStudentForm(RegistrationForm):
         del self.f_home_phone
         del self.f_vk_link
         del self.f_notification_types
+
+
+class RegistrationStudentFastForm(FlaskForm):
+    last_name = StringField('фамилия', validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
+    first_name = StringField('имя', validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
+    second_name = StringField('отчество',
+                              validators=[Length(0, 60), Regexp('^[А-Я][а-я]+$|^$', 0, 'только русские буквы')])
+    birth_date = DateFieldWidget('дата рождения', validators=[DataRequired()])
+    school = SelectField('школа', coerce=int, validators=[DataRequired()])
+    grade = StringField('класс', validators=[Length(1, 31)])
+    shift = StringField('смена', validators=[Length(1, 31)])
+    parent_phone = StringField('телефон родителя', validators=[Length(1, 31)])
+    parent_name = StringField('имя родителя', validators=[Length(1, 31)])
+    submit = SubmitField('создать ученика')
+
+    def __init__(self, *args, **kwargs):
+        super(RegistrationStudentFastForm, self).__init__(*args, *kwargs)
+        schools = [(school.id, school.name) for school in School.query.order_by(School.name).all()]
+        schools = [(-1, 'выберите школу')] + schools
+        self.school.choices = schools
+
+    def validate_school(self, field):
+        if field.data <= 0:
+            raise ValidationError('школа не выбрана!')

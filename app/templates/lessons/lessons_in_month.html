@@ -142,7 +142,9 @@
             <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
         </form>
 
-        <a href="{{ url_for('users.register_student') }}" class="btn btn-default">добавить ученика</a>
+        <a href="{{ url_for('users.register_student_fast', group_id=group.id, month_number=month_number) }}" class="btn btn-default">
+            добавитьученика
+        </a>
     {% endif %}
 
 {% endblock %}

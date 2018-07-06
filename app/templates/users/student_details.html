@@ -9,6 +9,7 @@
         {% else %}
             <strike>{{ student.fio }}</strike> (отключен)
         {% endif %}
+        {% if not student.filled %}<span style="color: orangered;">(не заполнен)</span>{% endif %}
     </h3>
     <h4>логин: {{ student.system_user.login }}</h4>
     <h4>последний визит: {{ moment(student.system_user.last_seen).fromNow(refresh=True) }}</h4>

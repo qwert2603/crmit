@@ -25,13 +25,17 @@
         </tr>
         {% for student in items %}
             <tr>
-                <td><a href="{{ url_for('users.student_details',id=student.id) }}">
-                    {% if student.system_user.enabled %}
-                        {{ student.fio }}
-                    {% else %}
-                        <strike>{{ student.fio }}</strike><br/>(отключен)
-                    {% endif %}
-                </a></td>
+                <td>
+                    <a href="{{ url_for('users.student_details',id=student.id) }}">
+                        {% if student.system_user.enabled %}
+                            {{ student.fio }}
+                        {% else %}
+                            <strike>{{ student.fio }}</strike>
+                        {% endif %}
+                    </a>
+                    {% if not student.system_user.enabled %}<br/>(отключен){% endif %}
+                    {% if not student.filled %}<br/><span style="color: orangered;">(не заполнен)</span>{% endif %}
+                </td>
                 <td>{{ student.system_user.login }}</td>
                 <td>{{ student.birth_date }}</td>
                 <td>{{ student.school.name }} / {{ student.grade }} / {{ student.shift }}</td>

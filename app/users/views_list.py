@@ -44,7 +44,8 @@ def students_list():
         selected_group = None
         pagination = Student.query
     pagination = pagination \
-        .filter(Student.fio.ilike('%{}%'.format(search))).order_by(Student.fio) \
+        .filter(Student.fio.ilike('%{}%'.format(search))) \
+        .order_by(Student.filled, Student.fio) \
         .paginate(page, per_page=20, error_out=False)
     return render_template('users/students_list.html', pagination=pagination, items=pagination.items, search=search,
                            groups=Group.query.order_by(Group.name).all(), selected_group=selected_group)

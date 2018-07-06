@@ -7,6 +7,7 @@ role_teacher_name = 'преподаватель'
 role_student_name = 'ученик'
 
 default_citizenship_name = 'Россия'
+default_citizenship_id = 1
 
 developer_login = 'qwert2603'
 

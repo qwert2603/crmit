@@ -192,6 +192,7 @@ class Student(db.Model):
     shift = db.Column(db.String(32), nullable=False)
     _phone = db.Column(db.String(255), name='phone', nullable=True)
     contact_phone = db.Column(db.Integer, nullable=False)
+    filled = db.Column(db.Boolean, nullable=False, default=True)
     students_in_groups = db.relationship('StudentInGroup', backref='student', lazy='dynamic')
     attendings = db.relationship('Attending', backref='student', lazy='dynamic')
     parent_of_students = db.relationship('ParentOfStudent', backref='student', lazy='dynamic')
