@@ -9,7 +9,7 @@ def section_to_json(section):
         'groups': [{
             'id': group.id,
             'name': group.name,
-            'teacher_fio': group.teacher.fio
+            'teacherFio': group.teacher.fio
         } for group in section.groups.order_by(Group.id).all()]
     }
 
@@ -19,8 +19,8 @@ def teacher_to_json(teacher):
         'id': teacher.id,
         'fio': teacher.fio,
         'phone': teacher.phone,
-        'lessons_count': teacher.lessons.count(),
-        'system_user': system_user_to_json(teacher.system_user),
+        'lessonsCount': teacher.lessons.count(),
+        'systemUser': system_user_to_json(teacher.system_user),
         'groups': [{
             'id': group.id,
             'name': group.name,
@@ -32,6 +32,6 @@ def system_user_to_json(system_user):
     return {
         'id': system_user.id,
         'login': system_user.login,
-        'last_seen': system_user.last_seen.timestamp() * 1000000,
-        'system_role_name': system_user.system_role.name,
+        'lastSeen': system_user.last_seen.timestamp() * 1000000,
+        'systemRoleName': system_user.system_role.name,
     }
