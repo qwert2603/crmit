@@ -52,6 +52,8 @@ def student_to_json_brief(student):
         'fio': student.fio,
         'contactPhoneNumber': student.contact_phone_number,
         'contactPhoneWho': student.contact_phone_who,
+        'filled': student.filled,
+        'systemUser': system_user_to_json(student.system_user),
         'groups': [{
             'id': group.id,
             'name': group.name,
