@@ -16,10 +16,10 @@ def teachers_list():
 
 
 def create_json_list(Entity, filter_field, entity_to_json):
-    list = Entity.query \
+    entities_list = Entity.query \
         .filter(filter_field.ilike('%{}%'.format(request.args.get('search', '', type=str)))) \
         .order_by(Entity.id) \
         .offset(request.args.get('offset', type=int)) \
         .limit(request.args.get('count', type=int)) \
         .all()
-    return jsonify([entity_to_json(entity) for entity in list])
+    return jsonify([entity_to_json(entity) for entity in entities_list])
