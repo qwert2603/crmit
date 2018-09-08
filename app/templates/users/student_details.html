@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% from '_macros.html' import render_contact_phone with context %}
 {% from '_macros.html' import render_parent with context %}
 
 {% block page_content %}
@@ -23,7 +22,7 @@
     <h4>класс: {{ student.grade }}</h4>
     <h4>смена: {{ student.shift }}</h4>
     {% if student.phone %}<h4>телефон: {{ student.phone }}</h4>{% endif %}
-    <h4>телефон для связи: {{ render_contact_phone(student) }}</h4>
+    <h4>телефон для связи: {{ student.contact_phone_number }} ({{ student.contact_phone_who }})</h4>
     <h4>гражданство: {{ student.citizenship.name }}</h4>
     родители:
     <ul>

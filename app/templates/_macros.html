@@ -69,18 +69,6 @@
     {% endif %}
 {% endmacro %}
 
-{% macro render_contact_phone(student) %}
-    {% if student.contact_phone == contact_phone_student %}
-        {{ student.phone }} (ученик)
-    {% elif student.contact_phone == contact_phone_mother %}
-        {{ student.mother.phone }} (мать)
-    {% elif student.contact_phone == contact_phone_father %}
-        {{ student.father.phone }} (отец)
-    {% else %}
-        omg
-    {% endif %}
-{% endmacro %}
-
 {% macro render_parent(parent) %}
     <h5>
         <a href="{{ url_for('structure.parents_list',search=parent.fio) }}">

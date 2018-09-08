@@ -1,7 +1,6 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
 {% from '_macros.html' import render_search_with_group %}
-{% from '_macros.html' import render_contact_phone with context %}
 
 {% block title %}список учеников{% endblock %}
 
@@ -65,7 +64,7 @@
                         {% endfor %}
                     </ul>
                 </td>
-                <td>{{ render_contact_phone(student) }}</td>
+                <td>{{ student.contact_phone_number }} ({{ student.contact_phone_who }})</td>
                 <td>{{ moment(student.system_user.last_seen).fromNow(refresh=True) }}</td>
                 {# todo: ? all teachers can remove / edit all students #}
                 <td>

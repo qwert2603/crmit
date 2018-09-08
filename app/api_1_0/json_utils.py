@@ -34,4 +34,34 @@ def system_user_to_json(system_user):
         'login': system_user.login,
         'lastSeen': system_user.last_seen.timestamp() * 1000000,
         'systemRoleName': system_user.system_role.name,
+        'enabled': system_user.enabled
+    }
+
+
+def master_to_json(master):
+    return {
+        'id': master.id,
+        'fio': master.fio,
+        'systemUser': system_user_to_json(master.system_user),
+    }
+
+
+def student_to_json_brief(student):
+    return {
+        'id': student.id,
+        'fio': student.fio,
+        'contactPhoneNumber': student.contact_phone_number,
+        'contactPhoneWho': student.contact_phone_who,
+        'groups': [{
+            'id': group.id,
+            'name': group.name,
+        } for group in student.groups.order_by(Group.id).all()]
+    }
+
+
+def student_to_json_full(student):
+    return {
+        'id': student.id,
+        'fio': student.fio,
+        # todo
     }

@@ -235,6 +235,24 @@ class Student(db.Model):
             .join(StudentInGroup, StudentInGroup.group_id == Group.id) \
             .filter(StudentInGroup.student_id == self.id)
 
+    @property
+    def contact_phone_number(self):
+        if self.contact_phone == contact_phone_student:
+            return self.phone
+        elif self.contact_phone == contact_phone_mother:
+            return self.mother.phone
+        elif self.contact_phone == contact_phone_father:
+            return self.father.phone
+
+    @property
+    def contact_phone_who(self):
+        if self.contact_phone == contact_phone_student:
+            return 'ученик'
+        elif self.contact_phone == contact_phone_mother:
+            return 'мать'
+        elif self.contact_phone == contact_phone_father:
+            return 'отец'
+
 
 class ParentOfStudent(db.Model):
     __tablename__ = 'parent_of_students'
