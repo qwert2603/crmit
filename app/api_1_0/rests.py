@@ -1,6 +1,7 @@
 from flask import jsonify, request
 
-from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief
+from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
+    student_to_json_full
 from app.api_1_0 import api_1_0
 from app.init_model import developer_login
 from app.models import Section, Teacher, Master, Student, SystemUser
@@ -31,6 +32,11 @@ def students_list():
                             lambda query: query
                             .order_by(Student.filled, Student.id)
                             )
+
+
+@api_1_0.route('student_details/<int:student_id>')
+def student_details(student_id):
+    return jsonify(student_to_json_full(Student.query.get_or_404(student_id)))
 
 
 def create_json_list(Entity, filter_field, entity_to_json, more_filter=None, order_by=None):

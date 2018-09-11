@@ -54,6 +54,9 @@ def student_to_json_brief(student):
         'contactPhoneWho': student.contact_phone_who,
         'filled': student.filled,
         'systemUser': system_user_to_json(student.system_user),
+        'schoolName': student.school.name,
+        'grade': student.grade,
+        'shift': student.shift,
         'groups': [{
             'id': group.id,
             'name': group.name,
@@ -64,6 +67,45 @@ def student_to_json_brief(student):
 def student_to_json_full(student):
     return {
         'id': student.id,
+        'systemUser': system_user_to_json(student.system_user),
         'fio': student.fio,
-        # todo
+        'birthDate': student.birth_date.strftime("%d.%m.%Y"),
+        'birthPlace': student.birth_place,
+        'registrationPlace': student.registration_place,
+        'actualAddress': student.actual_address,
+        'additionalInfo': student.additional_info,
+        'knownFrom': student.known_from,
+        'school': school_to_json(student.school),
+        'grade': student.grade,
+        'shift': student.shift,
+        'phone': student.phone,
+        'contactPhoneNumber': student.contact_phone_number,
+        'contactPhoneWho': student.contact_phone_who,
+        'citizenshipName': student.citizenship.name,
+        'parents': [parent_to_json(parent) for parent in student.parents],
+        'groups': [{
+            'id': group.id,
+            'name': group.name,
+            'teacherFio': group.teacher.fio
+        } for group in student.groups.order_by(Group.id).all()]
+    }
+
+
+def school_to_json(school):
+    return {
+        'id': school.id,
+        'name': school.name,
+    }
+
+
+def parent_to_json(parent):
+    return {
+        'id': parent.id,
+        'fio': parent.fio,
+        'phone': parent.phone,
+        'address': parent.address,
+        'email': parent.email,
+        'vkLink': parent.vk_link,
+        'homePhone': parent.home_phone,
+        'notification_types_string': parent.notification_types_string,
     }
