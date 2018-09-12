@@ -83,6 +83,8 @@ def student_to_json_full(student):
         'contactPhoneWho': student.contact_phone_who,
         'citizenshipName': student.citizenship.name,
         'parents': [parent_to_json(parent) for parent in student.parents],
+        'mother': parent_to_json_nullable(student.mother),
+        'father': parent_to_json_nullable(student.father),
         'groups': [{
             'id': group.id,
             'name': group.name,
@@ -107,5 +109,11 @@ def parent_to_json(parent):
         'email': parent.email,
         'vkLink': parent.vk_link,
         'homePhone': parent.home_phone,
-        'notification_types_string': parent.notification_types_string,
+        'notificationTypesString': parent.notification_types_string,
     }
+
+
+def parent_to_json_nullable(parent_nullable):
+    if parent_nullable is None:
+        return None
+    return parent_to_json(parent_nullable)
