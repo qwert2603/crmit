@@ -68,6 +68,7 @@ def student_to_json_full(student):
     return {
         'id': student.id,
         'systemUser': system_user_to_json(student.system_user),
+        'filled': student.filled,
         'fio': student.fio,
         'birthDate': student.birth_date.strftime("%d.%m.%Y"),
         'birthPlace': student.birth_place,
@@ -82,7 +83,6 @@ def student_to_json_full(student):
         'contactPhoneNumber': student.contact_phone_number,
         'contactPhoneWho': student.contact_phone_who,
         'citizenshipName': student.citizenship.name,
-        'parents': [parent_to_json(parent) for parent in student.parents],
         'mother': parent_to_json_nullable(student.mother),
         'father': parent_to_json_nullable(student.father),
         'groups': [{
