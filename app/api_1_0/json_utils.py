@@ -6,11 +6,7 @@ def section_to_json(section):
         'id': section.id,
         'name': section.name,
         'price': section.price,
-        'groups': [{
-            'id': group.id,
-            'name': group.name,
-            'teacherFio': group.teacher.fio
-        } for group in section.groups.order_by(Group.id).all()]
+        'groups': [group_to_json_brief(group) for group in section.groups.order_by(Group.id).all()]
     }
 
 
@@ -21,10 +17,7 @@ def teacher_to_json(teacher):
         'phone': teacher.phone,
         'lessonsCount': teacher.lessons.count(),
         'systemUser': system_user_to_json(teacher.system_user),
-        'groups': [{
-            'id': group.id,
-            'name': group.name,
-        } for group in teacher.groups.order_by(Group.id).all()]
+        'groups': [group_to_json_brief(group) for group in teacher.groups.order_by(Group.id).all()]
     }
 
 
@@ -57,10 +50,7 @@ def student_to_json_brief(student):
         'schoolName': student.school.name,
         'grade': student.grade,
         'shift': student.shift,
-        'groups': [{
-            'id': group.id,
-            'name': group.name,
-        } for group in student.groups.order_by(Group.id).all()]
+        'groups': [group_to_json_brief(group) for group in student.groups.order_by(Group.id).all()]
     }
 
 
@@ -85,11 +75,7 @@ def student_to_json_full(student):
         'citizenshipName': student.citizenship.name,
         'mother': parent_to_json_nullable(student.mother),
         'father': parent_to_json_nullable(student.father),
-        'groups': [{
-            'id': group.id,
-            'name': group.name,
-            'teacherFio': group.teacher.fio
-        } for group in student.groups.order_by(Group.id).all()]
+        'groups': [group_to_json_brief(group) for group in student.groups.order_by(Group.id).all()]
     }
 
 
@@ -117,3 +103,11 @@ def parent_to_json_nullable(parent_nullable):
     if parent_nullable is None:
         return None
     return parent_to_json(parent_nullable)
+
+
+def group_to_json_brief(group):
+    return {
+        'id': group.id,
+        'name': group.name,
+        'teacherFio': group.teacher.fio
+    }
