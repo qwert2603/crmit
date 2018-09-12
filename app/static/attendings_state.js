@@ -15,7 +15,7 @@ function makeStateSwitcher(stateContainer) {
         for (let i = 0; i < stateTexts.length; ++i) {
             stateTexts[i].style.display = "none";
         }
-        stateTexts[state].style.display = "";
+        stateTexts[state].style.display = "inline";
     }
 
     stateContainer.onclick = function () {
