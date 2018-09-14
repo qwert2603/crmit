@@ -115,3 +115,16 @@ def group_to_json_brief(group):
         'name': group.name,
         'teacherFio': group.teacher.fio
     }
+
+
+def group_to_json_full(group):
+    return {
+        'id': group.id,
+        'name': group.name,
+        'teacherFio': group.teacher.fio,
+        'sectionName': group.section.name,
+        'startMonth': group.start_month,
+        'endMonth': group.end_month,
+        'studentsCount': group.students.count(),
+        'lessonsDoneCount': group.lessons.filter(Lesson.date <= datetime.date.today()).count(),
+    }

@@ -1,15 +1,20 @@
 from flask import jsonify, request
 
 from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
-    student_to_json_full
+    student_to_json_full, group_to_json_full
 from app.api_1_0 import api_1_0
 from app.init_model import developer_login
-from app.models import Section, Teacher, Master, Student, SystemUser
+from app.models import Section, Teacher, Master, Student, SystemUser, Group
 
 
 @api_1_0.route('/sections_list')
 def sections_list():
     return create_json_list(Section, Section.name, section_to_json)
+
+
+@api_1_0.route('/groups_list')
+def groups_list():
+    return create_json_list(Group, Group.name, group_to_json_full)
 
 
 @api_1_0.route('/teachers_list')
