@@ -1,7 +1,7 @@
 from flask import jsonify, request
 
 from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
-    student_to_json_full, group_to_json_full
+    student_to_json_full, group_to_json_full, group_to_json_brief
 from app.api_1_0 import api_1_0
 from app.init_model import developer_login
 from app.models import Section, Teacher, Master, Student, SystemUser, Group
@@ -14,7 +14,7 @@ def sections_list():
 
 @api_1_0.route('/groups_list')
 def groups_list():
-    return create_json_list(Group, Group.name, group_to_json_full)
+    return create_json_list(Group, Group.name, group_to_json_brief)
 
 
 @api_1_0.route('/teachers_list')
@@ -42,6 +42,16 @@ def students_list():
 @api_1_0.route('student_details/<int:student_id>')
 def student_details(student_id):
     return jsonify(student_to_json_full(Student.query.get_or_404(student_id)))
+
+
+@api_1_0.route('group_details/<int:group_id>')
+def group_details(group_id):
+    return jsonify(group_to_json_full(Group.query.get_or_404(group_id)))
+
+
+@api_1_0.route('section_details/<int:section_id>')
+def section_details(section_id):
+    return jsonify(section_to_json(Section.query.get_or_404(section_id)))
 
 
 def create_json_list(Entity, filter_field, entity_to_json, more_filter=None, order_by=None):
