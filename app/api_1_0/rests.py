@@ -54,6 +54,11 @@ def section_details(section_id):
     return jsonify(section_to_json(Section.query.get_or_404(section_id)))
 
 
+@api_1_0.route('teacher_details/<int:teacher_id>')
+def teacher_details(teacher_id):
+    return jsonify(teacher_to_json(Teacher.query.get_or_404(teacher_id)))
+
+
 def create_json_list(Entity, filter_field, entity_to_json, more_filter=None, order_by=None):
     query_ = Entity.query \
         .filter(filter_field.ilike('%{}%'.format(request.args.get('search', '', type=str))))
