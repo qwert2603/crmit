@@ -1,4 +1,4 @@
-from flask import jsonify
+from flask import jsonify, request, abort
 
 from app.api_1_0 import api_1_0
 from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
@@ -6,7 +6,8 @@ from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_j
     attending_to_json
 from app.api_1_0.utils import create_json_list, create_attendings_for_all_students
 from app.init_model import developer_login
-from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup
+from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
+    attending_states
 
 
 @api_1_0.route('/sections_list')
@@ -79,3 +80,22 @@ def attendings_of_lesson(lesson_id):
     lesson = Lesson.query.get_or_404(lesson_id)
     create_attendings_for_all_students(lesson)
     return jsonify([attending_to_json(attending) for attending in lesson.attendings.order_by(Attending.id)])
+
+
+@api_1_0.route('save_attending_state', methods=['POST'])
+def save_attending_state():
+    def int_or_404(key):
+        if key not in request.json:
+            abort(400)
+        try:
+            return int(str(request.json[key]))
+        except ValueError:
+            abort(400)
+
+    attending_id = int_or_404('attendingId')
+    attending_state = int_or_404('attendingState')
+    if attending_state not in attending_states:
+        abort(400)
+
+    Attending.query.get_or_404(attending_id).state = attending_state
+    return 'ok'

@@ -437,6 +437,12 @@ attending_was_not = 0
 attending_was = 1
 attending_was_not_ill = 2
 
+attending_states = [
+    attending_was_not,
+    attending_was,
+    attending_was_not_ill
+]
+
 
 class Attending(db.Model):
     __tablename__ = 'attendings'

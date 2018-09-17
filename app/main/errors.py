@@ -21,3 +21,8 @@ def error403(e):
 @main.app_errorhandler(409)
 def error409(e):
     return render_template('error.html', message="409 - конфликт"), 409
+
+
+@main.app_errorhandler(400)
+def error400(e):
+    return render_template('error.html', message="400 - ошибочный запрос"), 400
