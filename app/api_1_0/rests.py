@@ -1,15 +1,12 @@
 from flask import jsonify
 
-from app import db
+from app.api_1_0 import api_1_0
 from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
     attending_to_json
-from app.api_1_0 import api_1_0
-from app.api_1_0.utils import create_json_list
+from app.api_1_0.utils import create_json_list, create_attendings_for_all_students
 from app.init_model import developer_login
-from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
-    attending_was_not
-from app.utils import number_of_month_for_date
+from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup
 
 
 @api_1_0.route('/sections_list')
@@ -80,12 +77,5 @@ def lessons_in_group(group_id):
 @api_1_0.route('attendings_of_lesson/<int:lesson_id>')
 def attendings_of_lesson(lesson_id):
     lesson = Lesson.query.get_or_404(lesson_id)
-
-    attending_exist_student_ids = [a.student_id for a in lesson.attendings]
-
-    for student in lesson.group.students_in_month(number_of_month_for_date(lesson.date)):
-        if student.id not in attending_exist_student_ids:
-            db.session.add(Attending(lesson_id=lesson_id, student_id=student.id, state=attending_was_not))
-    db.session.commit()
-
+    create_attendings_for_all_students(lesson)
     return jsonify([attending_to_json(attending) for attending in lesson.attendings.order_by(Attending.id)])
