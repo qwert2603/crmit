@@ -1,10 +1,15 @@
-from flask import jsonify, request
+from flask import jsonify
 
+from app import db
 from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
-    student_to_json_full, group_to_json_full, group_to_json_brief
+    student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
+    attending_to_json
 from app.api_1_0 import api_1_0
+from app.api_1_0.utils import create_json_list
 from app.init_model import developer_login
-from app.models import Section, Teacher, Master, Student, SystemUser, Group
+from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
+    attending_was_not
+from app.utils import number_of_month_for_date
 
 
 @api_1_0.route('/sections_list')
@@ -59,16 +64,28 @@ def teacher_details(teacher_id):
     return jsonify(teacher_to_json(Teacher.query.get_or_404(teacher_id)))
 
 
-def create_json_list(Entity, filter_field, entity_to_json, more_filter=None, order_by=None):
-    query_ = Entity.query \
-        .filter(filter_field.ilike('%{}%'.format(request.args.get('search', '', type=str))))
-    if more_filter is not None: query_ = more_filter(query_)
-    if order_by is not None:
-        query_ = order_by(query_)
-    else:
-        query_ = query_.order_by(Entity.id)
-    entities_list = query_ \
-        .offset(request.args.get('offset', type=int)) \
-        .limit(request.args.get('count', type=int)) \
-        .all()
-    return jsonify([entity_to_json(entity) for entity in entities_list])
+@api_1_0.route('students_in_group/<int:group_id>')
+def students_in_group(group_id):
+    group = Group.query.get_or_404(group_id)
+    students_in_group_list = group.students_in_group.order_by(StudentInGroup.id)
+    return jsonify([student_in_group_to_json(student_in_group) for student_in_group in students_in_group_list])
+
+
+@api_1_0.route('lessons_in_group/<int:group_id>')
+def lessons_in_group(group_id):
+    group = Group.query.get_or_404(group_id)
+    return jsonify([lesson_to_json(lesson) for lesson in group.lessons.order_by(Lesson.date.desc())])
+
+
+@api_1_0.route('attendings_of_lesson/<int:lesson_id>')
+def attendings_of_lesson(lesson_id):
+    lesson = Lesson.query.get_or_404(lesson_id)
+
+    attending_exist_student_ids = [a.student_id for a in lesson.attendings]
+
+    for student in lesson.group.students_in_month(number_of_month_for_date(lesson.date)):
+        if student.id not in attending_exist_student_ids:
+            db.session.add(Attending(lesson_id=lesson_id, student_id=student.id, state=attending_was_not))
+    db.session.commit()
+
+    return jsonify([attending_to_json(attending) for attending in lesson.attendings.order_by(Attending.id)])

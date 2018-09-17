@@ -130,3 +130,32 @@ def group_to_json_full(group):
         'studentsCount': group.students.count(),
         'lessonsDoneCount': group.lessons.filter(Lesson.date <= datetime.date.today()).count(),
     }
+
+
+def student_in_group_to_json(student_in_group):
+    return {
+        'id': student_in_group.id,
+        'studentId': student_in_group.student_id,
+        'studentFio': student_in_group.student.fio,
+        'groupId': student_in_group.group.id,
+        'discount': student_in_group.discount,
+        'enterMonth': student_in_group.enter_month,
+        'exitMonth': student_in_group.exit_month,
+    }
+
+
+def lesson_to_json(lesson):
+    return {
+        'id': lesson.id,
+        'groupId': lesson.group.id,
+        'date': lesson.date.strftime("%d.%m.%Y")
+    }
+
+
+def attending_to_json(attending):
+    return {
+        'id': attending.id,
+        'lessonId': attending.lesson_id,
+        'studentId': attending.student_id,
+        'state': attending.state,
+    }
