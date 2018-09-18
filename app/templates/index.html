@@ -9,6 +9,16 @@
             <div class="btn-block">
                 <a href="{{ url_for('users.change_password') }}" class="btn btn-default">изменить пароль</a>
             </div>
+
+            {% if current_user.access_tokens.count() > 0 %}
+                <div style="margin-top: 100px">
+                    <div class="btn-block">
+                        <p>вы авторизованы также через мобильное приложение,
+                            <br/>тут вы можете завершить все сессии в мобильном приложении</p>
+                        <a href="{{ url_for('users.logout_app') }}" class="btn btn-danger">завершить</a>
+                    </div>
+                </div>
+            {% endif %}
         {% endif %}
     {% else %}
         <i>вы не авторизованы</i>

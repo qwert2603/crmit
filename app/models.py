@@ -31,6 +31,7 @@ class SystemUser(UserMixin, db.Model):
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)
     student = db.relationship('Student', backref='system_user', uselist=False)
     notifications = db.relationship('Notification', backref='sender', lazy='dynamic')
+    access_tokens = db.relationship('AccessToken', backref='system_user', lazy='dynamic')
 
     @property
     def details(self):
@@ -522,3 +523,11 @@ class ScheduleGroup(db.Model):
     day_of_week = db.Column(db.Integer, nullable=False)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'), nullable=True)
     unique = db.UniqueConstraint(schedule_time_id, day_of_week)
+
+
+class AccessToken(db.Model):
+    __tablename__ = 'access_tokens'
+    id = db.Column(db.Integer, primary_key=True)
+    token = db.Column(db.String(255), nullable=False)
+    system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False)
+    expires = db.Column(db.DateTime, nullable=False)

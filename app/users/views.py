@@ -32,6 +32,16 @@ def logout():
     return redirect(url_for('.login'))
 
 
+@users.route('/logout_app')
+@login_required
+@check_master_or_teacher
+def logout_app():
+    for at in current_user.access_tokens.all():
+        db.session.delete(at)
+    flash('все ваши сессии в мобильном приложении завершены')
+    return redirect(url_for('main.index'))
+
+
 @users.route('/change_password', methods=['GET', 'POST'])
 @login_required
 @check_master_or_teacher
