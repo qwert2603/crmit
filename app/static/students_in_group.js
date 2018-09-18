@@ -1,8 +1,8 @@
 function moveItems(origin, dest) {
-    const find = $(origin).find(':selected');
+    var find = $(origin).find(':selected');
     // prefix '(f)' is always first in selected.
     // i hope.
-    const label = find['0'].label;
+    var label = find['0'].label;
     if (label.indexOf('(f)') >= 0) {
         alert(label + ' уже посещал занятия или вносил оплату!');
     }
@@ -20,7 +20,7 @@ $('#right').on('click', function () {
 });
 
 function selectAll() {
-    const in_group = document.getElementById("in_group");
+    var in_group = document.getElementById("in_group");
 
     for (var i = 0; i < in_group.options.length; i++) {
         in_group.options[i].selected = true;

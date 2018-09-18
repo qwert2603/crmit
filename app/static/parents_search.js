@@ -1,14 +1,14 @@
 function makeSearch(searchInputId, selectId) {
-    const search = document.getElementById(searchInputId);
-    const select = document.getElementById(selectId);
+    var search = document.getElementById(searchInputId);
+    var select = document.getElementById(selectId);
 
     search.oninput = function () {
-        const query = search.value.toLowerCase();
-        const options = select.getElementsByTagName("option");
+        var query = search.value.toLowerCase();
+        var options = select.getElementsByTagName("option");
         for (var i = 0; i < options.length; i++) {
-            const option = options[i];
+            var option = options[i];
             if (option.innerHTML.toLowerCase().indexOf(query) > -1) {
-                option.style.display = "";
+                option.style.display = "inline";
             } else {
                 option.style.display = "none";
             }
