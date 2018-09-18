@@ -1,5 +1,5 @@
 function goBackInHistory() {
-    let prevUrl = document.referrer;
+    var prevUrl = document.referrer;
     if (prevUrl) window.location.replace(prevUrl);
 }
 

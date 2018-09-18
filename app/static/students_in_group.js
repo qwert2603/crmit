@@ -22,7 +22,7 @@ $('#right').on('click', function () {
 function selectAll() {
     const in_group = document.getElementById("in_group");
 
-    for (let i = 0; i < in_group.options.length; i++) {
+    for (var i = 0; i < in_group.options.length; i++) {
         in_group.options[i].selected = true;
     }
 }

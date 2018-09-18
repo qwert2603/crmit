@@ -2,8 +2,8 @@ function makeStateSwitcher(stateContainer) {
     const radios = stateContainer.getElementsByTagName('input');
     const stateTexts = stateContainer.getElementsByClassName('state_text');
 
-    let state = 0;
-    for (let i = 0; i < radios.length; ++i) {
+    var state = 0;
+    for (var i = 0; i < radios.length; ++i) {
         if (radios[i].checked) {
             state = i;
             break;
@@ -12,7 +12,7 @@ function makeStateSwitcher(stateContainer) {
 
     function render(state) {
         radios[state].checked = true;
-        for (let i = 0; i < stateTexts.length; ++i) {
+        for (var i = 0; i < stateTexts.length; ++i) {
             stateTexts[i].style.display = "none";
         }
         stateTexts[state].style.display = "inline";
@@ -26,6 +26,6 @@ function makeStateSwitcher(stateContainer) {
 }
 
 const stateContainers = document.getElementsByClassName('state_container');
-for (let i = 0; i < stateContainers.length; ++i) {
+for (var i = 0; i < stateContainers.length; ++i) {
     makeStateSwitcher(stateContainers[i]);
 }

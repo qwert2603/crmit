@@ -5,7 +5,7 @@ function makeSearch(searchInputId, selectId) {
     search.oninput = function () {
         const query = search.value.toLowerCase();
         const options = select.getElementsByTagName("option");
-        for (let i = 0; i < options.length; i++) {
+        for (var i = 0; i < options.length; i++) {
             const option = options[i];
             if (option.innerHTML.toLowerCase().indexOf(query) > -1) {
                 option.style.display = "";
