@@ -12,7 +12,7 @@ def access_token_required():
     def decorator(f):
         @wraps(f)
         def decorated_function(*args, **kwargs):
-            token = request.args.get('access_token')
+            token = request.headers.get('access_token')
             if token is None:
                 abort(401)
             access_token = AccessToken.query.filter(AccessToken.token == token).first()
