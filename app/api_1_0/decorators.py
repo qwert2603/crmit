@@ -4,6 +4,7 @@ import datetime
 from flask import request, abort, g
 
 from app import db
+from app.api_1_0.utils import token_to_hash
 from app.init_model import role_master_name, role_teacher_name
 from app.models import AccessToken
 
@@ -15,8 +16,10 @@ def access_token_required():
             token = request.headers.get('access_token')
             if token is None:
                 abort(401)
-            access_token = AccessToken.query.filter(AccessToken.token == token).first()
-            if access_token is None or access_token.expires < datetime.datetime.utcnow():
+            access_token = AccessToken.query.filter(AccessToken.token_hash == token_to_hash(token)).first()
+            if access_token is None:
+                abort(401)
+            if access_token.expires < datetime.datetime.utcnow():
                 db.session.delete(access_token)
                 abort(401)
             if not access_token.system_user.enabled:

@@ -50,6 +50,12 @@ class SystemUser(UserMixin, db.Model):
     def verify_password(self, password):
         return check_password_hash(self.password_hash, password)
 
+    def access_tokens_not_expired(self):
+        return self.access_tokens.filter(AccessToken.expires > datetime.utcnow())
+
+    def access_tokens_expired(self):
+        return self.access_tokens.filter(AccessToken.expires < datetime.utcnow())
+
 
 class School(db.Model):
     __tablename__ = 'schools'
@@ -528,6 +534,6 @@ class ScheduleGroup(db.Model):
 class AccessToken(db.Model):
     __tablename__ = 'access_tokens'
     id = db.Column(db.Integer, primary_key=True)
-    token = db.Column(db.String(255), nullable=False)
+    token_hash = db.Column(db.String(255), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False)
     expires = db.Column(db.DateTime, nullable=False)

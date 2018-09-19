@@ -27,3 +27,11 @@ def create_attendings_for_all_students(lesson):
         if student.id not in attending_exist_student_ids:
             db.session.add(Attending(lesson_id=lesson.id, student_id=student.id, state=attending_was_not))
     db.session.commit()
+
+
+def token_to_hash(token):
+    import hashlib, binascii
+    from manage import app
+
+    dk = hashlib.pbkdf2_hmac('sha256', str(token).encode('utf-8'), app.config['ACCESS_TOKEN_SALT'], 100000)
+    return str(binascii.hexlify(dk))

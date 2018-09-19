@@ -8,7 +8,7 @@ def error400(e):
 
 @api_1_0.errorhandler(401)
 def error401(e):
-    return 'no access token', 401
+    return 'auth required', 401
 
 
 @api_1_0.errorhandler(403)

@@ -12,7 +12,7 @@ from app.api_1_0.decorators import access_token_required, check_master_or_teache
 from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
     attending_to_json
-from app.api_1_0.utils import create_json_list, create_attendings_for_all_students
+from app.api_1_0.utils import create_json_list, create_attendings_for_all_students, token_to_hash
 from app.init_model import developer_login, role_student_name, role_master_name, role_teacher_name
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
     attending_states, AccessToken
@@ -158,7 +158,8 @@ def login():
         return jsonify(errorCode=login_error_code_student_account_is_not_supported), 400
 
     expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
-    access_token = AccessToken(token=uuid.uuid4(), system_user_id=user.id, expires=expires)
+    token = uuid.uuid4()
+    access_token = AccessToken(token_hash=token_to_hash(token), system_user_id=user.id, expires=expires)
     db.session.add(access_token)
 
     account_type = 0
@@ -170,7 +171,7 @@ def login():
         account_type = account_type_teacher
         details_id = user.teacher.id
 
-    return jsonify(token=access_token.token, accountType=account_type, detailsId=details_id)
+    return jsonify(token=token, accountType=account_type, detailsId=details_id)
 
 
 @api_1_0.route('logout', methods=['POST'])

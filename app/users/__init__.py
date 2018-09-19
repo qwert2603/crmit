@@ -13,4 +13,6 @@ from app import db
 def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
+        for at in current_user.access_tokens_expired().all():
+            db.session.delete(at)
         db.session.add(current_user)

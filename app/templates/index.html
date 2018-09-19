@@ -10,7 +10,7 @@
                 <a href="{{ url_for('users.change_password') }}" class="btn btn-default">изменить пароль</a>
             </div>
 
-            {% if current_user.access_tokens.count() > 0 %}
+            {% if current_user.access_tokens_not_expired().count() > 0 %}
                 <div style="margin-top: 100px">
                     <div class="btn-block">
                         <p>вы авторизованы также через мобильное приложение,
