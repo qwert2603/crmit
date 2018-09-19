@@ -5,9 +5,9 @@ from flask import jsonify, request, abort, g
 
 from app import db
 from app.api_1_0 import api_1_0
-from app.api_1_0.consts import login_error_code_wrong_login_or_password, login_error_code_account_disabled, \
-    login_error_code_student_account_is_not_supported, access_token_expires_days, account_type_master, \
-    account_type_teacher
+from app.api_1_0.consts import access_token_expires_days, account_type_master, \
+    account_type_teacher, login_error_reason_student_account_is_not_supported, login_error_reason_account_disabled, \
+    login_error_reason_wrong_login_or_password
 from app.api_1_0.decorators import access_token_required, check_master_or_teacher_access_token
 from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
@@ -149,13 +149,13 @@ def login():
     user = SystemUser.query.filter(SystemUser.login == user_login).first()
 
     if user is None or not user.verify_password(password):
-        return jsonify(errorCode=login_error_code_wrong_login_or_password), 400
+        return jsonify(errorCode=login_error_reason_wrong_login_or_password), 400
 
     if not user.enabled:
-        return jsonify(errorCode=login_error_code_account_disabled), 400
+        return jsonify(errorCode=login_error_reason_account_disabled), 400
 
     if user.system_role.name == role_student_name:
-        return jsonify(errorCode=login_error_code_student_account_is_not_supported), 400
+        return jsonify(errorCode=login_error_reason_student_account_is_not_supported), 400
 
     expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
     token = uuid.uuid4()

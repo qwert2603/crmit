@@ -63,7 +63,7 @@ def student_to_json_full(student):
         'systemUser': system_user_to_json(student.system_user),
         'filled': student.filled,
         'fio': student.fio,
-        'birthDate': student.birth_date.strftime("%d.%m.%Y"),
+        'birthDate': student.birth_date.strftime("%Y-%m-%d"),
         'birthPlace': student.birth_place,
         'registrationPlace': student.registration_place,
         'actualAddress': student.actual_address,
@@ -148,7 +148,7 @@ def lesson_to_json(lesson):
     return {
         'id': lesson.id,
         'groupId': lesson.group.id,
-        'date': lesson.date.strftime("%d.%m.%Y")
+        'date': lesson.date.strftime("%Y-%m-%d")
     }
 
 
