@@ -135,12 +135,14 @@ def group_to_json_full(group):
 def student_in_group_to_json(student_in_group):
     return {
         'id': student_in_group.id,
+        'systemUserEnabled': student_in_group.student.system_user.enabled,
         'studentId': student_in_group.student_id,
         'studentFio': student_in_group.student.fio,
         'groupId': student_in_group.group.id,
         'discount': student_in_group.discount,
         'enterMonth': student_in_group.enter_month,
         'exitMonth': student_in_group.exit_month,
+        'lessonsAttendedCount': student_in_group.attendings_was.count(),
     }
 
 
