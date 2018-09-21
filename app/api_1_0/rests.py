@@ -149,13 +149,13 @@ def login():
     user = SystemUser.query.filter(SystemUser.login == user_login).first()
 
     if user is None or not user.verify_password(password):
-        return jsonify(errorCode=login_error_reason_wrong_login_or_password), 400
+        return jsonify(loginErrorReason=login_error_reason_wrong_login_or_password), 400
 
     if not user.enabled:
-        return jsonify(errorCode=login_error_reason_account_disabled), 400
+        return jsonify(loginErrorReason=login_error_reason_account_disabled), 400
 
     if user.system_role.name == role_student_name:
-        return jsonify(errorCode=login_error_reason_student_account_is_not_supported), 400
+        return jsonify(loginErrorReason=login_error_reason_student_account_is_not_supported), 400
 
     expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
     token = uuid.uuid4()
