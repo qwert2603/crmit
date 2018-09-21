@@ -103,7 +103,7 @@ def students_in_group(group_id):
 @check_master_or_teacher_access_token
 def lessons_in_group(group_id):
     group = Group.query.get_or_404(group_id)
-    return jsonify([lesson_to_json(lesson) for lesson in group.lessons.order_by(Lesson.date.desc())])
+    return jsonify([lesson_to_json(lesson) for lesson in group.lessons.order_by(Lesson.date)])
 
 
 @api_1_0.route('attendings_of_lesson/<int:lesson_id>')
