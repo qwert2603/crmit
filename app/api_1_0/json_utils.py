@@ -113,7 +113,8 @@ def group_to_json_brief(group):
     return {
         'id': group.id,
         'name': group.name,
-        'teacherFio': group.teacher.fio
+        'teacherId': group.teacher.id,
+        'teacherFio': group.teacher.fio,
     }
 
 
