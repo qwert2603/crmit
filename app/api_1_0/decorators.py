@@ -6,7 +6,7 @@ from flask import request, abort, g
 from app import db
 from app.api_1_0.utils import token_to_hash
 from app.init_model import role_master_name, role_teacher_name
-from app.models import AccessToken
+from app.models import AccessToken, last_seen_android
 
 
 def access_token_required():
@@ -29,6 +29,12 @@ def access_token_required():
             access_token.expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
             g.access_token = access_token
             g.current_user_app = access_token.system_user
+
+            g.current_user_app.last_seen = datetime.datetime.utcnow()
+            g.current_user_app.last_seen_where = last_seen_android
+            for at in g.current_user_app.access_tokens_expired().all():
+                db.session.delete(at)
+
             return f(*args, **kwargs)
 
         return decorated_function

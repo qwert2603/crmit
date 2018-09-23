@@ -19,6 +19,11 @@ class SystemRole(db.Model):
     system_users = db.relationship('SystemUser', backref='system_role', lazy='dynamic')
 
 
+last_seen_registration = 1
+last_seen_web = 2
+last_seen_android = 3
+
+
 class SystemUser(UserMixin, db.Model):
     __tablename__ = 'system_users'
     id = db.Column(db.Integer, primary_key=True)
@@ -26,6 +31,7 @@ class SystemUser(UserMixin, db.Model):
     password_hash = db.Column(db.String(255), nullable=False, unique=True)
     system_role_id = db.Column(db.Integer, db.ForeignKey('system_roles.id'), nullable=False)
     last_seen = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    last_seen_where = db.Column(db.Integer, default=last_seen_registration, nullable=False)
     enabled = db.Column(db.Boolean, nullable=False)
     master = db.relationship('Master', backref='system_user', uselist=False)
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)

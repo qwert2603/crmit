@@ -87,3 +87,14 @@
     {% if parent.home_phone %}<h5>домашний телефон: {{ parent.home_phone }}</h5>{% endif %}
     <h5>уведомления: {{ ' / '.join(parent.notification_types_string) or 'нет' }}</h5>
 {% endmacro %}
+
+{% macro render_last_seen(system_user) %}
+    {% if system_user.last_seen_where == last_seen_registration %}
+        никогда
+    {% else %}
+        {{ moment(system_user.last_seen).fromNow(refresh=True) }}
+        {% if system_user.last_seen_where == last_seen_android %}
+            <span class="glyphicon glyphicon-phone"></span>
+        {% endif %}
+    {% endif %}
+{% endmacro %}

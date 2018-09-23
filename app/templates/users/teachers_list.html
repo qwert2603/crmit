@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
 {% from '_macros.html' import render_search %}
+{% from '_macros.html' import render_last_seen with context %}
 
 {% block title %}список преподавателей{% endblock %}
 
@@ -47,7 +48,7 @@
                     </ul>
                 </td>
                 <td>{{ teacher.phone }}</td>
-                <td>{{ moment(teacher.system_user.last_seen).fromNow(refresh=True) }}</td>
+                <td>{{ render_last_seen(teacher.system_user) }}</td>
                 {% if current_user.system_role.name == role_master_name %}
                     <td>
                         <a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-default">

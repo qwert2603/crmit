@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% from '_macros.html' import pagination_widget %}
 {% from '_macros.html' import render_search %}
+{% from '_macros.html' import render_last_seen with context %}
 
 {% block title %}список руководителей{% endblock %}
 
@@ -23,7 +24,7 @@
         </tr>
         {% for master in items %}
             <tr>
-                  <td>
+                <td>
                     {% if master.system_user.enabled %}
                         {{ master.fio }}
                     {% else %}
@@ -31,7 +32,7 @@
                     {% endif %}
                 </td>
                 <td>{{ master.system_user.login }}</td>
-                <td>{{ moment(master.system_user.last_seen).fromNow(refresh=True) }}</td>
+                <td>{{ render_last_seen(master.system_user) }}</td>
                 {% if current_user.system_role.name == role_master_name %}
                     <td>
                         <a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default">
