@@ -20,7 +20,7 @@ def edit_master(id):
     if form.validate_on_submit():
         master.fio = form.fio.data
         master.system_user.login = form.login.data
-        if master.system_user_id == current_user.id:
+        if master.system_user_id == current_user.id and not form.enabled.data:
             flash('вы не можете отключить себя!')
         else:
             master.system_user.enabled = form.enabled.data
