@@ -151,7 +151,8 @@ def student_in_group_to_json(student_in_group):
 def lesson_to_json(lesson):
     return {
         'id': lesson.id,
-        'groupId': lesson.group.id,
+        'groupId': lesson.group_id,
+        'teacherId': lesson.teacher_id,
         'date': lesson.date.strftime("%Y-%m-%d")
     }
 
@@ -161,5 +162,6 @@ def attending_to_json(attending):
         'id': attending.id,
         'lessonId': attending.lesson_id,
         'studentId': attending.student_id,
+        'studentFio': attending.student.fio,
         'state': attending.state,
     }

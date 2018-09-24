@@ -119,7 +119,10 @@ def lessons_in_group(group_id):
 def attendings_of_lesson(lesson_id):
     lesson = Lesson.query.get_or_404(lesson_id)
     create_attendings_for_all_students(lesson)
-    return jsonify([attending_to_json(attending) for attending in lesson.attendings.order_by(Attending.id)])
+    attendings = lesson.attendings \
+        .join(Student, Student.id == Attending.student_id) \
+        .order_by(Student.fio)
+    return jsonify([attending_to_json(attending) for attending in attendings])
 
 
 @api_1_0.route('save_attending_state', methods=['POST'])
