@@ -27,7 +27,8 @@ def system_user_to_json(system_user):
     return {
         'id': system_user.id,
         'login': system_user.login,
-        'lastSeen': system_user.last_seen.timestamp() * 1000000,
+        'lastSeen': int(system_user.last_seen.timestamp() * 1000),
+        'lastSeenWhere': system_user.last_seen_where,
         'systemRoleName': system_user.system_role.name,
         'enabled': system_user.enabled
     }
