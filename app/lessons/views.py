@@ -56,6 +56,7 @@ def lessons_in_month(group_id, month_number):
         .order_by(Student.fio) \
         .all()
     if 'submit' in request.form:
+        if not can_user_write_group(current_user, group): abort(403)
         ls = Lesson.lessons_in_group_in_month(group_id, month_number).all()
         ps = Payment.query \
             .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \

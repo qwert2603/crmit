@@ -50,22 +50,33 @@
                     {{ student_in_group.student.fio }}
                 </a></td>
                 {% for lesson in lessons %}
-                    <td class="state_container">
+                    <td>
                         {% set state=attendings_states[lesson.id].get(student_in_group.student_id, attending_was_not) %}
-                        <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
-                               {% if not write_mode %}disabled{% endif %} value="{{ attending_was_not }}"
-                               style="display: none" {% if state == attending_was_not %}checked{% endif %}/>
-                        <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
-                               {% if not write_mode %}disabled{% endif %} value="{{ attending_was }}"
-                               style="display: none" {% if state == attending_was %}checked{% endif %}/>
-                        <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
-                               {% if not write_mode %}disabled{% endif %} value="{{ attending_was_not_ill }}"
-                               style="display: none" {% if state == attending_was_not_ill %}checked{% endif %}/>
-                        <div style="width: 50px">
-                            <div class="state_text label label-default" style="display: none">не был</div>
-                            <div class="state_text label label-success" style="display: none">был</div>
-                            <div class="state_text label label-warning" style="display: none">болел</div>
-                        </div>
+                        {% if write_mode %}
+                            <div class="state_container">
+                                <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                                       {% if not write_mode %}disabled{% endif %} value="{{ attending_was_not }}"
+                                       style="display: none" {% if state == attending_was_not %}checked{% endif %}/>
+                                <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                                       {% if not write_mode %}disabled{% endif %} value="{{ attending_was }}"
+                                       style="display: none" {% if state == attending_was %}checked{% endif %}/>
+                                <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                                       {% if not write_mode %}disabled{% endif %} value="{{ attending_was_not_ill }}"
+                                       style="display: none" {% if state == attending_was_not_ill %}checked{% endif %}/>
+                                <div style="width: 50px">
+                                    <div class="state_text label label-default" style="display: none">не был</div>
+                                    <div class="state_text label label-success" style="display: none">был</div>
+                                    <div class="state_text label label-warning" style="display: none">болел</div>
+                                </div>
+                            </div>
+                        {% else %}
+                            {% if state == attending_was_not %}
+                                <div class="state_text label label-default">не был</div>{% endif %}
+                            {% if state == attending_was %}
+                                <div class="state_text label label-success">был</div>{% endif %}
+                            {% if state == attending_was_not_ill %}
+                                <div class="state_text label label-warning">болел</div>{% endif %}
+                        {% endif %}
                     </td>
                 {% endfor %}
                 {% if write_mode %}
@@ -142,7 +153,8 @@
             <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
         </form>
 
-        <a href="{{ url_for('users.register_student_fast', group_id=group.id, month_number=month_number) }}" class="btn btn-default">
+        <a href="{{ url_for('users.register_student_fast', group_id=group.id, month_number=month_number) }}"
+           class="btn btn-default">
             добавитьученика
         </a>
     {% endif %}
