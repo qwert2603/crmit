@@ -165,3 +165,19 @@ def attending_to_json(attending):
         'studentFio': attending.student.fio,
         'state': attending.state,
     }
+
+
+def payment_to_json(payment):
+    return {
+        'id': payment.id,
+        'studentInGroupId': payment.student_in_group_id,
+        'studentId': payment.student_in_group.student.id,
+        'studentFio': payment.student_in_group.student.fio,
+        'groupId': payment.student_in_group.group.id,
+        'month': payment.month,
+        'value': payment.value,
+        'cash': payment.cash,
+        'confirmed': payment.confirmed,
+        'comment': payment.comment,
+        'needToPay': payment.student_in_group.group.section.price - payment.student_in_group.discount
+    }

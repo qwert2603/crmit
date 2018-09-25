@@ -11,8 +11,9 @@ from app.api_1_0.consts import access_token_expires_days, account_type_master, \
 from app.api_1_0.decorators import access_token_required, check_master_or_teacher_access_token
 from app.api_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
-    attending_to_json
-from app.api_1_0.utils import create_json_list, create_attendings_for_all_students, token_to_hash
+    attending_to_json, payment_to_json
+from app.api_1_0.utils import create_json_list, create_attendings_for_all_students, token_to_hash, \
+    create_payments_for_all_students
 from app.init_model import developer_login, role_student_name, role_master_name, role_teacher_name
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
     attending_states, AccessToken
@@ -149,6 +150,25 @@ def save_attending_state():
 
     attending.state = attending_state
     return 'ok'
+
+
+@api_1_0.route('payments/<int:group_id>/<int:month_number>')
+@access_token_required()
+@check_master_or_teacher_access_token
+def payments_in_month(group_id, month_number):
+    group = Group.query.get_or_404(group_id)
+    if not can_user_write_group(g.current_user_app, group):
+        abort(403)
+    if month_number < group.start_month or month_number > group.end_month:
+        abort(404)
+
+    create_payments_for_all_students(group, month_number)
+
+    payments = group.payments_in_month(month_number) \
+        .join(Student, Student.id == StudentInGroup.student_id) \
+        .order_by(Student.fio)
+
+    return jsonify([payment_to_json(p) for p in payments])
 
 
 @api_1_0.route('login', methods=['POST'])

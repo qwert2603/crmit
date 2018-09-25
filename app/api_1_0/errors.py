@@ -14,3 +14,8 @@ def error401(e):
 @api_1_0.errorhandler(403)
 def error403(e):
     return 'access denied', 403
+
+
+@api_1_0.errorhandler(404)
+def error404(e):
+    return 'not found', 404

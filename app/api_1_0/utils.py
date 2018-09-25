@@ -1,7 +1,7 @@
 from flask import request, jsonify
 
 from app import db
-from app.models import Attending, attending_was_not
+from app.models import Attending, attending_was_not, Payment
 from app.utils import number_of_month_for_date
 
 
@@ -26,6 +26,16 @@ def create_attendings_for_all_students(lesson):
     for student in lesson.group.students_in_month(number_of_month_for_date(lesson.date)):
         if student.id not in attending_exist_student_ids:
             db.session.add(Attending(lesson_id=lesson.id, student_id=student.id, state=attending_was_not))
+    db.session.commit()
+
+
+def create_payments_for_all_students(group, month_number):
+    payment_exist_student_in_group_ids = [p.student_in_group_id for p in group.payments_in_month(month_number)]
+
+    for student_in_group in group.students_in_group_in_month(month_number):
+        if student_in_group.id not in payment_exist_student_in_group_ids:
+            db.session.add(Payment(student_in_group=student_in_group, month=month_number, value=0, cash=True,
+                                   confirmed=False, comment=""))
     db.session.commit()
 
 

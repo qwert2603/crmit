@@ -354,6 +354,11 @@ class Group(db.Model):
         return self.students_in_group.filter(StudentInGroup.enter_month <= month_number,
                                              StudentInGroup.exit_month >= month_number)
 
+    def payments_in_month(self, month_number):
+        return Payment.query \
+            .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
+            .filter(StudentInGroup.group_id == self.id, Payment.month == month_number)
+
     @property
     def notifications(self):
         return Notification.query.filter(Notification.receiver_type == receiver_type_group,
