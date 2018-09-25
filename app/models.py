@@ -426,6 +426,10 @@ class Payment(db.Model):
     comment = db.Column(db.String(32), nullable=False)
     unique = db.UniqueConstraint(student_in_group_id, month)
 
+    @property
+    def max_value(self):
+        return self.student_in_group.group.section.price - self.student_in_group.discount
+
 
 class Lesson(db.Model):
     __tablename__ = 'lessons'

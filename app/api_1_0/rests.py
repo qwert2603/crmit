@@ -16,7 +16,7 @@ from app.api_1_0.utils import create_json_list, create_attendings_for_all_studen
     create_payments_for_all_students
 from app.init_model import developer_login, role_student_name, role_master_name, role_teacher_name
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
-    attending_states, AccessToken
+    attending_states, AccessToken, Payment
 from app.utils import can_user_write_group
 
 
@@ -130,7 +130,7 @@ def attendings_of_lesson(lesson_id):
 @access_token_required()
 @check_master_or_teacher_access_token
 def save_attending_state():
-    def int_or_404(key):
+    def int_or_400(key):
         if key not in request.json:
             abort(400)
         try:
@@ -138,8 +138,8 @@ def save_attending_state():
         except ValueError:
             abort(400)
 
-    attending_id = int_or_404('attendingId')
-    attending_state = int_or_404('attendingState')
+    attending_id = int_or_400('attendingId')
+    attending_state = int_or_400('attendingState')
     if attending_state not in attending_states:
         abort(400)
 
@@ -169,6 +169,45 @@ def payments_in_month(group_id, month_number):
         .order_by(Student.fio)
 
     return jsonify([payment_to_json(p) for p in payments])
+
+
+@api_1_0.route('save_payment', methods=['POST'])
+@access_token_required()
+@check_master_or_teacher_access_token
+def save_payment():
+    def int_or_400(key):
+        if key not in request.json:
+            abort(400)
+        try:
+            return int(str(request.json[key]))
+        except ValueError:
+            abort(400)
+
+    payment_id = int_or_400('paymentId')
+    value = int_or_400('value')
+    comment = request.json.get('comment')
+    is_cash = str(request.json.get('cash')) == 'True'
+    is_confirmed = str(request.json.get('confirmed')) == 'True'
+
+    payment = Payment.query.get_or_404(payment_id)
+
+    if not can_user_write_group(g.current_user_app, payment.student_in_group.group):
+        abort(403)
+
+    if value < 0: value = 0
+    max_value = payment.max_value
+    if value > max_value: value = max_value
+
+    if comment is None: comment = ''
+    comment = comment[:32]
+
+    payment.value = value
+    payment.comment = comment
+    payment.cash = is_cash
+    can_confirm = g.current_user_app.system_role.name == role_master_name
+    if can_confirm: payment.confirmed = is_confirmed
+
+    return 'ok'
 
 
 @api_1_0.route('login', methods=['POST'])
