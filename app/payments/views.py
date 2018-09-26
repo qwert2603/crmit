@@ -13,20 +13,14 @@ from app.payments.utils import payments_dicts, get_sum_not_confirmed_teacher, ge
 @check_access_group_write()
 def payments_in_group(group_id):
     group = Group.query.get_or_404(group_id)
-    students_in_group = group.students_in_group \
-        .join(Student, Student.id == StudentInGroup.student_id) \
-        .order_by(Student.fio) \
-        .all()
     can_confirm = current_user.system_role.name == role_master_name
     if 'submit' in request.form:
         for month_number in range(group.start_month, group.end_month + 1):
-            ps = Payment.query \
-                .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
-                .filter(StudentInGroup.group_id == group_id, Payment.month == month_number)
+            ps = group.payments_in_month(month_number)
             payments = dict()
             for p in ps:
                 payments[p.student_in_group_id] = p
-            for student_in_group in students_in_group:
+            for student_in_group in group.students_in_group_in_month(month_number):
                 new_value = request.form.get('p_{}_{}'.format(month_number, student_in_group.id), 0, type=int)
                 if new_value < 0: new_value = 0
                 max_value = group.section.price - student_in_group.discount
@@ -64,6 +58,10 @@ def payments_in_group(group_id):
     else:
         sum_not_confirmed_by_group = None
         sum_not_confirmed_all = None
+    students_in_group = group.students_in_group \
+        .join(Student, Student.id == StudentInGroup.student_id) \
+        .order_by(Student.fio) \
+        .all()
     return render_template('payments/payments_in_group.html', group=group, students_in_group=students_in_group,
                            payments=pd[0], confirmed=pd[1], cash=pd[2], comments=pd[3], confirmed_count_months=pd[4],
                            confirmed_count_students=pd[5], non_zero_count_months=pd[6], non_zero_count_students=pd[7],
