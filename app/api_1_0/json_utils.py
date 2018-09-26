@@ -174,7 +174,7 @@ def payment_to_json(payment):
         'studentId': payment.student_in_group.student.id,
         'studentFio': payment.student_in_group.student.fio,
         'groupId': payment.student_in_group.group.id,
-        'month': payment.month,
+        'monthNumber': payment.month,
         'value': payment.value,
         'cash': payment.cash,
         'confirmed': payment.confirmed,
