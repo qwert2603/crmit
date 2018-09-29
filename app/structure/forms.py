@@ -139,7 +139,7 @@ class GroupForm(FlaskForm):
         if self.group is not None:
             max_start_month = max_start_month_number_group(self.group.id)
             if max_start_month is not None and start_month > max_start_month:
-                raise ValidationError('существуют занятия и платежи до месяца начала!')
+                raise ValidationError('существуют занятия или платежи до месяца начала!')
             min_end_month = min_end_month_number_group(self.group.id)
             if min_end_month is not None and end_month < min_end_month:
-                raise ValidationError('существуют занятия и платежи после месяца конца!')
+                raise ValidationError('существуют занятия или платежи после месяца конца!')

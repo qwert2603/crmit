@@ -49,6 +49,8 @@ def delete_unconfirmed_payments_out_of_months_period(group):
 def correct_student_enter_exit_month_to_group_period(group):
     for student_in_group in group.students_in_group.all():
         if student_in_group.enter_month < group.start_month: student_in_group.enter_month = group.start_month
+        if student_in_group.enter_month > group.end_month: student_in_group.enter_month = group.end_month
+        if student_in_group.exit_month < group.start_month: student_in_group.exit_month = group.start_month
         if student_in_group.exit_month > group.end_month: student_in_group.exit_month = group.end_month
 
 
