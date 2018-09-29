@@ -64,6 +64,9 @@ def group_details(group_id):
     if 'submit' in request.form:
         for student_in_group in students_in_group:
             new_enter_month_number = request.form.get('enter_{}'.format(student_in_group.id), 0, type=int)
+            new_exit_month_number = request.form.get('exit_{}'.format(student_in_group.id), 0, type=int)
+            if new_enter_month_number > new_exit_month_number:
+                new_enter_month_number = new_exit_month_number
             if new_enter_month_number is not None:
                 if new_enter_month_number < group.start_month:
                     flash('ученик не может войти раньше начала группы ({})'.format(student_in_group.student.fio))
@@ -73,7 +76,6 @@ def group_details(group_id):
                     flash('ученик не может войти позже посещения или оплаты ({})'.format(student_in_group.student.fio))
                 else:
                     student_in_group.enter_month = new_enter_month_number
-            new_exit_month_number = request.form.get('exit_{}'.format(student_in_group.id), 0, type=int)
             if new_exit_month_number is not None:
                 if new_exit_month_number < group.start_month:
                     flash('ученик не может выйти раньше начала группы ({})'.format(student_in_group.student.fio))
