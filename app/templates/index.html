@@ -19,6 +19,15 @@
                     </div>
                 </div>
             {% endif %}
+
+
+            <div style="margin-top: 100px">
+                {% set gp_link="https://play.google.com/store/apps/details?id=com.qwert2603.crmit_android" %}
+                <h3>в Google Play доступно Android-приложение <a href="{{ gp_link }}">CRM "ЦМИТ"</a></h3>
+                <a href="{{ gp_link }}">
+                    <img src="{{ url_for('static', filename='google-play-badge.png') }}" width="30%" height="30%"/>
+                </a>
+            </div>
         {% endif %}
     {% else %}
         <i>вы не авторизованы</i>
