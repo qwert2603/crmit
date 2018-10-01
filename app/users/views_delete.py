@@ -17,6 +17,8 @@ def delete_master(id):
         flash('разрабочика нельзя удалить!')
         return redirect(url_for('.masters_list'))
     if not is_master_removable(master): abort(409)
+    for at in master.system_user.access_tokens.all():
+        db.session.delete(at)
     db.session.delete(master)
     db.session.delete(master.system_user)
     flash('руководитель {} удалён'.format(master.fio))
@@ -29,6 +31,8 @@ def delete_master(id):
 def delete_teacher(id):
     teacher = Teacher.query.get_or_404(id)
     if not is_teacher_removable(teacher): abort(409)
+    for at in teacher.system_user.access_tokens.all():
+        db.session.delete(at)
     db.session.delete(teacher)
     db.session.delete(teacher.system_user)
     flash('преподаватель {} удалён'.format(teacher.fio))
@@ -41,6 +45,8 @@ def delete_teacher(id):
 def delete_student(id):
     student = Student.query.get_or_404(id)
     if not is_student_removable(student): abort(409)
+    for at in student.system_user.access_tokens.all():
+        db.session.delete(at)
     student.parent_of_students.delete()
     db.session.delete(student)
     db.session.delete(student.system_user)
