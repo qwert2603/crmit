@@ -8,3 +8,9 @@ function askDelete(entity_name, delete_url) {
         window.location.replace(delete_url);
     }
 }
+
+function askLogoutApp(success_url) {
+    if (confirm('завершить все сессии в мобильном приложении?')) {
+        window.location.replace(success_url);
+    }
+}
