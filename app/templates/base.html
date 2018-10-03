@@ -79,7 +79,7 @@
             </div>
         {% endfor %}
 
-        {% if current_user.is_authenticated %}
+        {% if current_user.is_authenticated and hide_who_u_r != True %}
             <p><i>вы действуете от имени {{ current_user.login }} ({{ current_user.system_role.name }})</i></p>
         {% endif %}
 
