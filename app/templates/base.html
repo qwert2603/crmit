@@ -80,7 +80,7 @@
         {% endfor %}
 
         {% if current_user.is_authenticated and hide_who_u_r != True %}
-            <p><i>вы действуете от имени {{ current_user.login }} ({{ current_user.system_role.name }})</i></p>
+            <p><i>вы действуете как {{ current_user.login }} ({{ current_user.system_role.name }})</i></p>
         {% endif %}
 
         {% block page_content %}{% endblock %}
