@@ -15,6 +15,8 @@ def before_request():
 
 @api_1_0.after_request
 def after_request(response):
+    # in 'login' rest current_user_app is None
+    # (because current_user_app is settled in access_token_required before request processing).
     current_user_app = g.current_user_app
     if current_user_app is not None and current_user_app.is_authenticated and current_user_app.login == developer_login:
         from manage import app
