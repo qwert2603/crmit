@@ -40,7 +40,6 @@ def timetable():
                                                  group_id=new_group_id))
                 else:
                     schedule_group.group_id = new_group_id
-        db.session.commit()
         flash('расписание сохранено.')
         return redirect(url_for('.timetable'))
 

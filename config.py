@@ -29,6 +29,7 @@ class DevConfig(Config):
     MAIL_DEFAULT_SENDER = 'natalykanatkina@gmail.com'
     VK_ACCESS_TOKEN = os.getenv('VK_ACCESS_TOKEN')
     ACCESS_TOKEN_SALT = '1918'.encode('utf-8')
+    DEVELOPER_READ_ONLY = True
 
 
 class ProdConfig(Config):
@@ -43,6 +44,7 @@ class ProdConfig(Config):
     MAIL_DEFAULT_SENDER = 'natalykanatkina@gmail.com'
     VK_ACCESS_TOKEN = '<token>'  # todo
     ACCESS_TOKEN_SALT = '<salt>'.encode('utf-8')  # todo
+    DEVELOPER_READ_ONLY = True
 
 
 config = {

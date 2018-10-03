@@ -38,7 +38,6 @@ def payments_in_group(group_id):
                 else:
                     db.session.add(Payment(student_in_group=student_in_group, month=month_number, value=new_value,
                                            cash=is_cash, confirmed=can_confirm and is_confirmed, comment=comment))
-        db.session.commit()
         flash('оплата в группе {} сохранена.'.format(group.name))
         return redirect(url_for('payments.payments_in_group', group_id=group_id))
     pd = payments_dicts(group)
