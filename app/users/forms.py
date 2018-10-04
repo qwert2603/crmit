@@ -57,7 +57,7 @@ class RegistrationForm(FlaskForm):
 
 
 class RegistrationMasterForm(RegistrationForm):
-    submit = SubmitField('создать мастера')
+    submit = SubmitField('создать руководителя')
 
     def __init__(self, master=None, *args, **kwargs):
         super(RegistrationMasterForm, self).__init__(*args, **kwargs)

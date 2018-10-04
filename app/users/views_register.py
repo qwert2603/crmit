@@ -25,7 +25,7 @@ def register_master():
         master = Master(fio=form.fio.data, system_user=user_master)
         db.session.add(user_master)
         db.session.add(master)
-        flash('мастер {} создан.'.format(form.login.data))
+        flash('руководитель {} создан.'.format(form.login.data))
         return redirect(url_for('.masters_list'))
     return render_template('users/form_register_edit.html', form=form, class_name='руководителя', creating=True)
 

@@ -30,7 +30,7 @@ def edit_master(id):
         form.login.data = master.system_user.login
         form.fio.data = master.fio
         form.enabled.data = master.system_user.enabled
-    return render_template('users/form_register_edit.html', form=form, class_name='мастера', creating=False)
+    return render_template('users/form_register_edit.html', form=form, class_name='руководителя', creating=False)
 
 
 @users.route('/teacher/<int:id>', methods=['GET', 'POST'])
