@@ -20,6 +20,7 @@
             {% if current_user.system_role.name == role_master_name %}
                 <th></th>
                 <th></th>
+                <th></th>
             {% endif %}
         </tr>
         {% for master in items %}
@@ -40,10 +41,20 @@
                         </a>
                     </td>
                     <td>
-                        <a onclick="askDelete('{{ master.fio }}', '{{ url_for('users.delete_master',id=master.id) }}')"
-                           class="btn btn-danger {% if not is_master_removable(master) %}disabled{% endif %}">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
+                        {% if master.system_user.id != current_user.id %}
+                            <a href="{{ url_for('users.force_change_password',system_user_id=master.system_user.id) }}"
+                               class="btn btn-warning">
+                                <span class="glyphicon glyphicon-lock"></span>
+                            </a>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if master.system_user.id != current_user.id %}
+                            <a onclick="askDelete('{{ master.fio }}', '{{ url_for('users.delete_master',id=master.id) }}')"
+                               class="btn btn-danger {% if not is_master_removable(master) %}disabled{% endif %}">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        {% endif %}
                     </td>
                 {% endif %}
             </tr>

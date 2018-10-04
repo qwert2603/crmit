@@ -33,6 +33,7 @@ class SystemUser(UserMixin, db.Model):
     last_seen = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     last_seen_where = db.Column(db.Integer, default=last_seen_registration, nullable=False)
     enabled = db.Column(db.Boolean, nullable=False)
+    force_ask_to_login = db.Column(db.Boolean, nullable=False, default=False)
     master = db.relationship('Master', backref='system_user', uselist=False)
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)
     student = db.relationship('Student', backref='system_user', uselist=False)

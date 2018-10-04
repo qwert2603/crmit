@@ -24,6 +24,13 @@ class ChangePasswordForm(FlaskForm):
     submit = SubmitField('изменить пароль')
 
 
+class ForceChangePasswordForm(FlaskForm):
+    new_password = PasswordField('новый пароль', validators=[Length(1, 255)])
+    new_password_confirm = PasswordField('подтверждение нового пароля', validators=[
+        DataRequired(), EqualTo('new_password', 'пароли должны совпадать')])
+    submit = SubmitField('изменить пароль')
+
+
 # base field for registration.
 class RegistrationForm(FlaskForm):
     login = StringField('логин', validators=[Length(1, 64),
