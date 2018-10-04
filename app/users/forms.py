@@ -3,7 +3,7 @@ from wtforms import StringField, PasswordField, BooleanField, SubmitField, Valid
     SelectMultipleField, TextAreaField
 from wtforms.validators import Length, DataRequired, EqualTo, Regexp, Optional, Email
 
-from app.form import DateFieldWidget, VkLink, Phone
+from app.form import DateFieldWidget, VkLink, Phone, prefix_field_required
 from app.models import SystemUser, School, Citizenship, Parent, notification_types_list, shift_email, shift_vk, \
     contact_phone_variants, contact_phone_student, contact_phone_mother, contact_phone_father
 from app.utils import notification_types_list_to_int
@@ -17,27 +17,29 @@ class LoginForm(FlaskForm):
 
 
 class ChangePasswordForm(FlaskForm):
-    old_password = PasswordField('текущий пароль', validators=[DataRequired()])
-    new_password = PasswordField('новый пароль', validators=[Length(1, 255)])
-    new_password_confirm = PasswordField('подтверждение нового пароля', validators=[
+    old_password = PasswordField(prefix_field_required + 'текущий пароль', validators=[DataRequired()])
+    new_password = PasswordField(prefix_field_required + 'новый пароль', validators=[Length(1, 255)])
+    new_password_confirm = PasswordField(prefix_field_required + 'подтверждение нового пароля', validators=[
         DataRequired(), EqualTo('new_password', 'пароли должны совпадать')])
     submit = SubmitField('изменить пароль')
 
 
 class ForceChangePasswordForm(FlaskForm):
-    new_password = PasswordField('новый пароль', validators=[Length(1, 255)])
-    new_password_confirm = PasswordField('подтверждение нового пароля', validators=[
+    new_password = PasswordField(prefix_field_required + 'новый пароль', validators=[Length(1, 255)])
+    new_password_confirm = PasswordField(prefix_field_required + 'подтверждение нового пароля', validators=[
         DataRequired(), EqualTo('new_password', 'пароли должны совпадать')])
     submit = SubmitField('изменить пароль')
 
 
 # base field for registration.
 class RegistrationForm(FlaskForm):
-    login = StringField('логин', validators=[Length(1, 64),
-                                             Regexp('^[a-z][a-z0-9_]*$', 0, 'только буквы / цифры / подчеркивание')])
-    fio = StringField('фио', validators=[Length(1, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
-    password = PasswordField('пароль', validators=[Length(1, 255)])
-    password_confirm = PasswordField('подтверждение пароля', validators=[
+    login = StringField(prefix_field_required + 'логин',
+                        validators=[Length(1, 64),
+                                    Regexp('^[a-z][a-z0-9_]*$', 0, 'только буквы / цифры / подчеркивание')])
+    fio = StringField(prefix_field_required + 'фио',
+                      validators=[Length(1, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
+    password = PasswordField(prefix_field_required + 'пароль', validators=[Length(1, 255)])
+    password_confirm = PasswordField(prefix_field_required + 'подтверждение пароля', validators=[
         DataRequired(), EqualTo('password', 'пароли должны совпадать')])
     enabled = BooleanField('включен', default=True)
 
@@ -66,7 +68,7 @@ class RegistrationMasterForm(RegistrationForm):
 
 
 class RegistrationTeacherForm(RegistrationForm):
-    phone = StringField('телефон', validators=[Phone(allow_empty=False)])
+    phone = StringField(prefix_field_required + 'телефон', validators=[Phone(allow_empty=False)])
     submit = SubmitField('создать преподавателя')
 
     def __init__(self, teacher=None, *args, **kwargs):
@@ -82,30 +84,32 @@ create_new_parent_id = -2
 
 
 class RegistrationStudentForm(RegistrationForm):
-    last_name = StringField('фамилия', validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
-    first_name = StringField('имя', validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
+    last_name = StringField(prefix_field_required + 'фамилия',
+                            validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
+    first_name = StringField(prefix_field_required + 'имя',
+                             validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
     second_name = StringField('отчество',
                               validators=[Length(0, 60), Regexp('^[А-Я][а-я]+$|^$', 0, 'только русские буквы')])
-    birth_date = DateFieldWidget('дата рождения', validators=[DataRequired()])
-    birth_place = StringField('место рождения', validators=[Length(1, 255)])
-    registration_place = StringField('адрес регистрации', validators=[Length(1, 255)])
-    actual_address = StringField('фактический адрес проживания', validators=[Length(1, 255)])
+    birth_date = DateFieldWidget(prefix_field_required + 'дата рождения', validators=[DataRequired()])
+    birth_place = StringField(prefix_field_required + 'место рождения', validators=[Length(1, 255)])
+    registration_place = StringField(prefix_field_required + 'адрес регистрации', validators=[Length(1, 255)])
+    actual_address = StringField(prefix_field_required + 'фактический адрес проживания', validators=[Length(1, 255)])
     additional_info = TextAreaField('дополнительная информация', validators=[Length(0, 255)])
     known_from = StringField('откуда узнал(а) о ЦМИТ', validators=[Length(0, 255)])
-    citizenship = SelectField('гражданство', coerce=int, validators=[DataRequired()])
-    school = SelectField('школа', coerce=int, validators=[DataRequired()])
-    grade = StringField('класс', validators=[Length(1, 31)])
-    shift = StringField('смена', validators=[Length(1, 31)])
+    citizenship = SelectField(prefix_field_required + 'гражданство', coerce=int, validators=[DataRequired()])
+    school = SelectField(prefix_field_required + 'школа', coerce=int, validators=[DataRequired()])
+    grade = StringField(prefix_field_required + 'класс', validators=[Length(1, 31)])
+    shift = StringField(prefix_field_required + 'смена', validators=[Length(1, 31)])
     phone = StringField('телефон', validators=[Phone(allow_empty=True)])
-    contact_phone = SelectField('телефон для связи', coerce=int, validators=[DataRequired()])
+    contact_phone = SelectField(prefix_field_required + 'телефон для связи', coerce=int, validators=[DataRequired()])
     mother_search = StringField('мать. поиск', validators=[Optional()])
-    mother = SelectField('мать', coerce=int, validators=[Optional()])
+    mother = SelectField('мать (при создании нового заполните поля ниже)', coerce=int, validators=[Optional()])
     father_search = StringField('отец. поиск', validators=[Optional()])
-    father = SelectField('отец', coerce=int, validators=[Optional()])
+    father = SelectField('отец (при создании нового заполните поля ниже)', coerce=int, validators=[Optional()])
 
-    m_fio = StringField('новая мать: фио',
+    m_fio = StringField(prefix_field_required + 'новая мать: фио',
                         validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
-    m_phone = StringField('новая мать: телефон', validators=[Phone(allow_empty=True)])
+    m_phone = StringField(prefix_field_required + 'новая мать: телефон', validators=[Phone(allow_empty=True)])
     m_email = StringField('новая мать: email', validators=[Optional(), Length(0, 128), Email()])
     m_passport = StringField('новая мать: паспорт', validators=[Optional(), Length(0, 255)])
     m_address = StringField('новая мать: адрес', validators=[Optional(), Length(0, 255)])
@@ -113,9 +117,9 @@ class RegistrationStudentForm(RegistrationForm):
     m_vk_link = StringField('новая мать: ВКонтакте', validators=[Optional(), Length(0, 64), VkLink()])
     m_notification_types = SelectMultipleField('новая мать: уведомления', coerce=int, validators=[Optional()])
 
-    f_fio = StringField('новый отец: фио',
+    f_fio = StringField(prefix_field_required + 'новый отец: фио',
                         validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
-    f_phone = StringField('новый отец: телефон', validators=[Phone(allow_empty=True)])
+    f_phone = StringField(prefix_field_required + 'новый отец: телефон', validators=[Phone(allow_empty=True)])
     f_email = StringField('новый отец: email', validators=[Optional(), Length(0, 128), Email()])
     f_passport = StringField('новый отец: паспорт', validators=[Optional(), Length(0, 255)])
     f_address = StringField('новый отец: адрес', validators=[Optional(), Length(0, 255)])
@@ -180,9 +184,10 @@ class RegistrationStudentForm(RegistrationForm):
         if field.data == create_new_parent_id:
             if any(len(p) == 0 for p in self.required_fields_values_new_father()):
                 raise ValidationError('заполните поля в "новый родитель - отец"!')
+            # if self.f_passport.data is empty, nothing will be found because empty passport is stored in DB as NULL.
             if Parent.query.filter_by(_passport=self.f_passport.data).first():
                 raise ValidationError('паспорт отца уже зарегистрирован!')
-            if self.mother == create_new_parent_id and self.f_passport.data == self.m_passport.data:
+            if self.mother.data == create_new_parent_id and self.f_passport.data == self.m_passport.data:
                 raise ValidationError('паспорта родителей совпадают!')
 
     def validate_mother(self, field):
@@ -230,16 +235,18 @@ class RegistrationStudentForm(RegistrationForm):
 
 
 class RegistrationStudentFastForm(FlaskForm):
-    last_name = StringField('фамилия', validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
-    first_name = StringField('имя', validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
+    last_name = StringField(prefix_field_required + 'фамилия',
+                            validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
+    first_name = StringField(prefix_field_required + 'имя',
+                             validators=[Length(1, 60), Regexp('^[А-Я][а-я]+$', 0, 'только русские буквы')])
     second_name = StringField('отчество',
                               validators=[Length(0, 60), Regexp('^[А-Я][а-я]+$|^$', 0, 'только русские буквы')])
-    birth_date = DateFieldWidget('дата рождения', validators=[DataRequired()])
-    school = SelectField('школа', coerce=int, validators=[DataRequired()])
-    grade = StringField('класс', validators=[Length(1, 31)])
-    shift = StringField('смена', validators=[Length(1, 31)])
-    parent_phone = StringField('телефон родителя', validators=[Length(1, 31)])
-    parent_name = StringField('имя родителя', validators=[Length(1, 31)])
+    birth_date = DateFieldWidget(prefix_field_required + 'дата рождения', validators=[DataRequired()])
+    school = SelectField(prefix_field_required + 'школа', coerce=int, validators=[DataRequired()])
+    grade = StringField(prefix_field_required + 'класс', validators=[Length(1, 31)])
+    shift = StringField(prefix_field_required + 'смена', validators=[Length(1, 31)])
+    parent_phone = StringField(prefix_field_required + 'телефон родителя', validators=[Length(1, 31)])
+    parent_name = StringField(prefix_field_required + 'имя родителя', validators=[Length(1, 31)])
     submit = SubmitField('создать ученика')
 
     def __init__(self, *args, **kwargs):

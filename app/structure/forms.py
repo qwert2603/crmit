@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label, SelectMultipleField
 from wtforms.validators import Length, DataRequired, Email, Regexp, Optional
 
-from app.form import VkLink, Phone
+from app.form import VkLink, Phone, prefix_field_required
 from app.models import Group, Section, Citizenship, School, Parent, Teacher, notification_types_list, shift_email, \
     shift_vk
 from app.structure.utils import max_start_month_number_group, min_end_month_number_group
@@ -10,8 +10,9 @@ from app.utils import month_names, number_of_month, notification_types_list_to_i
 
 
 class ParentForm(FlaskForm):
-    fio = StringField('фио', validators=[Length(1, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
-    phone = StringField('телефон', validators=[Phone(allow_empty=False)])
+    fio = StringField(prefix_field_required + 'фио',
+                      validators=[Length(1, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
+    phone = StringField(prefix_field_required + 'телефон', validators=[Phone(allow_empty=False)])
     email = StringField('email', validators=[Optional(), Length(0, 128), Email()])
     passport = StringField('паспорт', validators=[Optional(), Length(0, 255)])
     address = StringField('адрес', validators=[Optional(), Length(0, 255)])
@@ -42,7 +43,7 @@ class ParentForm(FlaskForm):
 
 
 class SchoolForm(FlaskForm):
-    name = StringField('название школы', validators=[Length(1, 255)])
+    name = StringField(prefix_field_required + 'название школы', validators=[Length(1, 255)])
     submit = SubmitField('создать')
 
     def __init__(self, school=None, *args, **kwargs):
@@ -58,7 +59,7 @@ class SchoolForm(FlaskForm):
 
 
 class CitizenshipForm(FlaskForm):
-    name = StringField('гражданство', validators=[Length(1, 255)])
+    name = StringField(prefix_field_required + 'гражданство', validators=[Length(1, 255)])
     submit = SubmitField('создать')
 
     def __init__(self, citizenship=None, *args, **kwargs):
@@ -74,8 +75,8 @@ class CitizenshipForm(FlaskForm):
 
 
 class SectionForm(FlaskForm):
-    name = StringField('название секции', validators=[Length(1, 255)])
-    price = IntegerField('цена за месяц', validators=[DataRequired()])
+    name = StringField(prefix_field_required + 'название секции', validators=[Length(1, 255)])
+    price = IntegerField(prefix_field_required + 'цена за месяц', validators=[DataRequired()])
     submit = SubmitField('создать')
 
     def __init__(self, section=None, *args, **kwargs):
@@ -97,13 +98,13 @@ class SectionForm(FlaskForm):
 
 
 class GroupForm(FlaskForm):
-    section = SelectField('секция', coerce=int, validators=[DataRequired()])
-    name = StringField('название', validators=[Length(1, 255)])
-    teacher = SelectField('преподаватель', coerce=int, validators=[DataRequired()])
-    start_y = SelectField('начало. год', coerce=int, validators=[DataRequired()])
-    start_m = SelectField('начало. месяц', coerce=int, validators=[DataRequired()])
-    end_y = SelectField('конец. год', coerce=int, validators=[DataRequired()])
-    end_m = SelectField('конец. месяц', coerce=int, validators=[DataRequired()])
+    section = SelectField(prefix_field_required + 'секция', coerce=int, validators=[DataRequired()])
+    name = StringField(prefix_field_required + 'название', validators=[Length(1, 255)])
+    teacher = SelectField(prefix_field_required + 'преподаватель', coerce=int, validators=[DataRequired()])
+    start_y = SelectField(prefix_field_required + 'начало. год', coerce=int, validators=[DataRequired()])
+    start_m = SelectField(prefix_field_required + 'начало. месяц', coerce=int, validators=[DataRequired()])
+    end_y = SelectField(prefix_field_required + 'конец. год', coerce=int, validators=[DataRequired()])
+    end_m = SelectField(prefix_field_required + 'конец. месяц', coerce=int, validators=[DataRequired()])
     submit = SubmitField('создать')
 
     def __init__(self, group=None, *args, **kwargs):

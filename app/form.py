@@ -5,6 +5,8 @@ from wtforms.widgets import Input
 
 from app.models import vk_link_prefix
 
+prefix_field_required = '<span style="color: orangered;">*</span> '
+
 
 class DateInput(Input):
     input_type = 'date'
