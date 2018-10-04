@@ -73,6 +73,6 @@ def create_stub_models():
 
 
 def create_schedule_times():
-    for i in range(0, 12):
+    for i in range(0, 20):
         db.session.add(ScheduleTime())
     db.session.commit()
