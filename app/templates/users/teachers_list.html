@@ -3,9 +3,15 @@
 {% from '_macros.html' import render_search %}
 {% from '_macros.html' import render_last_seen with context %}
 
-{% block title %}список преподавателей{% endblock %}
+{% set title = 'преподаватели' %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
     {% if current_user.system_role.name == role_master_name %}
         <a href="{{ url_for('users.register_teacher') }}" class="btn btn-default">добавить преподавателя</a>
     {% endif %}

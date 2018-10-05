@@ -3,9 +3,16 @@
 {% from '_macros.html' import render_search %}
 {% from '_macros.html' import render_last_seen with context %}
 
-{% block title %}список руководителей{% endblock %}
+{% set title = 'руководители' %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
     {% if current_user.system_role.name == role_master_name %}
         <a href="{{ url_for('users.register_master') }}" class="btn btn-default">добавить руководителя</a>
     {% endif %}

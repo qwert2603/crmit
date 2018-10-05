@@ -2,15 +2,20 @@
 {% from '_macros.html' import render_parent with context %}
 {% from '_macros.html' import render_last_seen with context %}
 
+{% block title %}{{ student.fio }}{% endblock %}
+
 {% block page_content %}
-    <h3>
-        {% if student.system_user.enabled %}
-            {{ student.fio }}
-        {% else %}
-            <strike>{{ student.fio }}</strike> (отключен)
-        {% endif %}
-        {% if not student.filled %}<span style="color: orangered;">(не заполнен)</span>{% endif %}
-    </h3>
+    <div class="page-header">
+        <h1>
+            {% if student.system_user.enabled %}
+                {{ student.fio }}
+            {% else %}
+                <strike>{{ student.fio }}</strike> (отключен)
+            {% endif %}
+            {% if not student.filled %}<span style="color: #ff4500">(не заполнен)</span>{% endif %}
+        </h1>
+    </div>
+
     <h4>логин: {{ student.system_user.login }}</h4>
     <h4>последний визит: {{ render_last_seen(student.system_user) }}</h4>
     <h4>дата рождения: {{ student.birth_date }}</h4>

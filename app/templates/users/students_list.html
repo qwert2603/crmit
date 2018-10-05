@@ -3,9 +3,16 @@
 {% from '_macros.html' import render_search_with_group %}
 {% from '_macros.html' import render_last_seen with context %}
 
-{% block title %}список учеников{% endblock %}
+{% set title = 'ученики' %}
+
+{% block title %}{{ title }}{% endblock %}
 
 {% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
     <a href="{{ url_for('users.register_student') }}" class="btn btn-default">добавить ученика</a>
 
     {{ render_search_with_group(search, groups, selected_group) }}
@@ -34,7 +41,7 @@
                         {% endif %}
                     </a>
                     {% if not student.system_user.enabled %}<br/>(отключен){% endif %}
-                    {% if not student.filled %}<br/><span style="color: orangered;">(не заполнен)</span>{% endif %}
+                    {% if not student.filled %}<br/><span style="color: #ff4500;">(не заполнен)</span>{% endif %}
                 </td>
                 <td>{{ student.system_user.login }}</td>
                 <td>{{ student.birth_date }}</td>
