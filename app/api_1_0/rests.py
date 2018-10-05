@@ -94,7 +94,10 @@ def teacher_details(teacher_id):
 @access_token_required()
 @check_master_or_teacher_access_token
 def master_details(master_id):
-    return jsonify(master_to_json(Master.query.get_or_404(master_id)))
+    master = Master.query.get_or_404(master_id)
+    if master.system_user.login == developer_login and g.current_user_app.login != developer_login:
+        abort(404)
+    return jsonify(master_to_json(master))
 
 
 @api_1_0.route('students_in_group/<int:group_id>')

@@ -1,4 +1,4 @@
-from flask import render_template, redirect, request, url_for, flash
+from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import login_required, login_user, logout_user, current_user
 
 from app import db
@@ -70,7 +70,7 @@ def force_change_password(system_user_id):
     if system_user_id == current_user.id:
         return redirect(url_for('main.index'))
     if system_user.login == developer_login:
-        return redirect(url_for('users.masters_list'))
+        abort(404)
     form = ForceChangePasswordForm()
     if form.validate_on_submit():
         system_user.password = form.new_password.data

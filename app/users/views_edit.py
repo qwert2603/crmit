@@ -1,4 +1,4 @@
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
 from app.decorators import check_master, check_master_or_teacher
 from app.init_model import developer_login
@@ -14,7 +14,7 @@ from app.utils import password_from_date
 def edit_master(id):
     master = Master.query.get_or_404(id)
     if master.system_user.login == developer_login:
-        return redirect(url_for('.masters_list'))
+        abort(404)
     form = RegistrationMasterForm(master)
     if form.validate_on_submit():
         master.fio = form.fio.data
