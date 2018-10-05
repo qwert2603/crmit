@@ -14,7 +14,6 @@ from app.utils import password_from_date
 def edit_master(id):
     master = Master.query.get_or_404(id)
     if master.system_user.login == developer_login:
-        flash('разрабочика нельзя редактировать!')
         return redirect(url_for('.masters_list'))
     form = RegistrationMasterForm(master)
     if form.validate_on_submit():

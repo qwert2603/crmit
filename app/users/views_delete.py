@@ -14,7 +14,6 @@ from app.decorators import check_master, check_master_or_teacher
 def delete_master(id):
     master = Master.query.get_or_404(id)
     if master.system_user.login == developer_login:
-        flash('разрабочика нельзя удалить!')
         return redirect(url_for('.masters_list'))
     if not is_master_removable(master): abort(409)
     for at in master.system_user.access_tokens.all():

@@ -3,7 +3,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 
 from app import db
 from app.decorators import check_master_or_teacher, check_master
-from app.init_model import role_master_name, role_teacher_name
+from app.init_model import role_master_name, role_teacher_name, developer_login
 from app.models import SystemUser, Student
 from app.users import users
 from app.users.forms import LoginForm, ChangePasswordForm, ForceChangePasswordForm
@@ -69,6 +69,8 @@ def force_change_password(system_user_id):
         return redirect(url_for('main.index'))
     if system_user_id == current_user.id:
         return redirect(url_for('main.index'))
+    if system_user.login == developer_login:
+        return redirect(url_for('users.masters_list'))
     form = ForceChangePasswordForm()
     if form.validate_on_submit():
         system_user.password = form.new_password.data
