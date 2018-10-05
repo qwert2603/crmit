@@ -22,8 +22,9 @@ dont_rollback_endpoints = [
 @users.before_app_request
 def before_request():
     if current_user.is_authenticated:
-        current_user.last_seen = datetime.utcnow()
-        current_user.last_seen_where = last_seen_web
+        if current_user.login != developer_login:
+            current_user.last_seen = datetime.utcnow()
+            current_user.last_seen_where = last_seen_web
         for at in current_user.access_tokens_expired().all():
             db.session.delete(at)
         db.session.add(current_user._get_current_object())
