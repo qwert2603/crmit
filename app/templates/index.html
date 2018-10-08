@@ -7,7 +7,7 @@
         <h4>вы - {{ current_user.system_role.name }}</h4>
         {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
             <div class="btn-block">
-                <a href="{{ url_for('users.change_password') }}" class="btn btn-default">изменить пароль</a>
+                <a href="{{ url_for('users.change_password') }}" class="btn btn-warning">изменить пароль</a>
             </div>
 
             {% if current_user.access_tokens_not_expired().count() > 0 %}

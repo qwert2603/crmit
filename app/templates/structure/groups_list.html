@@ -28,12 +28,10 @@
             <th></th>
             <th></th>
             <th></th>
+            <th></th>
+            <th></th>
             {% if current_user.system_role.name == role_master_name %}
                 <th></th>
-            {% endif %}
-            <th></th>
-            <th></th>
-            {% if current_user.system_role.name == role_master_name %}
                 <th></th>
             {% endif %}
         </tr>
@@ -66,13 +64,6 @@
                            class="btn btn-default">детали</a>
                     {% endif %}
                 </td>
-                {% if current_user.system_role.name == role_master_name %}
-                    <td>
-                        <a href="{{ url_for('structure.edit_group',group_id=group.id) }}" class="btn btn-default">
-                            <span class="glyphicon glyphicon-pencil"></span>
-                        </a>
-                    </td>
-                {% endif %}
                 <td>
                     <a href="{{ url_for('stat.group_stat',group_id=group.id) }}" class="btn btn-default">
                         <span class="glyphicon glyphicon-stats"></span>
@@ -86,6 +77,11 @@
                     {% endif %}
                 </td>
                 {% if current_user.system_role.name == role_master_name %}
+                    <td>
+                        <a href="{{ url_for('structure.edit_group',group_id=group.id) }}" class="btn btn-warning">
+                            <span class="glyphicon glyphicon-pencil"></span>
+                        </a>
+                    </td>
                     <td>
                         <a onclick="askDelete('{{ group.name }}', '{{ url_for('structure.delete_group',id=group.id) }}')"
                            class="btn btn-danger {% if not is_group_removable(group) %}disabled{% endif %}">

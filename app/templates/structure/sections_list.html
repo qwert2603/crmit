@@ -52,7 +52,7 @@
                 </td>
                 {% if current_user.system_role.name == role_master_name %}
                     <td>
-                        <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-default"><span
+                        <a href="{{ url_for('structure.edit_section',id=section.id) }}" class="btn btn-warning"><span
                                 class="glyphicon glyphicon-pencil"></span></a>
                     </td>
                     <td>

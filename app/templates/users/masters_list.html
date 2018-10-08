@@ -43,14 +43,14 @@
                 <td>{{ render_last_seen(master.system_user) }}</td>
                 {% if current_user.system_role.name == role_master_name %}
                     <td>
-                        <a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-default">
+                        <a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-warning">
                             <span class="glyphicon glyphicon-pencil"></span>
                         </a>
                     </td>
                     <td>
                         {% if master.system_user.id != current_user.id %}
                             <a href="{{ url_for('users.force_change_password',system_user_id=master.system_user.id) }}"
-                               class="btn btn-warning">
+                               class="btn btn-danger">
                                 <span class="glyphicon glyphicon-lock"></span>
                             </a>
                         {% endif %}
