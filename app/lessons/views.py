@@ -32,7 +32,7 @@ def lessons_list():
     return render_template('lessons/lessons_list.html', group_id=group_id, teacher_id=teacher_id,
                            selected_date=selected_date, pagination=pagination, lessons=pagination.items,
                            groups=Group.query.order_by(Group.name).all(),
-                           teachers=Teacher.query.order_by(Teacher.fio).all(), current_date=datetime.date.today())
+                           teachers=Teacher.query.order_by(Teacher.fio).all())
 
 
 @lessons.route('/months/<int:group_id>')
@@ -104,7 +104,7 @@ def lessons_in_month(group_id, month_number):
     return render_template('lessons/lessons_in_month.html', group=group, month_number=month_number,
                            month_name=month_name, students_in_group=students_in_group, payments=pd[0], confirmed=pd[1],
                            cash=pd[2], comments=pd[3], lessons=ll[0], attendings_states=ll[1],
-                           write_mode=can_user_write_group(current_user, group), current_date=datetime.date.today())
+                           write_mode=can_user_write_group(current_user, group))
 
 
 @lessons.route('/create/<int:group_id>', methods=['GET', 'POST'])
@@ -112,18 +112,16 @@ def lessons_in_month(group_id, month_number):
 @check_access_group_write()
 def create_lesson(group_id):
     group = Group.query.get_or_404(group_id)
-    current_date = datetime.date.today()
     if 'submit' in request.form:
         date = parse_date_or_none(request.form.get('date'))
         if date is None or date < start_date_of_month(group.start_month) or date > end_date_of_month(group.end_month):
             abort(409)
-        if current_user.system_role.name == role_teacher_name and date < current_date:
+        if current_user.system_role.name == role_teacher_name and date < datetime.date.today():
             abort(409)
         db.session.add(Lesson(group_id=group_id, teacher_id=group.teacher_id, date=date))
         flash('занятие создано: {}'.format(date))
         return redirect(url_for('.lessons_in_month', group_id=group_id, month_number=number_of_month_for_date(date)))
-    return render_template('lessons/create_lesson.html', group=group,
-                           current_date=current_date)
+    return render_template('lessons/create_lesson.html', group=group)
 
 
 @lessons.route('/delete/<int:lesson_id>/<int:from_list>')
