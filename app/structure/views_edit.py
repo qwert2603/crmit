@@ -1,7 +1,8 @@
+import datetime
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
 from app.decorators import check_master, check_master_or_teacher
-from app.models import Citizenship, Section, Parent, School, Group
+from app.models import Citizenship, Section, Parent, School, Group, Lesson
 from app.structure import structure
 from app.structure.forms import CitizenshipForm, SectionForm, ParentForm, SchoolForm, GroupForm
 from app.structure.utils import delete_unconfirmed_payments_out_of_months_period, \
@@ -100,6 +101,8 @@ def edit_group(group_id):
         group.end_month = form.end_month()
         correct_student_enter_exit_month_to_group_period(group)
         delete_unconfirmed_payments_out_of_months_period(group)
+        for lesson in group.lessons.filter(Lesson.date > datetime.date.today()).all():
+            lesson.teacher_id = group.teacher_id
         flash('группа {} изменена'.format(form.name.data))
         return redirect(url_for('.groups_list'))
     if not form.is_submitted():
