@@ -1,5 +1,5 @@
 #!./venv/bin/python3
-
+import datetime
 from flask_mail import Mail
 from flask_migrate import Migrate
 
@@ -44,7 +44,7 @@ context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_te
                     attending_was_not=models.attending_was_not, attending_was=models.attending_was,
                     attending_was_not_ill=models.attending_was_not_ill,
                     last_seen_registration=models.last_seen_registration, last_seen_web=models.last_seen_web,
-                    last_seen_android=models.last_seen_android)
+                    last_seen_android=models.last_seen_android, current_date_fun=datetime.date.today)
 
 
 @app.context_processor

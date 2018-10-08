@@ -22,13 +22,16 @@ from app.utils import get_month_name, parse_date_or_none, number_of_month_for_da
 def lessons_list():
     group_id = request.args.get('group_id', 0, type=int)
     teacher_id = request.args.get('teacher_id', 0, type=int)
+    selected_date = parse_date_or_none(request.args.get('selected_date'))
     page = request.args.get('page', 1, type=int)
     pagination = Lesson.query.order_by(Lesson.date.desc())
     if group_id > 0: pagination = pagination.filter(Lesson.group_id == group_id)
     if teacher_id > 0: pagination = pagination.filter(Lesson.teacher_id == teacher_id)
+    if selected_date is not None: pagination = pagination.filter(Lesson.date <= selected_date)
     pagination = pagination.paginate(page, per_page=20, error_out=False)
-    return render_template('lessons/lessons_list.html', group_id=group_id, teacher_id=teacher_id, pagination=pagination,
-                           lessons=pagination.items, groups=Group.query.order_by(Group.name).all(),
+    return render_template('lessons/lessons_list.html', group_id=group_id, teacher_id=teacher_id,
+                           selected_date=selected_date, pagination=pagination, lessons=pagination.items,
+                           groups=Group.query.order_by(Group.name).all(),
                            teachers=Teacher.query.order_by(Teacher.fio).all(), current_date=datetime.date.today())
 
 
@@ -111,7 +114,7 @@ def create_lesson(group_id):
     group = Group.query.get_or_404(group_id)
     current_date = datetime.date.today()
     if 'submit' in request.form:
-        date = parse_date_or_none(request.form.get('date')).date()
+        date = parse_date_or_none(request.form.get('date'))
         if date is None or date < start_date_of_month(group.start_month) or date > end_date_of_month(group.end_month):
             abort(409)
         if current_user.system_role.name == role_teacher_name and date < current_date:

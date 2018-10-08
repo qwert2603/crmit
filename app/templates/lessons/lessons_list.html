@@ -32,6 +32,10 @@
                 {% endfor %}
             </select>
         </div>
+        <div class="form-group">
+            <h3><label for="selected_date">дата</label></h3>
+            <input class="form-control" id="selected_date" name="selected_date" type="date" value="{{ selected_date }}">
+        </div>
         <input class="btn btn-default" type="submit" value="искать">
     </form>
 
@@ -83,7 +87,7 @@
     </table>
 
     <div class="footer">
-        {{ pagination_widget(pagination, 'lessons.lessons_list', group_id=group_id, teacher_id=teacher_id) }}
+        {{ pagination_widget(pagination, 'lessons.lessons_list', group_id=group_id, teacher_id=teacher_id, selected_date=selected_date) }}
     </div>
 
     <a class="btn btn-warning margined_button" href="{{ url_for('lessons.delete_empty_past_lessons') }}">

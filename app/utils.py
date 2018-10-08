@@ -121,8 +121,10 @@ def password_from_date(date):
 
 
 def parse_date_or_none(date_str):
+    if date_str is None:
+        return None
     try:
-        return datetime.datetime.strptime(date_str, '%Y-%m-%d')
+        return datetime.datetime.strptime(date_str, '%Y-%m-%d').date()
     except ValueError:
         return None
 
