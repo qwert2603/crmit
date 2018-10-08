@@ -83,6 +83,6 @@
     </table>
 
     <div class="footer">
-        {{ pagination_widget(pagination, 'structure.parents_list') }}
+        {{ pagination_widget(pagination, 'structure.parents_list', search=search, group_id=selected_group.id) }}
     </div>
 {% endblock %}
