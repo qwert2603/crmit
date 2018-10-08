@@ -1,7 +1,8 @@
 from flask import request, render_template
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from app.decorators import check_master_or_teacher, check_master
+from app.init_model import role_teacher_name
 from app.models import Citizenship, Section, Parent, School, Group
 from app.structure import structure
 from app.list_route import create_list_route
@@ -21,8 +22,14 @@ def citizenships_list():
 @login_required
 @check_master_or_teacher
 def groups_list():
+    if current_user.system_role.name == role_teacher_name:
+        teacher_id = current_user.teacher.id
+    else:
+        teacher_id = 0
     return create_list_route(
-        lambda search: Group.query.filter(Group.name.ilike('%{}%'.format(search))).order_by(Group.name),
+        lambda search: Group.query
+            .filter(Group.name.ilike('%{}%'.format(search)))
+            .order_by(Group.teacher_id != teacher_id, Group.start_month.desc()),
         'structure/groups_list.html')
 
 
@@ -39,7 +46,7 @@ def parents_list():
     else:
         selected_group = None
         pagination = Parent.query
-    pagination = pagination\
+    pagination = pagination \
         .filter(Parent.fio.ilike('%{}%'.format(search))).order_by(Parent.fio) \
         .paginate(page, per_page=20, error_out=False)
     return render_template('structure/parents_list.html', pagination=pagination, items=pagination.items, search=search,

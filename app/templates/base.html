@@ -46,7 +46,11 @@
                         <li><a href="{{ url_for('structure.groups_list') }}">группы</a></li>
                         <li><a href="{{ url_for('structure.sections_list') }}">секции</a></li>
 
-                        <li><a href="{{ url_for('lessons.lessons_list') }}">занятия</a></li>
+                        {% if current_user.system_role.name == role_teacher_name %}
+                            <li><a href="{{ url_for('lessons.lessons_list', teacher_id=current_user.teacher.id) }}">занятия</a></li>
+                        {% else %}
+                            <li><a href="{{ url_for('lessons.lessons_list') }}">занятия</a></li>
+                        {% endif %}
 
                         <li><a href="{{ url_for('notifications.notifications_list') }}">увед-я</a></li>
 
