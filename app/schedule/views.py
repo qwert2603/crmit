@@ -46,5 +46,5 @@ def timetable():
     return render_template('schedule/timetable_master.html' if is_master else 'schedule/timetable_teacher.html',
                            groups=Group.query.order_by(Group.name).all(),
                            days_of_week=days_of_week_names,
-                           schedule_times=ScheduleTime.query.order_by(ScheduleTime.id).all(),
+                           schedule_times=ScheduleTime.query.order_by(ScheduleTime.time, ScheduleTime.id).all(),
                            schedule_groups=schedule_groups)
