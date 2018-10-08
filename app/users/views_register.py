@@ -92,10 +92,10 @@ def register_student():
 
 
 @users.route('/register/student/fast/<int:group_id>/<int:month_number>', methods=['GET', 'POST'])
+@users.route('/register/student/fast', methods=['GET', 'POST'])
 @login_required
 @check_master_or_teacher
-def register_student_fast(group_id, month_number):
-    group = Group.query.get_or_404(group_id)
+def register_student_fast(group_id=None, month_number=None):
     form = RegistrationStudentFastForm()
     if form.validate_on_submit():
         na_text = 'не указано'
@@ -104,7 +104,8 @@ def register_student_fast(group_id, month_number):
         user_student = SystemUser(
             login=generate_login_student(form.last_name.data, form.first_name.data, form.second_name.data),
             password=password_from_date(form.birth_date.data), system_role=role_student, enabled=True)
-        additional_info = 'телефон родителя: {}; \nимя родителя: {}'.format(form.parent_phone.data, form.parent_name.data)
+        additional_info = 'телефон родителя: {}; \nимя родителя: {}'.format(form.parent_phone.data,
+                                                                            form.parent_name.data)
         student = Student(fio=fio, system_user=user_student, birth_date=form.birth_date.data,
                           birth_place=na_text, registration_place=na_text, actual_address=na_text,
                           additional_info=additional_info, known_from=na_text, school_id=form.school.data,
@@ -112,8 +113,13 @@ def register_student_fast(group_id, month_number):
                           phone=na_text, contact_phone=contact_phone_student, filled=False)
         db.session.add(user_student)
         db.session.add(student)
-        db.session.add(StudentInGroup(student=student, group=group, enter_month=group.start_month,
-                                      exit_month=group.end_month))
-        flash('ученик {} создан и добавлен в группу {}.'.format(fio, group.name))
-        return redirect(url_for('lessons.lessons_in_month', group_id=group_id, month_number=month_number))
+        if group_id is not None:
+            group = Group.query.get_or_404(group_id)
+            db.session.add(StudentInGroup(student=student, group=group, enter_month=group.start_month,
+                                          exit_month=group.end_month))
+            flash('ученик {} создан и добавлен в группу {}.'.format(fio, group.name))
+            return redirect(url_for('lessons.lessons_in_month', group_id=group_id, month_number=month_number))
+        else:
+            flash('ученик {} создан.'.format(fio))
+            return redirect(url_for('users.students_list'))
     return render_template('users/form_register_student_fast.html', form=form)

@@ -103,9 +103,9 @@ class RegistrationStudentForm(RegistrationForm):
     phone = StringField('телефон', validators=[Phone(allow_empty=True)])
     contact_phone = SelectField(prefix_field_required + 'телефон для связи', coerce=int, validators=[DataRequired()])
     mother_search = StringField('мать. поиск', validators=[Optional()])
-    mother = SelectField('мать (при создании нового заполните поля ниже)', coerce=int, validators=[Optional()])
+    mother = SelectField('мать', coerce=int, validators=[Optional()])
     father_search = StringField('отец. поиск', validators=[Optional()])
-    father = SelectField('отец (при создании нового заполните поля ниже)', coerce=int, validators=[Optional()])
+    father = SelectField('отец', coerce=int, validators=[Optional()])
 
     m_fio = StringField(prefix_field_required + 'новая мать: фио',
                         validators=[Length(0, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
@@ -165,6 +165,8 @@ class RegistrationStudentForm(RegistrationForm):
             del self.password_confirm
             self.m_notification_types.choices = [[-1, 'нет']] + notification_types_list
             self.f_notification_types.choices = [[-1, 'нет']] + notification_types_list
+            self.mother.label = Label(self.mother.id, "мать (при создании нового заполните поля ниже)")
+            self.father.label = Label(self.father.id, "отец (при создании нового заполните поля ниже)")
 
     def validate_school(self, field):
         if field.data <= 0:
