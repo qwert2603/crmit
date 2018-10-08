@@ -2,7 +2,7 @@ import datetime
 
 from app import db
 from app.models import Lesson, attending_was
-from app.utils import number_of_month, end_date_of_month
+from app.utils import number_of_month, end_date_of_month, start_date_of_month
 from config import DB_TYPE_POSTGRES
 
 
@@ -85,8 +85,10 @@ def fill_group_by_schedule(group, new_dows):
         for a in lesson.attendings:
             db.session.delete(a)
         db.session.delete(lesson)
-    for date in days_of_dows(start_date=datetime.date.today() + datetime.timedelta(days=1),
-                             end_date=end_date_of_month(group.end_month), dows=new_dows):
+    start_date_1 = datetime.date.today() + datetime.timedelta(days=1)
+    start_date_2 = start_date_of_month(group.start_month)
+    for date in days_of_dows(start_date=max(start_date_1, start_date_2), end_date=end_date_of_month(group.end_month),
+                             dows=new_dows):
         db.session.add(Lesson(group_id=group.id, teacher_id=group.teacher_id, date=date))
 
 
