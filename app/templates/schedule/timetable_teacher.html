@@ -28,9 +28,11 @@
                         {% set group = schedule_groups.get(time.id, dict()).get(day_index).group %}
                         {% if group %}
                             {% if group.teacher == current_user.teacher %}
-                                <a href="{{ url_for('structure.groups_list',search=group.name) }}">
-                                    <b>{{ group.name }}</b>
-                                </a>
+                                <div class="colored_link">
+                                    <a href="{{ url_for('structure.groups_list',search=group.name) }}">
+                                        <b>{{ group.name }}</b>
+                                    </a>
+                                </div>
                             {% else %}
                                 <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
                                     {{ group.name }}

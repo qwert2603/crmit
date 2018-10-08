@@ -36,12 +36,14 @@
                     <ul>
                         {% for group in section.groups.all() %}
                             <li>
-                                <a href="{{ url_for('structure.groups_list',search=group.name) }}">
-                                    {{ group.name }}
-                                </a>
-                                <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
-                                    ({{ group.teacher.fio }})
-                                </a>
+                                <div {% if current_user.system_role.name == role_teacher_name and group.teacher_id==current_user.teacher.id %}class="colored_link"{% endif %}>
+                                    <a href="{{ url_for('structure.groups_list',search=group.name) }}">
+                                        {{ group.name }}
+                                    </a>
+                                    <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
+                                        ({{ group.teacher.fio }})
+                                    </a>
+                                </div>
                             </li>
                         {% else %}
                             <p><i>нет групп</i></p>

@@ -16,3 +16,12 @@
     font-size: 22px;
     color: red;
 }
+
+.colored_link a {
+    color: orangered;
+}
+
+
+.colored_link a:hover {
+    color: red;
+}
