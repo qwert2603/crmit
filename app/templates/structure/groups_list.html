@@ -80,7 +80,9 @@
                 </td>
                 <td>
                     {% if can_user_write_group(current_user, group) %}
-                        <a href="{{ url_for('payments.payments_in_group',group_id=group.id) }}" class="btn btn-default">&#8381;</a>
+                        <a href="{{ url_for('payments.payments_in_group',group_id=group.id) }}" class="btn btn-default">
+                            <span class="glyphicon glyphicon-rub"></span>
+                        </a>
                     {% endif %}
                 </td>
                 {% if current_user.system_role.name == role_master_name %}
