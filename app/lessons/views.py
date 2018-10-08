@@ -1,4 +1,5 @@
 import datetime
+
 from flask import request, render_template, abort, flash, url_for, redirect
 from flask_login import login_required, current_user
 
@@ -9,7 +10,7 @@ from app.is_removable_check import is_lesson_removable
 from app.lessons import lessons
 from app.lessons.utils import lessons_lists, dates_of_lessons_dict, empty_past_lessons, fill_group_by_schedule
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student, ScheduleGroup, \
-    attending_was_not, attending_was
+    attending_was_not
 from app.payments.utils import payments_in_month_dicts
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
     end_date_of_month, can_user_write_group, days_of_week_names, parse_int_or_none
@@ -28,7 +29,7 @@ def lessons_list():
     pagination = pagination.paginate(page, per_page=20, error_out=False)
     return render_template('lessons/lessons_list.html', group_id=group_id, teacher_id=teacher_id, pagination=pagination,
                            lessons=pagination.items, groups=Group.query.order_by(Group.name).all(),
-                           teachers=Teacher.query.order_by(Teacher.fio).all())
+                           teachers=Teacher.query.order_by(Teacher.fio).all(), current_date=datetime.date.today())
 
 
 @lessons.route('/months/<int:group_id>')
@@ -100,7 +101,7 @@ def lessons_in_month(group_id, month_number):
     return render_template('lessons/lessons_in_month.html', group=group, month_number=month_number,
                            month_name=month_name, students_in_group=students_in_group, payments=pd[0], confirmed=pd[1],
                            cash=pd[2], comments=pd[3], lessons=ll[0], attendings_states=ll[1],
-                           write_mode=can_user_write_group(current_user, group))
+                           write_mode=can_user_write_group(current_user, group), current_date=datetime.date.today())
 
 
 @lessons.route('/create/<int:group_id>', methods=['GET', 'POST'])
@@ -130,6 +131,7 @@ def delete_lesson(lesson_id, from_list):
     # can't use @check_access_group_write() because no 'group_id' param.
     if not can_user_write_group(current_user, lesson.group): abort(403)
     if not is_lesson_removable(lesson): abort(409)
+    if current_user.system_role.name == role_teacher_name and lesson.date < datetime.date.today(): abort(409)
     for a in lesson.attendings_was_not:
         db.session.delete(a)
     db.session.delete(lesson)
@@ -139,7 +141,7 @@ def delete_lesson(lesson_id, from_list):
     else:
         endpoint = '.lessons_in_month'
     return redirect(url_for(endpoint, group_id=lesson.group_id if from_list == 0 else None,
-                            month_number=(number_of_month_for_date(lesson.date))))
+                            month_number=number_of_month_for_date(lesson.date) if from_list == 0 else None))
 
 
 @lessons.route('/delete_empty_past', methods=['GET', 'POST'])

@@ -54,13 +54,16 @@
                         {% set state=attendings_states[lesson.id].get(student_in_group.student_id, attending_was_not) %}
                         {% if write_mode %}
                             <div class="state_container">
-                                <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                                <input form="save_form" type="radio"
+                                       name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
                                        {% if not write_mode %}disabled{% endif %} value="{{ attending_was_not }}"
                                        style="display: none" {% if state == attending_was_not %}checked{% endif %}/>
-                                <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                                <input form="save_form" type="radio"
+                                       name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
                                        {% if not write_mode %}disabled{% endif %} value="{{ attending_was }}"
                                        style="display: none" {% if state == attending_was %}checked{% endif %}/>
-                                <input form="save_form" type="radio" name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
+                                <input form="save_form" type="radio"
+                                       name="a_{{ lesson.id }}_{{ student_in_group.student_id }}"
                                        {% if not write_mode %}disabled{% endif %} value="{{ attending_was_not_ill }}"
                                        style="display: none" {% if state == attending_was_not_ill %}checked{% endif %}/>
                                 <div style="width: 50px">
@@ -132,7 +135,8 @@
             <td></td>
             {% for lesson in lessons %}
                 <td>
-                    {% if current_user.system_role.name == role_master_name %}
+                    {% if can_user_write_group(current_user, lesson.group)
+                        and (current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name and lesson.date >= current_date) %}
                         <a onclick="askDelete('занятие {{ lesson.date }} в {{ lesson.group.name }}', '{{ url_for('lessons.delete_lesson',lesson_id=lesson.id, from_list=0) }}')"
                            class="btn btn-danger {% if not is_lesson_removable(lesson) %}disabled{% endif %}">
                             <span class="glyphicon glyphicon-remove"></span>
