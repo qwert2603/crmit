@@ -25,10 +25,11 @@ def access_token_required():
             if not access_token.system_user.enabled:
                 db.session.delete(access_token)
                 abort(401)
-            from app.api_1_0_1.rests import access_token_expires_days
-            access_token.expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
             g.access_token = access_token
             g.current_user_app = access_token.system_user
+            if g.current_user_app.login != developer_login:
+                from app.api_1_0_1.rests import access_token_expires_days
+                access_token.expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
 
             if g.current_user_app.login != developer_login:
                 g.current_user_app.last_seen = datetime.datetime.utcnow()

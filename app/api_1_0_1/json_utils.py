@@ -181,3 +181,23 @@ def payment_to_json(payment):
         'comment': payment.comment,
         'needToPay': payment.student_in_group.group.section.price - payment.student_in_group.discount
     }
+
+
+def system_user_to_last_seen_info_json(system_user):
+    return {
+        'id': system_user.id,
+        'login': system_user.login,
+        'lastSeen': system_user.last_seen.strftime("%Y-%m-%d %H:%M"),
+        'lastSeenWhere': system_user.last_seen_where,
+        'systemRoleName': system_user.system_role.name,
+        'fio': system_user.details.fio,
+    }
+
+
+def access_token_to_json(access_token):
+    return {
+        'id': access_token.id,
+        'expires': access_token.expires.strftime("%Y-%m-%d %H:%M"),
+        'fio': access_token.system_user.details.fio,
+        'systemRoleName': access_token.system_user.system_role.name,
+    }

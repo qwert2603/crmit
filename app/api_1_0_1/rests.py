@@ -2,6 +2,7 @@ import datetime
 import uuid
 
 from flask import jsonify, request, abort, g
+from sqlalchemy import or_
 
 from app import db
 from app.api_1_0_1 import api_1_0_1
@@ -12,12 +13,12 @@ from app.api_1_0_1.decorators import access_token_required, check_master_or_teac
     check_developer_access_token
 from app.api_1_0_1.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
-    attending_to_json, payment_to_json
+    attending_to_json, payment_to_json, system_user_to_last_seen_info_json, access_token_to_json
 from app.api_1_0_1.utils import create_json_list, create_attendings_for_all_students, token_to_hash, \
     create_payments_for_all_students
 from app.init_model import developer_login, role_student_name, role_master_name, role_teacher_name
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
-    attending_states, AccessToken, Payment
+    attending_states, AccessToken, Payment, SystemRole
 from app.utils import can_user_write_group
 
 
@@ -265,11 +266,19 @@ def app_info():
 @access_token_required()
 @check_developer_access_token()
 def last_seens():
-    return 't'  # todo
+    system_users = SystemUser.query \
+        .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
+        .filter(or_(SystemRole.name == role_master_name, SystemRole.name == role_teacher_name)) \
+        .order_by(SystemUser.id) \
+        .all()
+    return jsonify([system_user_to_last_seen_info_json(system_user) for system_user in system_users])
 
 
 @api_1_0_1.route('active_sessions')
 @access_token_required()
 @check_developer_access_token()
 def active_sessions():
-    return 't'  # todo
+    access_tokens = AccessToken.query \
+        .order_by(AccessToken.id) \
+        .all()
+    return jsonify([access_token_to_json(access_token) for access_token in access_tokens])
