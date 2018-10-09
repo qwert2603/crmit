@@ -43,7 +43,7 @@
                 <td>{{ teacher.system_user.login }}</td>
                 <td>
                     <ul>
-                        {% for group in teacher.groups.all() %}
+                        {% for group in teacher.groups.order_by(Group.start_month.desc(), Group.name).all() %}
                             <li>
                                 <a href="{{ url_for('structure.groups_list',search=group.name) }}">
                                     {{ group.name }}
