@@ -7,8 +7,9 @@ from app import db
 from app.api_1_0_1 import api_1_0_1
 from app.api_1_0_1.consts import access_token_expires_days, account_type_master, \
     account_type_teacher, login_error_reason_student_account_is_not_supported, login_error_reason_account_disabled, \
-    login_error_reason_wrong_login_or_password
-from app.api_1_0_1.decorators import access_token_required, check_master_or_teacher_access_token
+    login_error_reason_wrong_login_or_password, actual_app_build_code
+from app.api_1_0_1.decorators import access_token_required, check_master_or_teacher_access_token, \
+    check_developer_access_token
 from app.api_1_0_1.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
     attending_to_json, payment_to_json
@@ -234,6 +235,8 @@ def login():
     access_token = AccessToken(token_hash=token_to_hash(token), system_user_id=user.id, expires=expires)
     db.session.add(access_token)
 
+    g.current_user_app = user
+
     account_type = 0
     details_id = 0
     if user.system_role.name == role_master_name:
@@ -251,3 +254,22 @@ def login():
 def logout():
     db.session.delete(g.access_token)
     return 'ok'
+
+
+@api_1_0_1.route('app_info')
+def app_info():
+    return jsonify(actual_app_build_code=actual_app_build_code)
+
+
+@api_1_0_1.route('last_seens')
+@access_token_required()
+@check_developer_access_token()
+def last_seens():
+    return 't'  # todo
+
+
+@api_1_0_1.route('active_sessions')
+@access_token_required()
+@check_developer_access_token()
+def active_sessions():
+    return 't'  # todo

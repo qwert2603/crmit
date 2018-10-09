@@ -5,7 +5,7 @@ from flask import request, abort, g
 
 from app import db
 from app.api_1_0_1.utils import token_to_hash
-from app.init_model import role_master_name, role_teacher_name
+from app.init_model import role_master_name, role_teacher_name, developer_login
 from app.models import AccessToken, last_seen_android
 
 
@@ -30,8 +30,9 @@ def access_token_required():
             g.access_token = access_token
             g.current_user_app = access_token.system_user
 
-            g.current_user_app.last_seen = datetime.datetime.utcnow()
-            g.current_user_app.last_seen_where = last_seen_android
+            if g.current_user_app.login != developer_login:
+                g.current_user_app.last_seen = datetime.datetime.utcnow()
+                g.current_user_app.last_seen_where = last_seen_android
             for at in g.current_user_app.access_tokens_expired().all():
                 db.session.delete(at)
 
@@ -65,3 +66,16 @@ def check_teacher_access_token(f):
 
 def check_master_or_teacher_access_token(f):
     return check_system_role_access_token([role_master_name, role_teacher_name])(f)
+
+
+def check_developer_access_token():
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if g.current_user_app.login != developer_login:
+                abort(404)
+            return f(*args, **kwargs)
+
+        return decorated_function
+
+    return decorator

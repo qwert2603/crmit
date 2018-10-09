@@ -6,3 +6,5 @@ account_type_master = 'MASTER'
 account_type_teacher = 'TEACHER'
 
 access_token_expires_days = 42
+
+actual_app_build_code = 3
