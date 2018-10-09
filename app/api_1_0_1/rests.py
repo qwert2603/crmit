@@ -259,7 +259,7 @@ def logout():
 
 @api_1_0_1.route('app_info')
 def app_info():
-    return jsonify(actual_app_build_code=actual_app_build_code)
+    return jsonify(actualAppBuildCode=actual_app_build_code)
 
 
 @api_1_0_1.route('last_seens')
@@ -274,11 +274,11 @@ def last_seens():
     return jsonify([system_user_to_last_seen_info_json(system_user) for system_user in system_users])
 
 
-@api_1_0_1.route('active_sessions')
+@api_1_0_1.route('access_tokens')
 @access_token_required()
 @check_developer_access_token()
-def active_sessions():
-    access_tokens = AccessToken.query \
+def access_tokens():
+    access_tokens_list = AccessToken.query \
         .order_by(AccessToken.id) \
         .all()
-    return jsonify([access_token_to_json(access_token) for access_token in access_tokens])
+    return jsonify([access_token_to_json(access_token) for access_token in access_tokens_list])
