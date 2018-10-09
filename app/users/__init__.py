@@ -11,13 +11,6 @@ from flask_login import current_user
 from datetime import datetime
 from app import db
 
-dont_rollback_endpoints = [
-    'users.login',
-    'users.logout',
-    'users.logout_app',
-    'users.change_password',
-]
-
 
 @users.before_app_request
 def before_request():
@@ -32,6 +25,12 @@ def before_request():
 
 @users.after_app_request
 def after_request(response):
+    dont_rollback_endpoints = [
+        'users.login',
+        'users.logout',
+        'users.logout_app',
+        'users.change_password',
+    ]
     if request.endpoint in dont_rollback_endpoints: return response
     if current_user.is_authenticated and current_user.login == developer_login:
         from manage import app
