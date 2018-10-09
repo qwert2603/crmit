@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
+from sqlalchemy.sql.functions import coalesce
 
 from app import db
 from app.decorators import check_master_or_teacher
@@ -43,8 +44,9 @@ def timetable():
         flash('расписание сохранено.')
         return redirect(url_for('.timetable'))
 
+    schedule_times = ScheduleTime.query.order_by(coalesce(ScheduleTime.time, '25:59'), ScheduleTime.id).all()
     return render_template('schedule/timetable_master.html' if is_master else 'schedule/timetable_teacher.html',
                            groups=Group.list_sorted_for_current_user().all(),
                            days_of_week=days_of_week_names,
-                           schedule_times=ScheduleTime.query.order_by(ScheduleTime.time, ScheduleTime.id).all(),
+                           schedule_times=schedule_times,
                            schedule_groups=schedule_groups)
