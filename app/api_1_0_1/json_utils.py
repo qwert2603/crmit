@@ -185,11 +185,7 @@ def payment_to_json(payment):
 
 def system_user_to_last_seen_info_json(system_user):
     return {
-        'id': system_user.id,
-        'login': system_user.login,
-        'lastSeen': system_user.last_seen.strftime("%Y-%m-%d %H:%M"),
-        'lastSeenWhere': system_user.last_seen_where,
-        'systemRoleName': system_user.system_role.name,
+        'systemUser': system_user_to_json(system_user),
         'fio': system_user.details.fio,
     }
 
@@ -197,7 +193,7 @@ def system_user_to_last_seen_info_json(system_user):
 def access_token_to_json(access_token):
     return {
         'id': access_token.id,
+        'systemUser': system_user_to_json(access_token.system_user),
         'expires': access_token.expires.strftime("%Y-%m-%d %H:%M"),
         'fio': access_token.system_user.details.fio,
-        'systemRoleName': access_token.system_user.system_role.name,
     }
