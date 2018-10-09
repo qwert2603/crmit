@@ -48,4 +48,4 @@ def students_list():
         .order_by(Student.filled, Student.fio) \
         .paginate(page, per_page=20, error_out=False)
     return render_template('users/students_list.html', pagination=pagination, items=pagination.items, search=search,
-                           groups=Group.query.order_by(Group.name).all(), selected_group=selected_group)
+                           groups=Group.list_sorted_for_current_user().all(), selected_group=selected_group)

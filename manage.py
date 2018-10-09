@@ -44,7 +44,8 @@ context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_te
                     attending_was_not=models.attending_was_not, attending_was=models.attending_was,
                     attending_was_not_ill=models.attending_was_not_ill,
                     last_seen_registration=models.last_seen_registration, last_seen_web=models.last_seen_web,
-                    last_seen_android=models.last_seen_android, current_date_fun=datetime.date.today)
+                    last_seen_android=models.last_seen_android, current_date_fun=datetime.date.today,
+                    Group=models.Group)
 
 
 @app.context_processor

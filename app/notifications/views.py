@@ -25,9 +25,10 @@ def notifications_list():
         .filter(SystemUser.login != developer_login) \
         .all()
     if current_user.system_role.name == role_master_name:
-        groups = Group.query.all()
+        groups = Group.query
     else:
-        groups = current_user.teacher.groups.all()
+        groups = current_user.teacher.groups
+    groups = groups.order_by(Group.start_month.desc(), Group.name).all()
     return render_template('notifications/notifications_list.html', sender_id=sender_id, pagination=pagination,
                            notifications=pagination.items, senders=senders, groups=groups)
 

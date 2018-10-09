@@ -56,7 +56,7 @@ def payments_in_month_dicts(group_id, month_number):
 def get_sum_not_confirmed_by_group(teacher_id):
     groups = Group.query \
         .filter_by(teacher_id=teacher_id) \
-        .order_by(Group.name) \
+        .order_by(Group.start_month.desc(), Group.name) \
         .all()
     result = []
     for group in groups:

@@ -31,7 +31,7 @@ def lessons_list():
     pagination = pagination.paginate(page, per_page=20, error_out=False)
     return render_template('lessons/lessons_list.html', group_id=group_id, teacher_id=teacher_id,
                            selected_date=selected_date, pagination=pagination, lessons=pagination.items,
-                           groups=Group.query.order_by(Group.name).all(),
+                           groups=Group.list_sorted_for_current_user().all(),
                            teachers=Teacher.query.order_by(Teacher.fio).all())
 
 

@@ -1,5 +1,5 @@
 from datetime import datetime
-from flask_login import AnonymousUserMixin, UserMixin
+from flask_login import AnonymousUserMixin, UserMixin, current_user
 from sqlalchemy import or_
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
@@ -45,6 +45,14 @@ class SystemUser(UserMixin, db.Model):
         if self.system_role.details_table_name == Master.__tablename__: return self.master
         if self.system_role.details_table_name == Teacher.__tablename__: return self.teacher
         if self.system_role.details_table_name == Student.__tablename__: return self.student
+
+    @property
+    def teacher_id_or_zero(self):
+        from app.init_model import role_teacher_name
+        if self.system_role.name == role_teacher_name:
+            return self.teacher.id
+        else:
+            return 0
 
     @property
     def password(self):
@@ -345,7 +353,7 @@ class Group(db.Model):
         return Parent.query \
             .join(ParentOfStudent, ParentOfStudent.parent_id == Parent.id) \
             .join(StudentInGroup, StudentInGroup.student_id == ParentOfStudent.student_id) \
-            .filter(StudentInGroup.group_id == self.id)\
+            .filter(StudentInGroup.group_id == self.id) \
             .distinct()
 
     def students_in_month(self, month_number):
@@ -365,6 +373,11 @@ class Group(db.Model):
     def notifications(self):
         return Notification.query.filter(Notification.receiver_type == receiver_type_group,
                                          Notification.receiver_id == self.id)
+
+    @staticmethod
+    def list_sorted_for_current_user():
+        return Group.query.order_by(Group.teacher_id != current_user.teacher_id_or_zero, Group.start_month.desc(),
+                                    Group.name)
 
 
 class StudentInGroup(db.Model):
