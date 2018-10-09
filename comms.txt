@@ -17,3 +17,6 @@ venv/bin/pip3 install mysql-python
 venv/bin/pip3 install -r requiments.txt
 
 tar -xvf crmit_0_8.tar.gz
+
+scp PycharmProjects/crmit/crmit_1_0_3.tar.gz kristallp@ssh.kristallp.nichost.ru:/home/kristallp/crm.cmit22.ru/cgi/
+rm -rf app/ comms.txt config.py fla.cgi manage.py migrations/ __pycache__/ README.md requiments.txt
