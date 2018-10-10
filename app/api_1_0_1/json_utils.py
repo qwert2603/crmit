@@ -149,10 +149,14 @@ def student_in_group_to_json(student_in_group):
 
 
 def lesson_to_json(lesson):
+    if lesson.teacher_id != lesson.group.teacher_id:
+        another_teacher_fio = lesson.teacher.fio
+    else:
+        another_teacher_fio = None
     return {
         'id': lesson.id,
         'groupId': lesson.group_id,
-        'teacherId': lesson.teacher_id,
+        'anotherTeacherFio': another_teacher_fio,
         'date': lesson.date.strftime("%Y-%m-%d")
     }
 
