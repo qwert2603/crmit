@@ -43,8 +43,8 @@
                         <li><a href="{{ url_for('users.students_list') }}">ученики</a></li>
 
                         <li><a href="{{ url_for('structure.parents_list') }}">род-ли</a></li>
-                        <li><a href="{{ url_for('structure.groups_list') }}">группы</a></li>
                         <li><a href="{{ url_for('structure.sections_list') }}">секции</a></li>
+                        <li><a href="{{ url_for('structure.groups_list') }}">группы</a></li>
 
                         {% if current_user.system_role.name == role_teacher_name %}
                             <li>

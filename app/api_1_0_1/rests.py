@@ -26,21 +26,24 @@ from app.utils import can_user_write_group
 @access_token_required()
 @check_master_or_teacher_access_token
 def sections_list():
-    return create_json_list(Section, Section.name, section_to_json)
+    return create_json_list(Section, Section.name, section_to_json, order_by=lambda query: query.order_by(Section.name))
 
 
 @api_1_0_1.route('/groups_list')
 @access_token_required()
 @check_master_or_teacher_access_token
 def groups_list():
-    return create_json_list(Group, Group.name, group_to_json_brief)
+    return create_json_list(Group, Group.name, group_to_json_brief,
+                            order_by=lambda query: query.order_by(
+                                Group.teacher_id != g.current_user_app.teacher_id_or_zero, Group.start_month.desc(),
+                                Group.name))
 
 
 @api_1_0_1.route('/teachers_list')
 @access_token_required()
 @check_master_or_teacher_access_token
 def teachers_list():
-    return create_json_list(Teacher, Teacher.fio, teacher_to_json)
+    return create_json_list(Teacher, Teacher.fio, teacher_to_json, order_by=lambda query: query.order_by(Teacher.fio))
 
 
 @api_1_0_1.route('/masters_list')
@@ -48,9 +51,10 @@ def teachers_list():
 @check_master_or_teacher_access_token
 def masters_list():
     return create_json_list(Master, Master.fio, master_to_json,
-                            lambda query: query
+                            more_filter=lambda query: query
                             .join(SystemUser, SystemUser.id == Master.system_user_id)
-                            .filter(SystemUser.login != developer_login)
+                            .filter(SystemUser.login != developer_login),
+                            order_by=lambda query: query.order_by(Master.fio)
                             )
 
 
@@ -59,9 +63,7 @@ def masters_list():
 @check_master_or_teacher_access_token
 def students_list():
     return create_json_list(Student, Student.fio, student_to_json_brief,
-                            lambda query: query
-                            .order_by(Student.filled, Student.id)
-                            )
+                            order_by=lambda query: query.order_by(Student.filled, Student.fio))
 
 
 @api_1_0_1.route('student_details/<int:student_id>')

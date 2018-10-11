@@ -116,6 +116,8 @@ def group_to_json_brief(group):
         'name': group.name,
         'teacherId': group.teacher.id,
         'teacherFio': group.teacher.fio,
+        'startMonth': group.start_month,
+        'endMonth': group.end_month,
     }
 
 
