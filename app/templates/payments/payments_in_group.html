@@ -24,13 +24,13 @@
                         {% if student_in_group.enter_month <= m and m <= student_in_group.exit_month %}
                             {% if confirmed[m].get(student_in_group.id) %}
                                 {{ payments[m].get(student_in_group.id, 0) }}
-                                / {{ group.section.price - student_in_group.discount }}
+                                / {{ group.section.price - student_in_group.discount }} &#8381;
                             {% else %}
                                 <input max="{{ group.section.price - student_in_group.discount }}" min="0"
                                        form="save_form"
                                        type="number" name="p_{{ m }}_{{ student_in_group.id }}"
                                        value="{{ payments[m].get(student_in_group.id, 0) }}">
-                                / {{ group.section.price - student_in_group.discount }}
+                                / {{ group.section.price - student_in_group.discount }} &#8381;
                             {% endif %}
                             <br/>
                             <input form="save_form" type="checkbox"
@@ -95,12 +95,12 @@
                                 {{ group.name }}
                             </a>
                         </td>
-                        <th>{{ group.sum_not_confirmed }}</th>
+                        <th>{{ group.sum_not_confirmed or 0 }} &#8381;</th>
                     </tr>
                 {% endfor %}
                 <tr>
                     <td>во всех Ваших группах</td>
-                    <th>{{ sum_not_confirmed_all }}</th>
+                    <th>{{ sum_not_confirmed_all or 0 }} &#8381;</th>
                 </tr>
             </table>
         </div>

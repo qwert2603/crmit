@@ -86,7 +86,7 @@
                     <td>
                         {% if confirmed.get(student_in_group.id) %}
                             {{ payments.get(student_in_group.id, 0) }} /
-                            {{ group.section.price - student_in_group.discount }}
+                            {{ group.section.price - student_in_group.discount }} &#8381;
                             <span style="color: green; ">(подт.)</span>
                         {% else %}
                             {% if write_mode %}
@@ -95,7 +95,7 @@
                                        type="number" name="p_{{ student_in_group.id }}"
                                        value="{{ payments.get(student_in_group.id, 0) }}">
                             {% endif %}
-                            / {{ group.section.price - student_in_group.discount }}
+                            / {{ group.section.price - student_in_group.discount }} &#8381;
                         {% endif %}
                     </td>
                     <td>

@@ -31,7 +31,7 @@
         {% for section in items %}
             <tr>
                 <td>{{ section.name }}</td>
-                <td>{{ section.price }}</td>
+                <td>{{ section.price }} &#8381;</td>
                 <td>
                     <ul>
                         {% for group in section.groups.order_by(Group.teacher_id != current_user.teacher_id_or_zero, Group.start_month.desc(), Group.name).all() %}
