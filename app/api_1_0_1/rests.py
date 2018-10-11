@@ -278,6 +278,6 @@ def last_seens():
 @check_developer_access_token()
 def access_tokens():
     access_tokens_list = AccessToken.query \
-        .order_by(AccessToken.id) \
+        .order_by(AccessToken.system_user_id, AccessToken.id) \
         .all()
     return jsonify([access_token_to_json(access_token) for access_token in access_tokens_list])
