@@ -44,9 +44,11 @@
                     </a>
                 </td>
                 <td>
-                    <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
-                        {{ group.teacher.fio }}
-                    </a>
+                    <div {% if group.teacher.system_user==current_user %}class="colored_link" {% endif %}>
+                        <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
+                            {{ group.teacher.fio }}
+                        </a>
+                    </div>
                 </td>
                 <td>{{ group.students.count() }}</td>
                 <td>{{ get_month_name(group.start_month) }} — {{ get_month_name(group.end_month) }}</td>

@@ -30,8 +30,8 @@
                                    value="{{ student_in_group.discount }}" min="0" max="{{ group.section.price }}"
                                    class="form-control">
                         {% else %}
-                            <div style="{% if student_in_group.discount>0 %}color: orangered{% endif %}">{{ student_in_group.discount }}
-                                &#8381;
+                            <div style="{% if student_in_group.discount>0 %}color: orangered{% endif %}">
+                                {{ student_in_group.discount }} &#8381;
                             </div>
                         {% endif %}
                     </td>

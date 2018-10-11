@@ -34,7 +34,9 @@
             <tr>
                 <td>
                     {% if master.system_user.enabled %}
-                        {{ master.fio }}
+                        <div style="{% if master.system_user==current_user %}color: orangered{% endif %}">
+                            {{ master.fio }}
+                        </div>
                     {% else %}
                         <strike>{{ master.fio }}</strike><br/>(отключен)
                     {% endif %}
