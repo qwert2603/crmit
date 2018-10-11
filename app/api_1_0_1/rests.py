@@ -13,7 +13,7 @@ from app.api_1_0_1.decorators import access_token_required, check_master_or_teac
     check_developer_access_token
 from app.api_1_0_1.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
-    attending_to_json, payment_to_json, system_user_to_last_seen_info_json, access_token_to_json
+    attending_to_json, payment_to_json, system_user_to_last_seen_info_json, access_token_to_json, sort_groups
 from app.api_1_0_1.utils import create_json_list, create_attendings_for_all_students, token_to_hash, \
     create_payments_for_all_students
 from app.init_model import developer_login, role_student_name, role_master_name, role_teacher_name
@@ -33,10 +33,7 @@ def sections_list():
 @access_token_required()
 @check_master_or_teacher_access_token
 def groups_list():
-    return create_json_list(Group, Group.name, group_to_json_brief,
-                            order_by=lambda query: query.order_by(
-                                Group.teacher_id != g.current_user_app.teacher_id_or_zero, Group.start_month.desc(),
-                                Group.name))
+    return create_json_list(Group, Group.name, group_to_json_brief, order_by=lambda query: sort_groups(query))
 
 
 @api_1_0_1.route('/teachers_list')

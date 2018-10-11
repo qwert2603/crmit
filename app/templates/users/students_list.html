@@ -62,11 +62,13 @@
                 </td>
                 <td>
                     <ul>
-                        {% for group in student.groups.all() %}
+                        {% for group in student.groups.order_by(Group.teacher_id != current_user.teacher_id_or_zero, Group.start_month.desc(), Group.name).all() %}
                             <li>
-                                <a href="{{ url_for('structure.groups_list',search=group.name) }}">
-                                    {{ group.name }}
-                                </a>
+                                <div {% if current_user.system_role.name == role_teacher_name and group.teacher_id==current_user.teacher.id %}class="colored_link"{% endif %}>
+                                    <a href="{{ url_for('structure.groups_list',search=group.name) }}">
+                                        {{ group.name }}
+                                    </a>
+                                </div>
                             </li>
                         {% else %}
                             <p><i>нет групп</i></p>

@@ -3,12 +3,18 @@ import datetime
 from app.models import Group, Lesson, Attending, attending_was
 
 
+def sort_groups(query):
+    from flask import g
+    return query.order_by(Group.teacher_id != g.current_user_app.teacher_id_or_zero, Group.start_month.desc(),
+                          Group.name)
+
+
 def section_to_json(section):
     return {
         'id': section.id,
         'name': section.name,
         'price': section.price,
-        'groups': [group_to_json_brief(group) for group in section.groups.order_by(Group.id).all()]
+        'groups': [group_to_json_brief(group) for group in sort_groups(section.groups).all()]
     }
 
 
@@ -19,7 +25,7 @@ def teacher_to_json(teacher):
         'phone': teacher.phone,
         'lessonsDoneCount': teacher.lessons.filter(Lesson.date <= datetime.date.today()).count(),
         'systemUser': system_user_to_json(teacher.system_user),
-        'groups': [group_to_json_brief(group) for group in teacher.groups.order_by(Group.id).all()]
+        'groups': [group_to_json_brief(group) for group in sort_groups(teacher.groups).all()]
     }
 
 
@@ -53,7 +59,7 @@ def student_to_json_brief(student):
         'schoolName': student.school.name,
         'grade': student.grade,
         'shift': student.shift,
-        'groups': [group_to_json_brief(group) for group in student.groups.order_by(Group.id).all()],
+        'groups': [group_to_json_brief(group) for group in sort_groups(student.groups).all()],
         'lessonsAttendedCount': student.attendings.filter(Attending.state == attending_was).count()
     }
 
@@ -79,7 +85,7 @@ def student_to_json_full(student):
         'citizenshipName': student.citizenship.name,
         'mother': parent_to_json_nullable(student.mother),
         'father': parent_to_json_nullable(student.father),
-        'groups': [group_to_json_brief(group) for group in student.groups.order_by(Group.id).all()],
+        'groups': [group_to_json_brief(group) for group in sort_groups(student.groups).all()],
         'lessonsAttendedCount': student.attendings.filter(Attending.state == attending_was).count()
     }
 
