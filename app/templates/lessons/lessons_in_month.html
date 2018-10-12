@@ -46,9 +46,15 @@
         </tr>
         {% for student_in_group in students_in_group %}
             <tr>
-                <td><a href="{{ url_for('users.student_details',id=student_in_group.student_id) }}">
-                    {{ student_in_group.student.fio }}
-                </a></td>
+                <td>
+                    <a href="{{ url_for('users.student_details',id=student_in_group.student_id) }}">
+                        {% if student_in_group.student.system_user.enabled %}
+                            {{ student_in_group.student.fio }}
+                        {% else %}
+                            <strike>{{ student_in_group.student.fio }}</strike>
+                        {% endif %}
+                    </a>
+                </td>
                 {% for lesson in lessons %}
                     <td>
                         {% set state=attendings_states[lesson.id].get(student_in_group.student_id, attending_was_not) %}

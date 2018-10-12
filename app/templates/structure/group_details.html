@@ -10,20 +10,29 @@
 {% block page_content %}
 
     <div class="page-header">
-        <h1>ученики в <a href="{{ url_for('structure.groups_list',search=group.name) }}">{{ group.name }}</a> (детали)</h1>
+        <h1>ученики в <a href="{{ url_for('structure.groups_list',search=group.name) }}">{{ group.name }}</a> (детали)
+        </h1>
     </div>
 
     <div class="col-md-12">
         <table class="table">
             <tr>
                 <th>фио</th>
-                <th>скидка</th>
+                <th>скидка{% if can_edit_discount %}, &#8381;{% endif %}</th>
                 <th>вход</th>
                 <th>выход</th>
             </tr>
             {% for student_in_group in students_in_group %}
                 <tr>
-                    <td>{{ student_in_group.student.fio }}</td>
+                    <td>
+                        <a href="{{ url_for('users.student_details',id=student_in_group.student_id) }}">
+                            {% if student_in_group.student.system_user.enabled %}
+                                {{ student_in_group.student.fio }}
+                            {% else %}
+                                <strike>{{ student_in_group.student.fio }}</strike>
+                            {% endif %}
+                        </a>
+                    </td>
                     <td>
                         {% if can_edit_discount %}
                             <input form="save_form" type="number" name="d_{{ student_in_group.id }}"
