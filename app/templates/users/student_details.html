@@ -46,7 +46,13 @@
                     <a href="{{ url_for('structure.groups_list',search=group.name) }}">
                         {{ group.name }}
                     </a>
-                    (<a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">{{ group.teacher.fio }}</a>
+                    (<a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
+                    {% if group.teacher.system_user.enabled %}
+                        {{ group.teacher.fio }}
+                    {% else %}
+                        <strike>{{ group.teacher.fio }}</strike>
+                    {% endif %}
+                </a>
                     ; учеников: {{ group.students.count() }})
                 </div>
             </li>

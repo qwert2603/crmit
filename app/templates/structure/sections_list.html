@@ -41,7 +41,11 @@
                                         {{ group.name }}
                                     </a>
                                     <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
-                                        ({{ group.teacher.fio }})
+                                        {% if group.teacher.system_user.enabled %}
+                                            ({{ group.teacher.fio }})
+                                        {% else %}
+                                            <strike>({{ group.teacher.fio }})</strike>
+                                        {% endif %}
                                     </a>
                                 </div>
                             </li>

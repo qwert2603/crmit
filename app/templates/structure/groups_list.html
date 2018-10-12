@@ -46,7 +46,11 @@
                 <td>
                     <div {% if group.teacher.system_user==current_user %}class="colored_link" {% endif %}>
                         <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
-                            {{ group.teacher.fio }}
+                            {% if group.teacher.system_user.enabled %}
+                                {{ group.teacher.fio }}
+                            {% else %}
+                                <strike>{{ group.teacher.fio }}</strike>
+                            {% endif %}
                         </a>
                     </div>
                 </td>
