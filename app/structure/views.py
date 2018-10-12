@@ -1,7 +1,7 @@
-from flask import render_template, request, url_for, redirect, flash
+from flask import render_template, request, url_for, redirect, flash, abort
 from flask_login import login_required, current_user
 from app import db
-from app.decorators import check_master_or_teacher, check_access_group_write
+from app.decorators import check_master_or_teacher
 from app.init_model import role_master_name
 from app.models import Group, Student, StudentInGroup
 from app.structure import structure
@@ -21,6 +21,7 @@ def students_in_group(group_id):
         .all()
     in_group_students_ids = [s.student.id for s in students_in_group]
     if 'submit' in request.form:
+        if not can_user_write_group(current_user, group): abort(403)
         form_in_group = [int(i) for i in request.form.getlist('in_group')]
         for new_id in form_in_group:
             if new_id not in in_group_students_ids:
@@ -53,7 +54,7 @@ def students_in_group(group_id):
 
 @structure.route('/group_details/<int:group_id>', methods=['GET', 'POST'])
 @login_required
-@check_access_group_write()
+@check_master_or_teacher
 def group_details(group_id):
     group = Group.query.get_or_404(group_id)
     students_in_group = group.students_in_group \
@@ -62,6 +63,7 @@ def group_details(group_id):
         .all()
     can_edit_discount = current_user.system_role.name == role_master_name
     if 'submit' in request.form:
+        if not can_user_write_group(current_user, group): abort(403)
         for student_in_group in students_in_group:
             new_enter_month_number = request.form.get('enter_{}'.format(student_in_group.id), 0, type=int)
             new_exit_month_number = request.form.get('exit_{}'.format(student_in_group.id), 0, type=int)
@@ -96,7 +98,10 @@ def group_details(group_id):
                         flash('скидка не может быть меньше нуля! ({})'.format(student_in_group.student.fio))
                     else:
                         student_in_group.discount = new_discount
-        flash('скидки и месяцы входа/выхода в группе {} изменены.'.format(group.name))
+        if can_edit_discount:
+            flash('скидки и месяцы входа/выхода в группе {} изменены.'.format(group.name))
+        else:
+            flash('месяцы входа/выхода в группе {} изменены.'.format(group.name))
         return redirect(url_for('structure.groups_list'))
     return render_template('structure/group_details.html', group=group, students_in_group=students_in_group,
                            can_edit_discount=can_edit_discount)

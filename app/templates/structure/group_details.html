@@ -18,7 +18,9 @@
         <table class="table">
             <tr>
                 <th>фио</th>
-                <th>скидка{% if can_edit_discount %}, &#8381;{% endif %}</th>
+                {% if can_user_write_group(current_user, group) %}
+                    <th>скидка{% if can_edit_discount %}, &#8381;{% endif %}</th>
+                {% endif %}
                 <th>вход</th>
                 <th>выход</th>
             </tr>
@@ -33,48 +35,62 @@
                             {% endif %}
                         </a>
                     </td>
+                    {% if can_user_write_group(current_user, group) %}
+                        <td>
+                            {% if can_edit_discount %}
+                                <input form="save_form" type="number" name="d_{{ student_in_group.id }}"
+                                       value="{{ student_in_group.discount }}" min="0" max="{{ group.section.price }}"
+                                       class="form-control">
+                            {% else %}
+                                <div style="{% if student_in_group.discount>0 %}color: orangered{% endif %}">
+                                    {{ student_in_group.discount }} &#8381;
+                                </div>
+                            {% endif %}
+                        </td>
+                    {% endif %}
                     <td>
-                        {% if can_edit_discount %}
-                            <input form="save_form" type="number" name="d_{{ student_in_group.id }}"
-                                   value="{{ student_in_group.discount }}" min="0" max="{{ group.section.price }}"
-                                   class="form-control">
-                        {% else %}
-                            <div style="{% if student_in_group.discount>0 %}color: orangered{% endif %}">
-                                {{ student_in_group.discount }} &#8381;
-                            </div>
-                        {% endif %}
-                    </td>
-                    <td>
-                        <select form="save_form" name="enter_{{ student_in_group.id }}" class="form-control">
-                            {% for m in range(
+                        {% if can_user_write_group(current_user, group) %}
+                            <select form="save_form" name="enter_{{ student_in_group.id }}" class="form-control">
+                                {% for m in range(
                                 group.start_month,
                                 (student_in_group.max_enter_month_number or group.end_month) + 1
                             ) %}
-                                <option value="{{ m }}"
-                                        {% if m==student_in_group.enter_month %}selected{% endif %}>{{ get_month_name(m) }}</option>
-                            {% endfor %}
-                        </select>
+                                    <option value="{{ m }}"
+                                            {% if m==student_in_group.enter_month %}selected{% endif %}>{{ get_month_name(m) }}</option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            {{ get_month_name(student_in_group.enter_month) }}
+                        {% endif %}
                     </td>
                     <td>
-                        <select form="save_form" name="exit_{{ student_in_group.id }}" class="form-control">
-                            {% for m in range(
+                        {% if can_user_write_group(current_user, group) %}
+                            <select form="save_form" name="exit_{{ student_in_group.id }}" class="form-control">
+                                {% for m in range(
                                 student_in_group.min_exit_month_number or group.start_month,
                                 group.end_month + 1
                             ) %}
-                                <option value="{{ m }}"
-                                        {% if m==student_in_group.exit_month %}selected{% endif %}>{{ get_month_name(m) }}</option>
-                            {% endfor %}
-                        </select>
+                                    <option value="{{ m }}"
+                                            {% if m==student_in_group.exit_month %}selected{% endif %}>{{ get_month_name(m) }}</option>
+                                {% endfor %}
+                            </select>
+                        {% else %}
+                            {{ get_month_name(student_in_group.exit_month) }}
+                        {% endif %}
                     </td>
                 </tr>
             {% endfor %}
         </table>
 
-        <form method="post" id="save_form">
-            <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
-        </form>
+        {% if can_user_write_group(current_user, group) %}
+            <form method="post" id="save_form">
+                <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
+            </form>
+        {% endif %}
     </div>
 
-    {% include '_cancel_button.html' %}
+    {% if can_user_write_group(current_user, group) %}
+        {% include '_cancel_button.html' %}
+    {% endif %}
 
 {% endblock %}

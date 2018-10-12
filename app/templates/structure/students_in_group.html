@@ -60,7 +60,13 @@
         <ul>
             {% for student_in_group in students_in_group %}
                 <li>
-                    <a href="{{ url_for('users.student_details',id=student_in_group.student.id) }}">{{ student_in_group.student.fio }}</a>
+                    <a href="{{ url_for('users.student_details',id=student_in_group.student.id) }}">
+                        {% if student_in_group.student.system_user.enabled %}
+                            {{ student_in_group.student.fio }}
+                        {% else %}
+                            <strike>{{ student_in_group.student.fio }}</strike>
+                        {% endif %}
+                    </a>
                 </li>
             {% endfor %}
         </ul>

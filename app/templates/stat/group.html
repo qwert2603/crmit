@@ -15,8 +15,9 @@
             <th>учеников</th>
             <th>занятий</th>
             <th>% посещения</th>
-            <th>оплата</th>
-            <th></th>
+            {% if can_user_write_group(current_user, group) %}
+                <th>оплата</th>
+            {% endif %}
         </tr>
         {% for month in months %}
             <tr>
@@ -28,7 +29,9 @@
                 <td>{{ month.students_count }}</td>
                 <td>{{ month.lessons_count }}</td>
                 <td>{{ month.attendings_percent }}</td>
-                <td>{{ month.payments_confirmed }} / {{ month.payments }} / {{ month.students_count }}</td>
+                {% if can_user_write_group(current_user, group) %}
+                    <td>{{ month.payments_confirmed }} / {{ month.payments }} / {{ month.students_count }}</td>
+                {% endif %}
             </tr>
         {% endfor %}
     </table>

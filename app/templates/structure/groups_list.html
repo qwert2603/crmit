@@ -65,10 +65,9 @@
                     </a>
                 </td>
                 <td>
-                    {% if can_user_write_group(current_user, group) %}
-                        <a href="{{ url_for('structure.group_details',group_id=group.id) }}"
-                           class="btn btn-default">детали</a>
-                    {% endif %}
+                    <a href="{{ url_for('structure.group_details',group_id=group.id) }}" class="btn btn-default">
+                        детали
+                    </a>
                 </td>
                 <td>
                     <a href="{{ url_for('stat.group_stat',group_id=group.id) }}" class="btn btn-default">
