@@ -288,7 +288,7 @@ def last_seens():
     system_users = SystemUser.query \
         .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
         .filter(or_(SystemRole.name == role_master_name, SystemRole.name == role_teacher_name)) \
-        .order_by(SystemUser.id) \
+        .order_by(SystemUser.last_seen.desc()) \
         .all()
     return jsonify([system_user_to_last_seen_info_json(system_user) for system_user in system_users])
 
