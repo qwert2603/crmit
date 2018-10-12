@@ -164,6 +164,7 @@ def lesson_to_json(lesson):
     return {
         'id': lesson.id,
         'groupId': lesson.group_id,
+        'groupName': lesson.group.name,
         'teacherId': lesson.teacher_id,
         'anotherTeacherFio': another_teacher_fio,
         'date': lesson.date.strftime("%Y-%m-%d")

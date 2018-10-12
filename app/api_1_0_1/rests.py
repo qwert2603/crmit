@@ -118,6 +118,26 @@ def lessons_in_group(group_id):
     return jsonify([lesson_to_json(lesson) for lesson in group.lessons.order_by(Lesson.date)])
 
 
+@api_1_0_1.route('last_lessons')
+@access_token_required()
+@check_master_or_teacher_access_token
+def last_lessons():
+    count = request.args.get('count', type=int, default=10)
+    lessons = None
+    if g.current_user_app.system_role.name == role_master_name:
+        lessons = Lesson.query
+    elif g.current_user_app.system_role.name == role_teacher_name:
+        lessons = g.current_user_app.teacher.lessons
+    else:
+        abort(404)
+    lessons = lessons \
+        .filter(Lesson.date <= datetime.date.today()) \
+        .order_by(Lesson.date.desc()) \
+        .limit(count) \
+        .all()
+    return jsonify([lesson_to_json(lesson) for lesson in lessons])
+
+
 @api_1_0_1.route('attendings_of_lesson/<int:lesson_id>')
 @access_token_required()
 @check_master_or_teacher_access_token
