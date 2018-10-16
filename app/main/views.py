@@ -2,7 +2,9 @@ from flask_login import login_required
 
 from app.decorators import check_master
 from app.main import main
-from flask import render_template
+from flask import render_template, jsonify
+
+from app.main.dump_utils import db_to_dump
 
 
 @main.route('/')
@@ -21,4 +23,4 @@ def anth():
 @login_required
 @check_master
 def dump():
-    return '// todo'
+    return jsonify(db_to_dump())
