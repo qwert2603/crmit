@@ -11,6 +11,8 @@ default_citizenship_id = 1
 
 developer_login = 'qwert2603'
 
+actual_app_build_code = 3
+
 
 def create_system_roles():
     role_master = SystemRole(name=role_master_name, details_table_name=Master.__tablename__)
