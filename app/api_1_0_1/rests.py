@@ -10,7 +10,7 @@ from app.api_1_0_1.consts import access_token_expires_days, account_type_master,
     account_type_teacher, login_error_reason_student_account_is_not_supported, login_error_reason_account_disabled, \
     login_error_reason_wrong_login_or_password
 from app.api_1_0_1.decorators import access_token_required, check_master_or_teacher_access_token, \
-    check_developer_access_token
+    check_developer_access_token, check_master_access_token
 from app.api_1_0_1.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
     attending_to_json, payment_to_json, system_user_to_last_seen_info_json, access_token_to_json, sort_groups
@@ -18,6 +18,7 @@ from app.api_1_0_1.utils import create_json_list, create_attendings_for_all_stud
     create_payments_for_all_students
 from app.init_model import developer_login, role_student_name, role_master_name, role_teacher_name, \
     actual_app_build_code
+from app.main.dump_utils import db_to_dump
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
     attending_states, AccessToken, Payment, SystemRole
 from app.utils import can_user_write_group
@@ -302,3 +303,10 @@ def access_tokens():
         .order_by(AccessToken.system_user_id, AccessToken.id) \
         .all()
     return jsonify([access_token_to_json(access_token) for access_token in access_tokens_list])
+
+
+@api_1_0_1.route('dump')
+@access_token_required()
+@check_master_access_token
+def dump():
+    return jsonify(db_to_dump())
