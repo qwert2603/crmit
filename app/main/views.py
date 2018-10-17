@@ -6,7 +6,8 @@ from app.main import main
 from flask import render_template, jsonify, abort
 
 from app.main.dump_utils import db_to_dump
-from app.models import Group, attending_states, Master, Teacher, Student, SystemUser, SystemRole
+from app.models import Group, attending_states, Master, Teacher, Student, SystemUser, SystemRole, StudentInGroup, \
+    Attending
 from app.utils import start_date_of_month, end_date_of_month, get_month_name
 
 
@@ -93,12 +94,18 @@ def check_db_integrity_attengings_correct_group_of_students():
     if current_user.login != developer_login: abort(404)
     problems = list()
 
-    for group in Group.query.all():
-        for lesson in group.lessons.all():
-            for attending in lesson.attendings.all():
-                if lesson.group_id not in [g.id for g in attending.student.groups.all()]:
-                    problems.append(
-                        'ученик посетил занятие группы, в которой не состоит; attending_id={} ({} / {} / {})'
-                            .format(attending.id, attending.student.fio, attending.lesson.date, group.name))
+    students_group_map = dict()
+    for student_in_group in StudentInGroup.query.all():
+        group_ids = students_group_map.get(student_in_group.student_id)
+        if group_ids is None:
+            group_ids = set()
+            students_group_map[student_in_group.student_id] = group_ids
+        group_ids.add(student_in_group.group_id)
+
+    for attending in Attending.query.all():
+        if attending.lesson.group_id not in students_group_map[attending.student_id]:
+            problems.append(
+                'ученик посетил занятие группы, в которой не состоит; attending_id={} ({} / {} / {})'
+                    .format(attending.id, attending.student.fio, attending.lesson.date, attending.lesson.group.name))
 
     return render_template('check_db_integrity__attengings_correct_group_of_students.html', problems=problems)
