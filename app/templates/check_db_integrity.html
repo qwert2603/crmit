@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% set title='проверка целостности' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <ul>
+        {% for problem in problems %}
+            <li>{{ problem }}</li>
+        {% else %}
+            <i>нет проблем</i>
+        {% endfor %}
+    </ul>
+
+{% endblock %}

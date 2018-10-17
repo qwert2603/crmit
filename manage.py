@@ -5,7 +5,7 @@ from flask_migrate import Migrate
 
 import app.models as models
 from app import create_app, db
-from app.init_model import role_master_name, role_teacher_name, role_student_name
+from app.init_model import role_master_name, role_teacher_name, role_student_name, developer_login
 from app.is_removable_check import is_section_removable, is_group_removable, is_parent_removable, is_school_removable, \
     is_citizenship_removable, is_student_removable, is_master_removable, is_teacher_removable, is_lesson_removable
 from app.utils import start_date_of_month, end_date_of_month, number_of_month_for_date, get_month_name, \
@@ -45,7 +45,7 @@ context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_te
                     attending_was_not_ill=models.attending_was_not_ill,
                     last_seen_registration=models.last_seen_registration, last_seen_web=models.last_seen_web,
                     last_seen_android=models.last_seen_android, current_date_fun=datetime.date.today,
-                    Group=models.Group)
+                    Group=models.Group, developer_login=developer_login)
 
 
 @app.context_processor

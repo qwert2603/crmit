@@ -6,6 +6,12 @@
         <h1><a href="{{ url_for('structure.schools_list') }}">школы</a></h1>
         <h1><a href="{{ url_for('structure.citizenships_list') }}">гражданства</a></h1>
         <h1><a href="{{ url_for('main.dump') }}">сохранить всё важное из базы данных</a></h1>
+        {% if current_user.login == developer_login %}
+            <h1><a href="{{ url_for('main.check_db_integrity') }}">проверка целостности базы данных</a></h1>
+            <h1><a href="{{ url_for('main.check_db_integrity_attengings_correct_group_of_students') }}">
+                проверка целостности базы данных: ученики посещают занятия только своих групп
+            </a></h1>
+        {% endif %}
     </div>
 
 {% endblock %}
