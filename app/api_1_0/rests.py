@@ -234,6 +234,8 @@ def login():
     access_token = AccessToken(token_hash=token_to_hash(token), system_user_id=user.id, expires=expires)
     db.session.add(access_token)
 
+    g.current_user_app = user
+
     account_type = 0
     details_id = 0
     if user.system_role.name == role_master_name:
