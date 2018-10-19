@@ -1,6 +1,6 @@
 import datetime
 
-from app.models import Group, Lesson, Attending, attending_was
+from app.models import Group, Lesson, Attending, attending_was, AccessToken
 
 
 def sort_groups(query):
@@ -204,10 +204,10 @@ def system_user_to_last_seen_info_json(system_user):
     }
 
 
-def access_token_to_json(access_token):
+def system_user_access_tokens_to_json(system_user):
+    access_tokens = system_user.access_tokens.order_by(AccessToken.expires.desc()).all()
     return {
-        'id': access_token.id,
-        'systemUser': system_user_to_json(access_token.system_user),
-        'expires': access_token.expires.strftime("%Y-%m-%d %H:%M"),
-        'fio': access_token.system_user.details.fio,
+        'systemUser': system_user_to_json(system_user),
+        'expires_list': [at.expires.strftime("%Y-%m-%d %H:%M") for at in access_tokens],
+        'fio': system_user.details.fio,
     }
