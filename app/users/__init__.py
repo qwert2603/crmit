@@ -33,7 +33,7 @@ def after_request(response):
     ]
     if request.endpoint in dont_rollback_endpoints: return response
     if current_user.is_authenticated and current_user.login == developer_login:
-        from manage import app
-        if app.config['DEVELOPER_READ_ONLY']:
+        from app_holder import app_instance
+        if app_instance.config['DEVELOPER_READ_ONLY']:
             db.session.rollback()
     return response

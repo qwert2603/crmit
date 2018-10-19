@@ -22,7 +22,7 @@ def after_request(response):
     if request.endpoint in dont_rollback_endpoints: return response
     current_user_app = g.current_user_app
     if current_user_app is not None and current_user_app.is_authenticated and current_user_app.login == developer_login:
-        from manage import app
-        if app.config['DEVELOPER_READ_ONLY']:
+        from app_holder import app_instance
+        if app_instance.config['DEVELOPER_READ_ONLY']:
             db.session.rollback()
     return response

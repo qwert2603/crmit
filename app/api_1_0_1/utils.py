@@ -41,7 +41,7 @@ def create_payments_for_all_students(group, month_number):
 
 def token_to_hash(token):
     import hashlib, binascii
-    from manage import app
+    from app_holder import app_instance
 
-    dk = hashlib.pbkdf2_hmac('sha256', str(token).encode('utf-8'), app.config['ACCESS_TOKEN_SALT'], 100000)
+    dk = hashlib.pbkdf2_hmac('sha256', str(token).encode('utf-8'), app_instance.config['ACCESS_TOKEN_SALT'], 100000)
     return str(binascii.hexlify(dk))

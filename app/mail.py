@@ -8,9 +8,9 @@ def send_email(subject, body, recipients):
     msg.body = body
 
     def send_email_async():
-        from manage import app, mail
-        with app.app_context():
-            mail.send(msg)
+        from app_holder import app_instance, mail_instance
+        with app_instance.app_context():
+            mail_instance.send(msg)
 
     thread = Thread(target=send_email_async)
     thread.start()

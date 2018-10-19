@@ -4,6 +4,7 @@ from flask_mail import Mail
 from flask_migrate import Migrate
 
 import app.models as models
+import app_holder
 from app import create_app, db
 from app.init_model import role_master_name, role_teacher_name, role_student_name, developer_login
 from app.is_removable_check import is_section_removable, is_group_removable, is_parent_removable, is_school_removable, \
@@ -14,6 +15,9 @@ from app.utils import start_date_of_month, end_date_of_month, number_of_month_fo
 app = create_app('default')
 migrate = Migrate(app, db)
 mail = Mail(app)
+
+app_holder.app_instance = app
+app_holder.mail_instance = mail
 
 
 @app.shell_context_processor

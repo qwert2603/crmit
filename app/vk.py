@@ -5,11 +5,11 @@ import requests
 
 def send_vk_messages(subject, body, domains):
     def send_vk_messages_async():
-        from manage import app
+        from app_holder import app_instance
         for domain in domains:
             r = requests.get('https://api.vk.com/method/messages.send',
                              {'v': '5.76', 'domain': domain, 'message': '{}\n{}'.format(subject, body),
-                              'access_token': app.config['VK_ACCESS_TOKEN']})
+                              'access_token': app_instance.config['VK_ACCESS_TOKEN']})
             print('send_vk_messages', r.json())
 
     thread = Thread(target=send_vk_messages_async)

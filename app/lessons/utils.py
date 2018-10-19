@@ -19,8 +19,8 @@ def lessons_lists(group_id, month_number):
 
 
 def dates_of_lessons_dict(group_id):
-    from manage import app
-    if app.config['DB_TYPE'] == DB_TYPE_POSTGRES:
+    from app_holder import app_instance
+    if app_instance.config['DB_TYPE'] == DB_TYPE_POSTGRES:
         sql = '''
                     SELECT
                         extract(YEAR FROM date)                                         AS year,
