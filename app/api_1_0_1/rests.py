@@ -302,7 +302,7 @@ def last_seens():
 def access_tokens():
     system_user_ids = [r[0] for r in db.session.query(AccessToken.system_user_id).distinct().all()]
     result_list = [system_user_access_tokens_to_json(SystemUser.query.get(suid)) for suid in system_user_ids]
-    result_list = sorted(result_list, key=lambda r: r.get('expires_list')[0], reverse=True)
+    result_list = sorted(result_list, key=lambda r: r.get('expiresList')[0], reverse=True)
     return jsonify(result_list)
 
 
