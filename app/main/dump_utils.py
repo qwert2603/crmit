@@ -16,11 +16,11 @@ def db_to_dump():
 
     payments_map = dict()
     for p in Payment.query.order_by(Payment.month).all():
-        payments_of_sig = payments_map.get(p.student_in_group)
+        payments_of_sig = payments_map.get(p.student_in_group_id)
         if payments_of_sig is None:
             payments_of_sig = list()
-            payments_map[p.student_in_group] = payments_of_sig
-            payments_of_sig.append(p)
+            payments_map[p.student_in_group_id] = payments_of_sig
+        payments_of_sig.append(p)
 
     _attending_states_strings = ['не был', 'был', 'болел']
 
