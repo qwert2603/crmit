@@ -53,7 +53,9 @@ def change_password():
         if current_user.verify_password(form.old_password.data):
             current_user.password = form.new_password.data
             db.session.add(current_user._get_current_object())
-            flash('пароль изменен.')
+            for at in current_user.access_tokens.all():
+                db.session.delete(at)
+            flash('ваш пароль изменен и все ваши сессии в мобильном приложении завершены')
             return redirect(url_for('main.index'))
         flash('неверный старый пароль!')
     return render_template('users/change_password.html', form=form)
@@ -78,7 +80,7 @@ def force_change_password(system_user_id):
         for at in system_user.access_tokens.all():
             db.session.delete(at)
         db.session.add(system_user)
-        flash('пароль пользователя {} изменен.'.format(system_user.login))
+        flash('пароль пользователя {} изменен и все его сессии в мобильном приложении завершены'.format(system_user.login))
         return redirect(url_for('main.index'))
     return render_template('users/force_change_password.html', form=form, system_user=system_user)
 
