@@ -1,6 +1,6 @@
 from app import db
 from app.models import SystemRole, SystemUser, Master, Teacher, Section, Group, Student, Citizenship, School, \
-    StudentInGroup, Payment, ScheduleTime
+    StudentInGroup, Payment, ScheduleTime, contact_phone_student
 
 role_master_name = 'руководитель'
 role_teacher_name = 'преподаватель'
@@ -44,7 +44,7 @@ def create_stub_models():
 
     role_teacher = SystemRole.query.filter_by(name=role_teacher_name).first()
     user_teacher = SystemUser(login='te1', password='12', system_role=role_teacher, enabled=True)
-    teacher = Teacher(fio='Учитель Петр Петрович', system_user=user_teacher)
+    teacher = Teacher(fio='Учитель Петр Петрович', system_user=user_teacher, phone='89012223344')
     db.session.add(user_teacher)
     db.session.add(teacher)
 
@@ -54,7 +54,8 @@ def create_stub_models():
     user_student = SystemUser(login='st1', password='31082002', system_role=role_student, enabled=True)
     student = Student(fio='Ученик Алексей Алексеевич', system_user=user_student, birth_place='birth place',
                       birth_date='2002-08-31',
-                      registration_place='reg place', actual_address='act addr', citizenship_id=1, school=school)
+                      registration_place='reg place', actual_address='act addr', citizenship_id=1, school=school,
+                      grade='1', shift=1, contact_phone=contact_phone_student, phone='89023334455')
     db.session.add(user_student)
     db.session.add(student)
 
@@ -69,7 +70,7 @@ def create_stub_models():
 
     student_in_group = StudentInGroup(student=student, group=group, discount=100, enter_month=8, exit_month=16)
     db.session.add(student_in_group)
-    db.session.add(Payment(student_in_group=student_in_group, month=1, value=800))
+    db.session.add(Payment(student_in_group=student_in_group, month=1, value=800, comment=''))
 
     db.session.commit()
 
