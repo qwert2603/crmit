@@ -247,8 +247,8 @@ class RegistrationStudentFastForm(FlaskForm):
     school = SelectField(prefix_field_required + 'школа', coerce=int, validators=[DataRequired()])
     grade = StringField(prefix_field_required + 'класс', validators=[Length(1, 31)])
     shift = StringField(prefix_field_required + 'смена', validators=[Length(1, 31)])
-    parent_phone = StringField(prefix_field_required + 'телефон родителя', validators=[Length(1, 31)])
     parent_name = StringField(prefix_field_required + 'имя родителя', validators=[Length(1, 31)])
+    parent_phone = StringField(prefix_field_required + 'телефон родителя', validators=[Length(1, 31)])
     submit = SubmitField('создать ученика')
 
     def __init__(self, *args, **kwargs):
