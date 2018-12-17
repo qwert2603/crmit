@@ -8,6 +8,7 @@ def generate_login_student(last_name, first_name, second_name):
         login += translit(second_name[0])
     for c in last_name:
         login += translit(c)
+    if login == '': login = 'login'
     from app import SystemUser
     if not SystemUser.query.filter_by(login=login).first():
         return login
@@ -53,7 +54,7 @@ def translit(c):
     if c == 'э': return 'eh'
     if c == 'ю': return 'yu'
     if c == 'я': return 'ya'
-    raise Exception('unknown letter "{}"'.format(c))
+    return ''
 
 
 months_per_year = 12

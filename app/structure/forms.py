@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label, SelectMultipleField
-from wtforms.validators import Length, DataRequired, Email, Regexp, Optional
+from wtforms.validators import Length, DataRequired, Email, Optional
 
 from app.form import VkLink, Phone, prefix_field_required
 from app.models import Group, Section, Citizenship, School, Parent, Teacher, notification_types_list, shift_email, \
@@ -10,8 +10,7 @@ from app.utils import month_names, number_of_month, notification_types_list_to_i
 
 
 class ParentForm(FlaskForm):
-    fio = StringField(prefix_field_required + 'фио',
-                      validators=[Length(1, 255), Regexp('^[а-яА-Я ]*$', 0, 'только русские буквы')])
+    fio = StringField(prefix_field_required + 'фио', validators=[Length(1, 255)])
     phone = StringField(prefix_field_required + 'телефон', validators=[Phone(allow_empty=False)])
     email = StringField('email', validators=[Optional(), Length(0, 128), Email()])
     passport = StringField('паспорт', validators=[Optional(), Length(0, 255)])
