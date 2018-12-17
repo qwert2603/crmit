@@ -60,12 +60,7 @@ def get_sum_not_confirmed_by_group(teacher_id):
         .all()
     result = []
     for group in groups:
-        sum_not_confirmed = db.session.query(func.sum(Payment.value)) \
-            .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
-            .filter(StudentInGroup.group_id == group.id) \
-            .filter(Payment.confirmed == False) \
-            .scalar()
-        result.append({'name': group.name, 'sum_not_confirmed': sum_not_confirmed})
+        result.append({'name': group.name, 'sum_not_confirmed': group.sum_not_confirmed})
     return result
 
 

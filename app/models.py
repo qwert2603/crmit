@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask_login import AnonymousUserMixin, UserMixin, current_user
-from sqlalchemy import or_
+from sqlalchemy import or_, func
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import db
 from app.utils import end_date_of_month, start_date_of_month
@@ -378,6 +378,14 @@ class Group(db.Model):
     def list_sorted_for_current_user():
         return Group.query.order_by(Group.teacher_id != current_user.teacher_id_or_zero, Group.start_month.desc(),
                                     Group.name)
+
+    @property
+    def sum_not_confirmed(self):
+        return db.session.query(func.sum(Payment.value)) \
+            .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
+            .filter(StudentInGroup.group_id == self.id) \
+            .filter(Payment.confirmed == False) \
+            .scalar()
 
 
 class StudentInGroup(db.Model):

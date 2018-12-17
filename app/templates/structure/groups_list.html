@@ -25,11 +25,12 @@
             <th>преподаватель</th>
             <th>учеников</th>
             <th>период</th>
+            <th>зан-я</th>
             <th></th>
             <th></th>
-            <th></th>
-            <th></th>
-            <th></th>
+            <th>стат.</th>
+            <th>оплата</th>
+            <th>Σ неп.</th>
             {% if current_user.system_role.name == role_master_name %}
                 <th></th>
                 <th></th>
@@ -61,7 +62,7 @@
                 <td>
                     <a href="{{ url_for('structure.students_in_group',group_id=group.id) }}"
                        class="btn btn-default">
-                        список учеников
+                        ученики
                     </a>
                 </td>
                 <td>
@@ -79,6 +80,11 @@
                         <a href="{{ url_for('payments.payments_in_group',group_id=group.id) }}" class="btn btn-default">
                             <span class="glyphicon glyphicon-rub"></span>
                         </a>
+                    {% endif %}
+                </td>
+                <td>
+                    {% if can_user_write_group(current_user, group) %}
+                        {{ group.sum_not_confirmed or 0 }} ₽
                     {% endif %}
                 </td>
                 {% if current_user.system_role.name == role_master_name %}
