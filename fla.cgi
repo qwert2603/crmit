@@ -1,5 +1,7 @@
 #!./venv/bin/python3
 
+from flask_mail import Mail
+import app_holder
 from app import create_app
 from wsgiref.handlers import CGIHandler
 import os
