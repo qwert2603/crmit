@@ -3,6 +3,8 @@ from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
+
+import app_holder
 from config import config
 
 bootstrap = Bootstrap()
@@ -25,6 +27,7 @@ def load_user(user_id):
 
 def create_app(config_name):
     app = Flask(__name__)
+    app_holder.app_instance = app
     app.config.from_object(config[config_name])
     config[config_name].init_app(app)
 

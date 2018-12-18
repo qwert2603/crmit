@@ -9,7 +9,6 @@ os.environ['SCRIPT_NAME'] = ''
 app = create_app('prod')
 mail = Mail(app)
 
-app_holder.app_instance = app
 app_holder.mail_instance = mail
 
 @app.context_processor

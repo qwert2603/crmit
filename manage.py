@@ -16,7 +16,6 @@ app = create_app('default')
 migrate = Migrate(app, db)
 mail = Mail(app)
 
-app_holder.app_instance = app
 app_holder.mail_instance = mail
 
 
