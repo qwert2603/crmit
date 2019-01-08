@@ -65,7 +65,7 @@ try:
     response_string = response.read().decode("utf-8")
     write_file.write(response_string)
 
-    b = send_email('crmit dump cuccess', 'dump of {}'.format(now_string))
+    b = send_email('crmit dump success', 'dump of {}'.format(now_string))
     if b: print('ok')
 except Exception as e:
     write_file.write(str(e))
