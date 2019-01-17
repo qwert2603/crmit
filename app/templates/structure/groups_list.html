@@ -2,7 +2,7 @@
 {% from '_macros.html' import pagination_widget %}
 {% from '_macros.html' import render_search %}
 
-{% set title = 'группы' %}
+{% set title = 'groups' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -13,24 +13,24 @@
     </div>
 
     {% if current_user.system_role.name == role_master_name %}
-        <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">добавить группу</a>
+        <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">add group</a>
     {% endif %}
 
     {{ render_search(search) }}
 
     <table class="table">
         <tr>
-            <th>название</th>
-            <th>секция</th>
-            <th>преподаватель</th>
-            <th>учеников</th>
-            <th>период</th>
-            <th>зан-я</th>
+            <th>name</th>
+            <th>section</th>
+            <th>teacher</th>
+            <th>students</th>
+            <th>period</th>
+            <th>lessons</th>
             <th></th>
             <th></th>
-            <th>стат.</th>
-            <th>оплата</th>
-            <th>Σ неп.</th>
+            <th>stats</th>
+            <th>payments</th>
+            <th>Σ unc.</th>
             {% if current_user.system_role.name == role_master_name %}
                 <th></th>
                 <th></th>
@@ -62,12 +62,12 @@
                 <td>
                     <a href="{{ url_for('structure.students_in_group',group_id=group.id) }}"
                        class="btn btn-default">
-                        ученики
+                        students
                     </a>
                 </td>
                 <td>
                     <a href="{{ url_for('structure.group_details',group_id=group.id) }}" class="btn btn-default">
-                        детали
+                        details
                     </a>
                 </td>
                 <td>

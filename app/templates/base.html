@@ -39,36 +39,36 @@
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
                     {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
-                        <li><a href="{{ url_for('users.masters_list') }}">руков-ли</a></li>
-                        <li><a href="{{ url_for('users.teachers_list') }}">препод-ли</a></li>
-                        <li><a href="{{ url_for('users.students_list') }}">ученики</a></li>
+                        <li><a href="{{ url_for('users.masters_list') }}">masters</a></li>
+                        <li><a href="{{ url_for('users.teachers_list') }}">teachers</a></li>
+                        <li><a href="{{ url_for('users.students_list') }}">students</a></li>
 
-                        <li><a href="{{ url_for('structure.parents_list') }}">род-ли</a></li>
-                        <li><a href="{{ url_for('structure.sections_list') }}">секции</a></li>
-                        <li><a href="{{ url_for('structure.groups_list') }}">группы</a></li>
+                        <li><a href="{{ url_for('structure.parents_list') }}">parents</a></li>
+                        <li><a href="{{ url_for('structure.sections_list') }}">sections</a></li>
+                        <li><a href="{{ url_for('structure.groups_list') }}">groups</a></li>
 
                         {% if current_user.system_role.name == role_teacher_name %}
                             <li>
-                                <a href="{{ url_for('lessons.lessons_list', teacher_id=current_user.teacher.id, selected_date=current_date_fun()) }}">занятия</a>
+                                <a href="{{ url_for('lessons.lessons_list', teacher_id=current_user.teacher.id, selected_date=current_date_fun()) }}"></a>
                             </li>
                         {% else %}
                             <li>
-                                <a href="{{ url_for('lessons.lessons_list', selected_date=current_date_fun()) }}">занятия</a>
+                                <a href="{{ url_for('lessons.lessons_list', selected_date=current_date_fun()) }}">lessons</a>
                             </li>
                         {% endif %}
 
-                        <li><a href="{{ url_for('notifications.notifications_list') }}">увед-я</a></li>
+                        <li><a href="{{ url_for('notifications.notifications_list') }}">notifications</a></li>
 
-                        <li><a href="{{ url_for('schedule.timetable') }}">расп-е</a></li>
+                        <li><a href="{{ url_for('schedule.timetable') }}">schedule</a></li>
                     {% endif %}
 
                     {% if current_user.system_role.name == role_master_name %}
-                        <li><a href="{{ url_for('main.anth') }}">ещё</a></li>
+                        <li><a href="{{ url_for('main.anth') }}">more</a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}
-                        <li><a href="{{ url_for('users.logout') }}"><b>выйти</b></a></li>
+                        <li><a href="{{ url_for('users.logout') }}"><b>logout</b></a></li>
                     {% else %}
                         <li><a href="{{ url_for('users.login') }}">войти</a></li>
                     {% endif %}
@@ -88,7 +88,7 @@
         {% endfor %}
 
         {% if current_user.is_authenticated and hide_who_u_r != True %}
-            <p><i>вы действуете как {{ current_user.login }} ({{ current_user.system_role.name }})</i></p>
+            <p><i>you are {{ current_user.login }} ({{ current_user.system_role.name }})</i></p>
         {% endif %}
 
         {% block page_content %}{% endblock %}

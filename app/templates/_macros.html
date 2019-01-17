@@ -34,10 +34,10 @@
 {% macro render_search(search) %}
     <form method="get" class="form-group">
         <div class="form-group">
-            <h2><label for="search">поиск</label></h2>
+            <h2><label for="search">search</label></h2>
             <input class="form-control" id="search" name="search" type="text" value="{{ search }}">
         </div>
-        <input class="btn btn-default" type="submit" value="искать">
+        <input class="btn btn-default" type="submit" value="search">
     </form>
 
     {% if search %}результаты поиска по запросу "<b>{{ search }}</b>"{% endif %}

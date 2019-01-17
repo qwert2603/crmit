@@ -2,7 +2,7 @@ from app import db
 from app.models import SystemRole, SystemUser, Master, Teacher, Section, Group, Student, Citizenship, School, \
     StudentInGroup, Payment, ScheduleTime, contact_phone_student
 
-role_master_name = 'руководитель'
+role_master_name = 'master'
 role_teacher_name = 'преподаватель'
 role_student_name = 'ученик'
 
