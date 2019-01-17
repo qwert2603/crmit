@@ -14,6 +14,7 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'users.login'
 
+
 from app.models import AnonUser, SystemUser
 
 login_manager.anonymous_user = AnonUser
