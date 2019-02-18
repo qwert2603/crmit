@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% from 'student/_macros.html' import render_students_my_info %}
 
 {% block page_content %}
 
@@ -39,6 +40,10 @@
                 <img src="{{ url_for('static', filename='google-play-badge.png') }}" width="323px" height="125px"/>
             </a>
         </div>
+    {% endif %}
+
+    {% if current_user.is_student %}
+        {{ render_students_my_info(current_user.student) }}
     {% endif %}
 
 {% endblock %}

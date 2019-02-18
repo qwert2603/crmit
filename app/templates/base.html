@@ -66,6 +66,10 @@
                     {% if current_user.is_master %}
                         <li><a href="{{ url_for('main.anth') }}">ещё</a></li>
                     {% endif %}
+
+                    {% if current_user.is_student %}
+                        <li><a href="{{ url_for('student.my_info') }}">укпукп</a></li>
+                    {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
                     {% if current_user.is_authenticated %}

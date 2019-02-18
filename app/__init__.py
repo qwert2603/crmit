@@ -61,6 +61,9 @@ def create_app(config_name):
     from app.schedule import schedule as schedule_blueprint
     app.register_blueprint(schedule_blueprint, url_prefix='/schedule')
 
+    from app.student import student as student_blueprint
+    app.register_blueprint(student_blueprint, url_prefix='/student')
+
     from app.api_1_0 import api_1_0 as api_1_0_blueprint
     app.register_blueprint(api_1_0_blueprint, url_prefix='/api/v1.0')
 

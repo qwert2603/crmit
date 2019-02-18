@@ -3,7 +3,7 @@ from functools import wraps
 from flask import abort, request
 from flask_login import current_user
 
-from app.init_model import role_master_name, role_teacher_name
+from app.init_model import role_master_name, role_teacher_name, role_student_name
 from app.models import Group
 from app.utils import can_user_write_group
 
@@ -32,6 +32,9 @@ def check_teacher(f):
 def check_master_or_teacher(f):
     return check_system_role([role_master_name, role_teacher_name])(f)
 
+
+def check_student(f):
+    return check_system_role([role_student_name])(f)
 
 def check_access_group_write():
     def decorator(f):
