@@ -16,12 +16,12 @@ def parents_of_group(group_id):
 
 
 def do_send_notification(parents, subject, body):
-    emails = []
+    emails = set()
     vk_domains = set()
     vk_links = set()
     for parent in parents:
         if parent.notification_types & (1 << shift_email) != 0:
-            emails.append(parent.email)
+            emails.add(parent.email)
         if parent.notification_types & (1 << shift_vk) != 0:
             vk_domains.add(parent.vk_link[len(vk_link_prefix):])
             vk_links.add(parent.vk_link)
