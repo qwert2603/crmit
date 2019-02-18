@@ -1,5 +1,8 @@
 import datetime
 
+from flask import request, url_for
+from werkzeug.utils import redirect
+
 
 def generate_login_student(last_name, first_name, second_name):
     login = ''
@@ -171,3 +174,7 @@ def notification_types_int_to_list(nt_int):
 
 
 days_of_week_names = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс']
+
+
+def redirect_back_or_home():
+    return redirect(request.referrer or url_for("main.index"))

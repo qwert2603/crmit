@@ -7,6 +7,7 @@ from app.init_model import developer_login
 from app.is_removable_check import is_master_removable, is_teacher_removable, is_student_removable
 from app.models import Master, Teacher, Student
 from app.users import users
+from app.utils import redirect_back_or_home
 
 
 @users.route('/delete_master/<int:id>')
@@ -22,7 +23,7 @@ def delete_master(id):
     db.session.delete(master)
     db.session.delete(master.system_user)
     flash('руководитель {} удалён'.format(master.fio))
-    return redirect(url_for('.masters_list'))
+    return redirect_back_or_home()
 
 
 @users.route('/delete_teacher/<int:id>')
@@ -36,7 +37,7 @@ def delete_teacher(id):
     db.session.delete(teacher)
     db.session.delete(teacher.system_user)
     flash('преподаватель {} удалён'.format(teacher.fio))
-    return redirect(url_for('.teachers_list'))
+    return redirect_back_or_home()
 
 
 @users.route('/delete_student/<int:id>')
@@ -51,4 +52,4 @@ def delete_student(id):
     db.session.delete(student)
     db.session.delete(student.system_user)
     flash('ученик {} удалён'.format(student.fio))
-    return redirect(url_for('.students_list'))
+    return redirect_back_or_home()

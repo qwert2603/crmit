@@ -78,7 +78,7 @@
                     <td>
                         {% if can_user_write_group(current_user, lesson.group)
                         and (current_user.is_master or current_user.is_teacher and lesson.date >= current_date_fun()) %}
-                            <a onclick="askDelete('занятие {{ lesson.date }} в {{ lesson.group.name }}', '{{ url_for('lessons.delete_lesson',lesson_id=lesson.id, from_list=1) }}')"
+                            <a onclick="askDelete('занятие {{ lesson.date }} в {{ lesson.group.name }}', '{{ url_for('lessons.delete_lesson',lesson_id=lesson.id) }}')"
                                class="btn btn-danger {% if not is_lesson_removable(lesson) %}disabled{% endif %}">
                                 <span class="glyphicon glyphicon-remove"></span>
                             </a>

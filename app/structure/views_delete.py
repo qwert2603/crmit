@@ -7,6 +7,7 @@ from app.is_removable_check import is_citizenship_removable, is_parent_removable
     is_section_removable, is_group_removable
 from app.models import Citizenship, Section, Parent, School, Group
 from app.structure import structure
+from app.utils import redirect_back_or_home
 
 
 @structure.route('/delete_citizenship/<int:id>')
@@ -17,7 +18,7 @@ def delete_citizenship(id):
     if not is_citizenship_removable(citizenship): abort(409)
     db.session.delete(citizenship)
     flash('гражданство {} удалено'.format(citizenship.name))
-    return redirect(url_for('.citizenships_list'))
+    return redirect_back_or_home()
 
 
 @structure.route('/delete_section/<int:id>')
@@ -28,7 +29,7 @@ def delete_section(id):
     if not is_section_removable(section): abort(409)
     db.session.delete(section)
     flash('секция {} удалена'.format(section.name))
-    return redirect(url_for('.sections_list'))
+    return redirect_back_or_home()
 
 
 @structure.route('/delete_school/<int:id>')
@@ -39,7 +40,7 @@ def delete_school(id):
     if not is_school_removable(school): abort(409)
     db.session.delete(school)
     flash('школа {} удалена'.format(school.name))
-    return redirect(url_for('.schools_list'))
+    return redirect_back_or_home()
 
 
 @structure.route('/delete_parent/<int:id>')
@@ -50,7 +51,7 @@ def delete_parent(id):
     if not is_parent_removable(parent): abort(409)
     db.session.delete(parent)
     flash('родитель {} удален'.format(parent.fio))
-    return redirect(url_for('.parents_list'))
+    return redirect_back_or_home()
 
 
 @structure.route('/delete_group/<int:id>')
@@ -62,4 +63,4 @@ def delete_group(id):
     group.notifications.delete()
     db.session.delete(group)
     flash('группа {} удалена'.format(group.name))
-    return redirect(url_for('.groups_list'))
+    return redirect_back_or_home()

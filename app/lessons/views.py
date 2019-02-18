@@ -12,7 +12,7 @@ from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teache
     attending_was_not
 from app.payments.utils import payments_in_month_dicts
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
-    end_date_of_month, can_user_write_group, days_of_week_names, parse_int_or_none
+    end_date_of_month, can_user_write_group, days_of_week_names, parse_int_or_none, redirect_back_or_home
 
 
 @lessons.route('/list')
@@ -123,10 +123,10 @@ def create_lesson(group_id):
     return render_template('lessons/create_lesson.html', group=group)
 
 
-@lessons.route('/delete/<int:lesson_id>/<int:from_list>')
+@lessons.route('/delete/<int:lesson_id>')
 @login_required
 @check_master_or_teacher
-def delete_lesson(lesson_id, from_list):
+def delete_lesson(lesson_id):
     lesson = Lesson.query.get_or_404(lesson_id)
     # can't use @check_access_group_write() because no 'group_id' param.
     if not can_user_write_group(current_user, lesson.group): abort(403)
@@ -136,12 +136,7 @@ def delete_lesson(lesson_id, from_list):
         db.session.delete(a)
     db.session.delete(lesson)
     flash('занятие {} в {} удалено'.format(lesson.date, lesson.group.name))
-    if from_list != 0:
-        endpoint = '.lessons_list'
-    else:
-        endpoint = '.lessons_in_month'
-    return redirect(url_for(endpoint, group_id=lesson.group_id if from_list == 0 else None,
-                            month_number=number_of_month_for_date(lesson.date) if from_list == 0 else None))
+    return redirect_back_or_home()
 
 
 @lessons.route('/delete_empty_past', methods=['GET', 'POST'])
