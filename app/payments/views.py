@@ -1,8 +1,8 @@
 from flask import render_template, request, flash, redirect, url_for
 from flask_login import login_required, current_user
+
 from app import db
 from app.decorators import check_access_group_write
-from app.init_model import role_master_name, role_teacher_name
 from app.models import Group, StudentInGroup, Student, Payment
 from app.payments import payments
 from app.payments.utils import payments_dicts, get_sum_not_confirmed_teacher, get_sum_not_confirmed_by_group
@@ -13,7 +13,7 @@ from app.payments.utils import payments_dicts, get_sum_not_confirmed_teacher, ge
 @check_access_group_write()
 def payments_in_group(group_id):
     group = Group.query.get_or_404(group_id)
-    can_confirm = current_user.system_role.name == role_master_name
+    can_confirm = current_user.is_master
     if 'submit' in request.form:
         for month_number in range(group.start_month, group.end_month + 1):
             ps = group.payments_in_month(month_number)
@@ -51,7 +51,7 @@ def payments_in_group(group_id):
         confirmed_payments += pd[4][month_number]
         non_zero_payments += pd[6][month_number]
         students_in_month[month_number] = students_count
-    if current_user.system_role.name == role_teacher_name:
+    if current_user.is_teacher:
         sum_not_confirmed_by_group = get_sum_not_confirmed_by_group(current_user.teacher.id)
         sum_not_confirmed_all = get_sum_not_confirmed_teacher(current_user.teacher.id)
     else:

@@ -5,7 +5,7 @@
     {% if current_user.is_authenticated %}
         <h3>добро пожаловать, {{ current_user.login }} ({{ current_user.details.fio }})</h3>
         <h4>вы - {{ current_user.system_role.name }}</h4>
-        {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
+        {% if current_user.is_master or current_user.is_teacher %}
             <div class="btn-block">
                 <a href="{{ url_for('users.change_password') }}" class="btn btn-warning">изменить пароль</a>
             </div>

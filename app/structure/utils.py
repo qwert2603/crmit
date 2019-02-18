@@ -1,4 +1,5 @@
 from sqlalchemy import func, or_
+
 from app import db
 from app.models import Payment, StudentInGroup, Lesson, Attending, attending_was, attending_was_not, \
     attending_was_not_ill

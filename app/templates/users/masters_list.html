@@ -13,7 +13,7 @@
         <h1>{{ title }}</h1>
     </div>
 
-    {% if current_user.system_role.name == role_master_name %}
+    {% if current_user.is_master %}
         <a href="{{ url_for('users.register_master') }}" class="btn btn-default">добавить руководителя</a>
     {% endif %}
 
@@ -24,7 +24,7 @@
             <th>фио</th>
             <th>логин</th>
             <th>последний визит</th>
-            {% if current_user.system_role.name == role_master_name %}
+            {% if current_user.is_master %}
                 <th></th>
                 <th></th>
                 <th></th>
@@ -43,7 +43,7 @@
                 </td>
                 <td>{{ master.system_user.login }}</td>
                 <td>{{ render_last_seen(master.system_user) }}</td>
-                {% if current_user.system_role.name == role_master_name %}
+                {% if current_user.is_master %}
                     <td>
                         <a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-warning">
                             <span class="glyphicon glyphicon-pencil"></span>

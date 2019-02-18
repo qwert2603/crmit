@@ -3,7 +3,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 
 from app import db
 from app.decorators import check_master_or_teacher, check_master
-from app.init_model import role_master_name, role_teacher_name, developer_login
+from app.init_model import developer_login
 from app.models import SystemUser, Student
 from app.users import users
 from app.users.forms import LoginForm, ChangePasswordForm, ForceChangePasswordForm
@@ -66,7 +66,7 @@ def change_password():
 @check_master
 def force_change_password(system_user_id):
     system_user = SystemUser.query.get_or_404(system_user_id)
-    if system_user.system_role.name != role_master_name and system_user.system_role.name != role_teacher_name:
+    if not system_user.is_master and not system_user.is_teacher:
         flash('пароль ученика менять нельзя!')
         return redirect(url_for('main.index'))
     if system_user_id == current_user.id:

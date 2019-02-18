@@ -1,6 +1,8 @@
 from functools import wraps
+
 from flask import abort, request
 from flask_login import current_user
+
 from app.init_model import role_master_name, role_teacher_name
 from app.models import Group
 from app.utils import can_user_write_group

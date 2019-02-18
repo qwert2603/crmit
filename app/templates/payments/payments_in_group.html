@@ -92,7 +92,7 @@
         </tr>
     </table>
 
-    {% if current_user.system_role.name == role_teacher_name %}
+    {% if current_user.is_teacher %}
         <div class="col-md-4">
             <h4>сумма неподтвержденных платежей:</h4>
             <table class="table">

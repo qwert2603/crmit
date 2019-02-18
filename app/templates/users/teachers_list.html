@@ -12,7 +12,7 @@
     <div class="page-header">
         <h1>{{ title }}</h1>
     </div>
-    {% if current_user.system_role.name == role_master_name %}
+    {% if current_user.is_master %}
         <a href="{{ url_for('users.register_teacher') }}" class="btn btn-default">добавить преподавателя</a>
     {% endif %}
 
@@ -25,7 +25,7 @@
             <th>группы</th>
             <th>телефон</th>
             <th>последний визит</th>
-            {% if current_user.system_role.name == role_master_name %}
+            {% if current_user.is_master %}
                 <th></th>
                 <th></th>
                 <th></th>
@@ -60,7 +60,7 @@
                 </td>
                 <td>{{ teacher.phone }}</td>
                 <td>{{ render_last_seen(teacher.system_user) }}</td>
-                {% if current_user.system_role.name == role_master_name %}
+                {% if current_user.is_master %}
                     <td>
                         <a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-warning">
                             <span class="glyphicon glyphicon-pencil"></span>

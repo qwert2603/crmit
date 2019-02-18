@@ -5,7 +5,6 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.decorators import check_master_or_teacher, check_access_group_write, check_master
-from app.init_model import role_teacher_name
 from app.is_removable_check import is_lesson_removable
 from app.lessons import lessons
 from app.lessons.utils import lessons_lists, dates_of_lessons_dict, empty_past_lessons, fill_group_by_schedule
@@ -116,7 +115,7 @@ def create_lesson(group_id):
         date = parse_date_or_none(request.form.get('date'))
         if date is None or date < start_date_of_month(group.start_month) or date > end_date_of_month(group.end_month):
             abort(409)
-        if current_user.system_role.name == role_teacher_name and date < datetime.date.today():
+        if current_user.is_teacher and date < datetime.date.today():
             abort(409)
         db.session.add(Lesson(group_id=group_id, teacher_id=group.teacher_id, date=date))
         flash('занятие создано: {}'.format(date))
@@ -132,7 +131,7 @@ def delete_lesson(lesson_id, from_list):
     # can't use @check_access_group_write() because no 'group_id' param.
     if not can_user_write_group(current_user, lesson.group): abort(403)
     if not is_lesson_removable(lesson): abort(409)
-    if current_user.system_role.name == role_teacher_name and lesson.date < datetime.date.today(): abort(409)
+    if current_user.is_teacher and lesson.date < datetime.date.today(): abort(409)
     for a in lesson.attendings_was_not:
         db.session.delete(a)
     db.session.delete(lesson)

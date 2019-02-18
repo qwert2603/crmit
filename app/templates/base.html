@@ -27,9 +27,9 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                    <span style="color: {% if current_user.system_role.name == role_master_name %}#ff4500
-                    {% elif current_user.system_role.name == role_teacher_name %}#1E90FF
-                    {% elif current_user.system_role.name == role_student_name %}#228B22
+                    <span style="color: {% if current_user.is_master %}#ff4500
+                    {% elif current_user.is_teacher %}#1E90FF
+                    {% elif current_user.is_student %}#228B22
                     {% else %}#000000
                     {% endif %}">
                         crmit
@@ -38,7 +38,7 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    {% if current_user.system_role.name == role_master_name or current_user.system_role.name == role_teacher_name %}
+                    {% if current_user.is_master or current_user.is_teacher %}
                         <li><a href="{{ url_for('users.masters_list') }}">руков-ли</a></li>
                         <li><a href="{{ url_for('users.teachers_list') }}">препод-ли</a></li>
                         <li><a href="{{ url_for('users.students_list') }}">ученики</a></li>
@@ -47,7 +47,7 @@
                         <li><a href="{{ url_for('structure.sections_list') }}">секции</a></li>
                         <li><a href="{{ url_for('structure.groups_list') }}">группы</a></li>
 
-                        {% if current_user.system_role.name == role_teacher_name %}
+                        {% if current_user.is_teacher %}
                             <li>
                                 <a href="{{ url_for('lessons.lessons_list', teacher_id=current_user.teacher.id, selected_date=current_date_fun()) }}">занятия</a>
                             </li>
@@ -62,7 +62,7 @@
                         <li><a href="{{ url_for('schedule.timetable') }}">расп-е</a></li>
                     {% endif %}
 
-                    {% if current_user.system_role.name == role_master_name %}
+                    {% if current_user.is_master %}
                         <li><a href="{{ url_for('main.anth') }}">ещё</a></li>
                     {% endif %}
                 </ul>

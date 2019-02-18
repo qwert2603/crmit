@@ -1,5 +1,6 @@
 from flask import render_template, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
+
 from app.decorators import check_master, check_master_or_teacher
 from app.init_model import developer_login
 from app.models import Master, Teacher, Student, ParentOfStudent

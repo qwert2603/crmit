@@ -1,7 +1,9 @@
 from datetime import datetime
+
 from flask_login import AnonymousUserMixin, UserMixin, current_user
 from sqlalchemy import or_, func
 from werkzeug.security import generate_password_hash, check_password_hash
+
 from app import db
 from app.utils import end_date_of_month, start_date_of_month
 
@@ -41,15 +43,32 @@ class SystemUser(UserMixin, db.Model):
     access_tokens = db.relationship('AccessToken', backref='system_user', lazy='dynamic')
 
     @property
+    def is_master(self):
+        from app.init_model import role_master_name
+
+        return self.system_role.name == role_master_name
+
+    @property
+    def is_teacher(self):
+        from app.init_model import role_teacher_name
+
+        return self.system_role.name == role_teacher_name
+
+    @property
+    def is_student(self):
+        from app.init_model import role_student_name
+
+        return self.system_role.name == role_student_name
+
+    @property
     def details(self):
-        if self.system_role.details_table_name == Master.__tablename__: return self.master
-        if self.system_role.details_table_name == Teacher.__tablename__: return self.teacher
-        if self.system_role.details_table_name == Student.__tablename__: return self.student
+        if self.is_master: return self.master
+        if self.is_teacher: return self.teacher
+        if self.is_student: return self.student
 
     @property
     def teacher_id_or_zero(self):
-        from app.init_model import role_teacher_name
-        if self.system_role.name == role_teacher_name:
+        if self.is_teacher:
             return self.teacher.id
         else:
             return 0

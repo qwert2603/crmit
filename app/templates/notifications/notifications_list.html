@@ -48,7 +48,7 @@
             <tr>
                 <td>{{ moment(notification.send_time).format('LLL') }}</td>
                 <td>
-                    {% if notification.sender.system_role.name == role_master_name %}
+                    {% if notification.sender.is_master %}
                         <a href="{{ url_for('users.masters_list',search=notification.sender.details.fio) }}">
                             {% if notification.sender.enabled %}
                                 {{ notification.sender.details.fio }}
@@ -56,7 +56,7 @@
                                 <strike>{{ notification.sender.details.fio }}</strike>
                             {% endif %}
                         </a>
-                    {% elif notification.sender.system_role.name == role_teacher_name %}
+                    {% elif notification.sender.is_teacher %}
                         <a href="{{ url_for('users.teachers_list',search=notification.sender.details.fio) }}">
                             {% if notification.sender.enabled %}
                                 {{ notification.sender.details.fio }}

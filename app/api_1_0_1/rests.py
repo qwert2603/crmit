@@ -17,7 +17,7 @@ from app.api_1_0_1.json_utils import section_to_json, teacher_to_json, master_to
     sort_groups
 from app.api_1_0_1.utils import create_json_list, create_attendings_for_all_students, token_to_hash, \
     create_payments_for_all_students
-from app.init_model import developer_login, role_student_name, role_master_name, role_teacher_name, \
+from app.init_model import developer_login, role_master_name, role_teacher_name, \
     actual_app_build_code
 from app.main.dump_utils import db_to_dump
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
@@ -127,9 +127,9 @@ def lessons_in_group(group_id):
 def last_lessons():
     count = request.args.get('count', type=int, default=10)
     lessons = None
-    if g.current_user_app.system_role.name == role_master_name:
+    if g.current_user_app.is_master:
         lessons = Lesson.query
-    elif g.current_user_app.system_role.name == role_teacher_name:
+    elif g.current_user_app.is_teacher:
         lessons = g.current_user_app.teacher.lessons
     else:
         abort(404)
@@ -231,7 +231,7 @@ def save_payment():
     payment.value = value
     payment.comment = comment
     payment.cash = is_cash
-    can_confirm = g.current_user_app.system_role.name == role_master_name
+    can_confirm = g.current_user_app.is_master
     if can_confirm: payment.confirmed = is_confirmed
 
     return 'ok'
@@ -250,7 +250,7 @@ def login():
     if not user.enabled:
         return jsonify(loginErrorReason=login_error_reason_account_disabled), 400
 
-    if user.system_role.name == role_student_name:
+    if user.is_student:
         return jsonify(loginErrorReason=login_error_reason_student_account_is_not_supported), 400
 
     expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
@@ -262,10 +262,10 @@ def login():
 
     account_type = 0
     details_id = 0
-    if user.system_role.name == role_master_name:
+    if user.is_master:
         account_type = account_type_master
         details_id = user.master.id
-    if user.system_role.name == role_teacher_name:
+    if user.is_teacher:
         account_type = account_type_teacher
         details_id = user.teacher.id
 

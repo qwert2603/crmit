@@ -1,6 +1,6 @@
+import datetime
 from functools import wraps
 
-import datetime
 from flask import request, abort, g
 
 from app import db

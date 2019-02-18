@@ -1,10 +1,9 @@
+from flask import render_template, jsonify, abort
 from flask_login import login_required, current_user
 
 from app.decorators import check_master
 from app.init_model import developer_login, role_master_name, role_teacher_name, role_student_name
 from app.main import main
-from flask import render_template, jsonify, abort
-
 from app.main.dump_utils import db_to_dump
 from app.models import Group, attending_states, Master, Teacher, Student, SystemUser, SystemRole, StudentInGroup, \
     Attending

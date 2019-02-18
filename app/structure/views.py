@@ -1,8 +1,8 @@
 from flask import render_template, request, url_for, redirect, flash, abort
 from flask_login import login_required, current_user
+
 from app import db
 from app.decorators import check_master_or_teacher
-from app.init_model import role_master_name
 from app.models import Group, Student, StudentInGroup
 from app.structure import structure
 from app.structure.utils import max_enter_month_number_student_in_group, min_exit_month_number_student_in_group, \
@@ -61,7 +61,7 @@ def group_details(group_id):
         .join(Student, Student.id == StudentInGroup.student_id) \
         .order_by(Student.fio) \
         .all()
-    can_edit_discount = current_user.system_role.name == role_master_name
+    can_edit_discount = current_user.is_master
     if 'submit' in request.form:
         if not can_user_write_group(current_user, group): abort(403)
         for student_in_group in students_in_group:

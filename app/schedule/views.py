@@ -4,7 +4,6 @@ from sqlalchemy.sql.functions import coalesce
 
 from app import db
 from app.decorators import check_master_or_teacher
-from app.init_model import role_master_name
 from app.models import Group, ScheduleTime, ScheduleGroup
 from app.schedule import schedule
 from app.utils import days_of_week_names
@@ -20,7 +19,7 @@ def timetable():
             schedule_groups[sg.schedule_time.id] = dict()
         schedule_groups[sg.schedule_time.id][sg.day_of_week] = sg
 
-    is_master = current_user.system_role.name == role_master_name
+    is_master = current_user.is_master
 
     if 'submit' in request.form:
         if not is_master:

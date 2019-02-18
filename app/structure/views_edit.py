@@ -1,6 +1,8 @@
 import datetime
+
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
+
 from app.decorators import check_master, check_master_or_teacher
 from app.models import Citizenship, Section, Parent, School, Group, Lesson
 from app.structure import structure
