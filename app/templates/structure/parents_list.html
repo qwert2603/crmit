@@ -50,11 +50,7 @@
                         {% for student in parent.children.all() %}
                             <li>
                                 <a href="{{ url_for('users.student_details',id=student.id) }}">
-                                    {% if student.system_user.enabled %}
-                                        {{ student.fio }}
-                                    {% else %}
-                                        <strike>{{ student.fio }}</strike>
-                                    {% endif %}
+                                    {{ render_system_user_fio(student.system_user) }}
                                 </a>
                             </li>
                         {% else %}

@@ -32,15 +32,7 @@
         </tr>
         {% for master in items %}
             <tr>
-                <td>
-                    {% if master.system_user.enabled %}
-                        <div style="{% if master.system_user==current_user %}color: orangered{% endif %}">
-                            {{ master.fio }}
-                        </div>
-                    {% else %}
-                        <strike>{{ master.fio }}</strike><br/>(отключен)
-                    {% endif %}
-                </td>
+                <td>{{ render_system_user_fio(master.system_user, show_disabled_text=true) }}</td>
                 <td>{{ master.system_user.login }}</td>
                 <td>{{ render_last_seen(master.system_user) }}</td>
                 {% if current_user.is_master %}

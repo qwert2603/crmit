@@ -98,3 +98,14 @@
         {% endif %}
     {% endif %}
 {% endmacro %}
+
+{% macro render_system_user_fio(system_user, show_disabled_text=false) %}
+    {% if system_user.enabled %}
+        <div style="{% if system_user==current_user %}color: orangered{% endif %}">
+            {{ system_user.details.fio }}
+        </div>
+    {% else %}
+        <del>{{ system_user.details.fio }}</del>
+        {% if show_disabled_text %}(отключен){% endif %}
+    {% endif %}
+{% endmacro %}

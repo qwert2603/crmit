@@ -35,14 +35,9 @@
             <tr>
                 <td>
                     <a href="{{ url_for('users.student_details',id=student.id) }}">
-                        {% if student.system_user.enabled %}
-                            {{ student.fio }}
-                        {% else %}
-                            <strike>{{ student.fio }}</strike>
-                        {% endif %}
+                        {{ render_system_user_fio(student.system_user, show_disabled_text=true) }}
                     </a>
-                    {% if not student.system_user.enabled %}<br/>(отключен){% endif %}
-                    {% if not student.filled %}<br/><span style="color: #ff4500;">(не заполнен)</span>{% endif %}
+                    {% if not student.filled %}<p><span style="color: #ff4500;">(не заполнен)</span></p>{% endif %}
                 </td>
                 <td>{{ student.system_user.login }}</td>
                 <td>{{ student.birth_date }}</td>

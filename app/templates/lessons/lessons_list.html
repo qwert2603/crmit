@@ -69,11 +69,7 @@
                 </td>
                 <td>
                     <a href="{{ url_for('users.teachers_list',search=lesson.teacher.fio) }}">
-                        {% if lesson.teacher.system_user.enabled %}
-                            {{ lesson.teacher.fio }}
-                        {% else %}
-                            <strike>{{ lesson.teacher.fio }}</strike>
-                        {% endif %}
+                        {{ render_system_user_fio(lesson.teacher.system_user) }}
                     </a>
                 </td>
                 <td>{{ lesson.attendings_was.count() }}

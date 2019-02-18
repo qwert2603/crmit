@@ -33,15 +33,7 @@
         </tr>
         {% for teacher in items %}
             <tr>
-                <td>
-                    {% if teacher.system_user.enabled %}
-                        <div style="{% if teacher.system_user==current_user %}color: orangered{% endif %}">
-                            {{ teacher.fio }}
-                        </div>
-                    {% else %}
-                        <strike>{{ teacher.fio }}</strike><br/>(отключен)
-                    {% endif %}
-                </td>
+                <td>{{ render_system_user_fio(teacher.system_user, show_disabled_text=true) }}</td>
                 <td>{{ teacher.system_user.login }}</td>
                 <td>
                     <div {% if teacher.system_user==current_user %}class="colored_link" {% endif %}>

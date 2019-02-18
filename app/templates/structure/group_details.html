@@ -28,11 +28,7 @@
                 <tr>
                     <td>
                         <a href="{{ url_for('users.student_details',id=student_in_group.student_id) }}">
-                            {% if student_in_group.student.system_user.enabled %}
-                                {{ student_in_group.student.fio }}
-                            {% else %}
-                                <strike>{{ student_in_group.student.fio }}</strike>
-                            {% endif %}
+                            {{ render_system_user_fio(student_in_group.student.system_user) }}
                         </a>
                     </td>
                     {% if can_user_write_group(current_user, group) %}

@@ -50,19 +50,11 @@
                 <td>
                     {% if notification.sender.is_master %}
                         <a href="{{ url_for('users.masters_list',search=notification.sender.details.fio) }}">
-                            {% if notification.sender.enabled %}
-                                {{ notification.sender.details.fio }}
-                            {% else %}
-                                <strike>{{ notification.sender.details.fio }}</strike>
-                            {% endif %}
+                            {{ render_system_user_fio(notification.sender) }}
                         </a>
                     {% elif notification.sender.is_teacher %}
                         <a href="{{ url_for('users.teachers_list',search=notification.sender.details.fio) }}">
-                            {% if notification.sender.enabled %}
-                                {{ notification.sender.details.fio }}
-                            {% else %}
-                                <strike>{{ notification.sender.details.fio }}</strike>
-                            {% endif %}
+                            {{ render_system_user_fio(notification.sender) }}
                         </a>
                     {% endif %}
                 </td>
@@ -73,11 +65,7 @@
                         </a>
                     {% elif notification.receiver_type==receiver_type_student_in_group %}
                         <a href="{{ url_for('users.student_details',id=notification.student_in_group.student_id) }}">
-                            {% if notification.student_in_group.student.system_user.enabled %}
-                                {{ notification.student_in_group.student.fio }}
-                            {% else %}
-                                <strike>{{ notification.student_in_group.student.fio }}</strike>
-                            {% endif %}
+                            {{ render_system_user_fio(notification.student_in_group.student.system_user) }}
                         </a>
                     {% endif %}
                 </td>

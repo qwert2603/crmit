@@ -7,11 +7,7 @@
 {% block page_content %}
     <div class="page-header">
         <h1>
-            {% if student.system_user.enabled %}
-                {{ student.fio }}
-            {% else %}
-                <strike>{{ student.fio }}</strike> (отключен)
-            {% endif %}
+            {{ render_system_user_fio(student.system_user, show_disabled_text=true) }}
             {% if not student.filled %}<span style="color: #ff4500">(не заполнен)</span>{% endif %}
         </h1>
     </div>
@@ -47,11 +43,7 @@
                         {{ group.name }}
                     </a>
                     (<a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
-                    {% if group.teacher.system_user.enabled %}
-                        {{ group.teacher.fio }}
-                    {% else %}
-                        <strike>{{ group.teacher.fio }}</strike>
-                    {% endif %}
+                    {{ render_system_user_fio(group.teacher.system_user) }}
                 </a>
                     ; учеников: {{ group.students.count() }})
                 </div>
