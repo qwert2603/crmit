@@ -28,14 +28,17 @@
         <a href="{{ url_for('users.login') }}" class="btn btn-default">войти</a>
     {% endif %}
 
-    <div style="margin-top: 100px">
-        {% set gp_link="https://play.google.com/store/apps/details?id=com.qwert2603.crmit_android" %}
-        <h4>в Google Play доступно Android-приложение <a target="_blank" rel="noopener noreferrer" href="{{ gp_link }}">
-            CRM "ЦМИТ"
-        </a></h4>
-        <a target="_blank" rel="noopener noreferrer" href="{{ gp_link }}">
-            <img src="{{ url_for('static', filename='google-play-badge.png') }}" width="323px" height="125px"/>
-        </a>
-    </div>
+    {% if current_user.is_master or current_user.is_teacher %}
+        <div style="margin-top: 100px">
+            {% set gp_link="https://play.google.com/store/apps/details?id=com.qwert2603.crmit_android" %}
+            <h4>в Google Play доступно Android-приложение
+                <a target="_blank" rel="noopener noreferrer" href="{{ gp_link }}">
+                    CRM "ЦМИТ"
+                </a></h4>
+            <a target="_blank" rel="noopener noreferrer" href="{{ gp_link }}">
+                <img src="{{ url_for('static', filename='google-play-badge.png') }}" width="323px" height="125px"/>
+            </a>
+        </div>
+    {% endif %}
 
 {% endblock %}
