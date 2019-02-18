@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label, SelectMultipleField
 from wtforms.validators import Length, DataRequired, Email, Optional
@@ -110,10 +112,17 @@ class GroupForm(FlaskForm):
         super(GroupForm, self).__init__(*args, *kwargs)
         self.section.choices = [(section.id, section.name) for section in Section.query.order_by(Section.name).all()]
         self.teacher.choices = [(teacher.id, teacher.fio) for teacher in Teacher.query.order_by(Teacher.fio).all()]
+
         self.start_y.choices = [(y, y) for y in range(2017, 2030)]
+        self.start_y.data = date.today().year
         self.start_m.choices = [(m + 1, month_names[m]) for m in range(0, 12)]
+        self.start_m.data = date.today().month
+
         self.end_y.choices = [(y, y) for y in range(2017, 2030)]
+        self.end_y.data = date.today().year
         self.end_m.choices = [(m + 1, month_names[m]) for m in range(0, 12)]
+        self.end_m.data = date.today().month
+
         self.group = group
         if group is not None:
             self.submit.label = Label(self.submit.id, 'сохранить')
