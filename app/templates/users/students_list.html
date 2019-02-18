@@ -77,7 +77,6 @@
                 </td>
                 <td>{{ student.contact_phone_number }} ({{ student.contact_phone_who }})</td>
                 <td>{{ render_last_seen(student.system_user) }}</td>
-                {# todo: ? all teachers can remove / edit all students #}
                 <td>
                     <a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-warning">
                         <span class="glyphicon glyphicon-pencil"></span>
