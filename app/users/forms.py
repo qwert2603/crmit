@@ -99,9 +99,9 @@ class RegistrationStudentForm(RegistrationForm):
     phone = StringField('телефон', validators=[Phone(allow_empty=True)])
     contact_phone = SelectField(prefix_field_required + 'телефон для связи', coerce=int, validators=[DataRequired()])
     mother_search = StringField('мать. поиск', validators=[Optional()])
-    mother = SelectField('мать', coerce=int, validators=[Optional()])
+    mother = SelectField('мать (при создании нового заполните поля ниже)', coerce=int, validators=[Optional()])
     father_search = StringField('отец. поиск', validators=[Optional()])
-    father = SelectField('отец', coerce=int, validators=[Optional()])
+    father = SelectField('отец (при создании нового заполните поля ниже)', coerce=int, validators=[Optional()])
 
     m_fio = StringField(prefix_field_required + 'новая мать: фио', validators=[Length(0, 255)])
     m_phone = StringField(prefix_field_required + 'новая мать: телефон', validators=[Phone(allow_empty=True)])
@@ -131,17 +131,23 @@ class RegistrationStudentForm(RegistrationForm):
 
     def __init__(self, student=None, *args, **kwargs):
         super(RegistrationStudentForm, self).__init__(*args, *kwargs)
+
         schools = [(school.id, school.name) for school in School.query.order_by(School.name).all()]
         if student is None:
             schools = [(-1, 'выберите школу')] + schools
         self.school.choices = schools
+
         self.contact_phone.choices = contact_phone_variants
         self.citizenship.choices = [(c.id, c.name) for c in Citizenship.query.order_by(Citizenship.id).all()]
-        parents = [(no_parent_id, 'нет')] + [(p.id, p.fio) for p in Parent.query.order_by(Parent.fio).all()]
-        if student is None:
-            parents = [(create_new_parent_id, 'создать нового')] + parents
+
+        parents = [(p.id, p.fio) for p in Parent.query.order_by(Parent.fio).all()]
+        parents = [(create_new_parent_id, 'создать нового')] + parents
+        parents = [(no_parent_id, 'нет')] + parents
         self.mother.choices = parents
         self.father.choices = parents
+
+        self.m_notification_types.choices = [[no_parent_id, 'нет']] + notification_types_list
+        self.f_notification_types.choices = [[no_parent_id, 'нет']] + notification_types_list
 
         self.student = student
         if student is not None:
@@ -150,17 +156,12 @@ class RegistrationStudentForm(RegistrationForm):
             del self.second_name
             self.setup_for_editing()
             self.system_user = student.system_user
-            self.delete_new_parents_fields()
         else:
             # this fields are generated from last_name / first_name / second_name.
             del self.login
             del self.fio
             del self.password
             del self.password_confirm
-            self.m_notification_types.choices = [[-1, 'нет']] + notification_types_list
-            self.f_notification_types.choices = [[-1, 'нет']] + notification_types_list
-            self.mother.label = Label(self.mother.id, "мать (при создании нового заполните поля ниже)")
-            self.father.label = Label(self.father.id, "отец (при создании нового заполните поля ниже)")
 
     def validate_school(self, field):
         if field.data <= 0:
@@ -183,7 +184,8 @@ class RegistrationStudentForm(RegistrationForm):
             # if self.f_passport.data is empty, nothing will be found because empty passport is stored in DB as NULL.
             if Parent.query.filter_by(_passport=self.f_passport.data).first():
                 raise ValidationError('паспорт отца уже зарегистрирован!')
-            if self.mother.data == create_new_parent_id and self.f_passport.data == self.m_passport.data:
+            if self.mother.data == create_new_parent_id and self.f_passport.data.strip() != '' \
+                    and self.f_passport.data == self.m_passport.data:
                 raise ValidationError('паспорта родителей совпадают!')
 
     def validate_mother(self, field):
@@ -210,24 +212,6 @@ class RegistrationStudentForm(RegistrationForm):
         if ni_ints & (1 << shift_vk) != 0 and self.f_vk_link.data.strip() == '':
             raise ValidationError('укажите ВКонтакте!')
         # don't check phone here because it is required.
-
-    def delete_new_parents_fields(self):
-        del self.m_fio
-        del self.m_phone
-        del self.m_email
-        del self.m_passport
-        del self.m_address
-        del self.m_home_phone
-        del self.m_vk_link
-        del self.m_notification_types
-        del self.f_fio
-        del self.f_phone
-        del self.f_email
-        del self.f_passport
-        del self.f_address
-        del self.f_home_phone
-        del self.f_vk_link
-        del self.f_notification_types
 
 
 class RegistrationStudentFastForm(FlaskForm):

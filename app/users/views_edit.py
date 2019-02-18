@@ -1,12 +1,14 @@
 from flask import render_template, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
 
+from app import db
 from app.decorators import check_master, check_master_or_teacher
 from app.init_model import developer_login
-from app.models import Master, Teacher, Student, ParentOfStudent
+from app.models import Master, Teacher, Student, ParentOfStudent, Parent
 from app.users import users
-from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm
-from app.utils import password_from_date
+from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm, \
+    create_new_parent_id, no_parent_id
+from app.utils import password_from_date, notification_types_list_to_int
 
 
 @users.route('/master/<int:id>', methods=['GET', 'POST'])
@@ -84,12 +86,34 @@ def edit_student(id):
         student.phone = form.phone.data
         student.contact_phone = form.contact_phone.data
         student.filled = True
+
         new_mother_id = form.mother.data
-        if new_mother_id == -1: new_mother_id = None
+        if new_mother_id == no_parent_id: new_mother_id = None
         new_father_id = form.father.data
-        if new_father_id == -1: new_father_id = None
-        ParentOfStudent.change_parent(student.id, mother_id, new_mother_id, True)
-        ParentOfStudent.change_parent(student.id, father_id, new_father_id, False)
+        if new_father_id == no_parent_id: new_father_id = None
+
+        if new_mother_id == create_new_parent_id:
+            mother = Parent(fio=form.m_fio.data, phone=form.m_phone.data, email=form.m_email.data,
+                            passport=form.m_passport.data, address=form.m_address.data,
+                            home_phone=form.m_home_phone.data, vk_link=form.m_vk_link.data,
+                            notification_types=notification_types_list_to_int(form.m_notification_types.data))
+            db.session.add(mother)
+            db.session.add(ParentOfStudent(student=student, parent=mother, is_mother=True))
+            flash('родитель {} создан'.format(form.m_fio.data))
+        else:
+            ParentOfStudent.change_parent(student.id, mother_id, new_mother_id, True)
+
+        if new_father_id == create_new_parent_id:
+            father = Parent(fio=form.f_fio.data, phone=form.f_phone.data, email=form.f_email.data,
+                            passport=form.f_passport.data, address=form.f_address.data,
+                            home_phone=form.f_home_phone.data, vk_link=form.f_vk_link.data,
+                            notification_types=notification_types_list_to_int(form.f_notification_types.data))
+            db.session.add(father)
+            db.session.add(ParentOfStudent(student=student, parent=father, is_mother=False))
+            flash('родитель {} создан'.format(form.f_fio.data))
+        else:
+            ParentOfStudent.change_parent(student.id, father_id, new_father_id, False)
+
         flash('ученик {} изменен'.format(form.fio.data))
         return redirect(url_for('.students_list'))
     if not form.is_submitted():
