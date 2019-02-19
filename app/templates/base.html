@@ -68,7 +68,9 @@
                     {% endif %}
 
                     {% if current_user.is_student %}
-                        <li><a href="{{ url_for('student.my_info') }}">укпукп</a></li>
+                        <li><a href="{{ url_for('student.lessons', selected_date=current_date_fun()) }}">занятия</a></li>
+                        <li><a href="{{ url_for('student.payments') }}">платежи</a></li>
+                        <li><a href="{{ url_for('student.messages') }}">сообщения</a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">

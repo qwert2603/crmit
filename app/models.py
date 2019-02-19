@@ -496,6 +496,9 @@ class Lesson(db.Model):
                                    Lesson.date >= start_date_of_month(month_number),
                                    Lesson.date <= end_date_of_month(month_number))
 
+    def attending_of_student(self, student_id):
+        return self.attendings.filter(Attending.student_id == student_id).first()
+
 
 attending_was_not = 0
 attending_was = 1

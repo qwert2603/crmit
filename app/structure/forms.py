@@ -8,7 +8,8 @@ from app.form import VkLink, Phone, prefix_field_required
 from app.models import Group, Section, Citizenship, School, Parent, Teacher, notification_types_list, shift_email, \
     shift_vk
 from app.structure.utils import max_start_month_number_group, min_end_month_number_group
-from app.utils import month_names, number_of_month, notification_types_list_to_int
+from app.utils import month_names, number_of_month, notification_types_list_to_int, earliest_year, last_year, \
+    months_per_year
 
 
 class ParentForm(FlaskForm):
@@ -113,15 +114,16 @@ class GroupForm(FlaskForm):
         self.section.choices = [(section.id, section.name) for section in Section.query.order_by(Section.name).all()]
         self.teacher.choices = [(teacher.id, teacher.fio) for teacher in Teacher.query.order_by(Teacher.fio).all()]
 
-        self.start_y.choices = [(y, y) for y in range(2017, 2030)]
-        self.start_y.data = date.today().year
-        self.start_m.choices = [(m + 1, month_names[m]) for m in range(0, 12)]
-        self.start_m.data = date.today().month
+        self.start_y.choices = [(y, y) for y in range(earliest_year, last_year + 1)]
+        self.start_m.choices = [(m + 1, month_names[m]) for m in range(0, months_per_year)]
+        self.end_y.choices = [(y, y) for y in range(earliest_year, last_year + 1)]
+        self.end_m.choices = [(m + 1, month_names[m]) for m in range(0, months_per_year)]
 
-        self.end_y.choices = [(y, y) for y in range(2017, 2030)]
-        self.end_y.data = date.today().year
-        self.end_m.choices = [(m + 1, month_names[m]) for m in range(0, 12)]
-        self.end_m.data = date.today().month
+        if group is None:
+            self.start_y.data = date.today().year
+            self.start_m.data = date.today().month
+            self.end_y.data = date.today().year
+            self.end_m.data = date.today().month
 
         self.group = group
         if group is not None:

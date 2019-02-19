@@ -62,6 +62,7 @@ def translit(c):
 
 months_per_year = 12
 earliest_year = 2017
+last_year = 2042
 
 
 def number_of_month_for_date(date):

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+
+{% block title %}занятия{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>занятия</h1>
+    </div>
+
+    {% if current_user.is_master %}
+        <a class="btn btn-warning margined_button" href="{{ url_for('lessons.delete_empty_past_lessons') }}">
+            удалить пустые занятия в прошлом
+        </a>
+    {% endif %}
+
+    <form method="get" class="form-group">
+        <div class="form-group">
+            <h3><label for="group_id">группа</label></h3>
+            <select class="form-control" id="group_id" name="group_id">
+                <option value="0">все</option>
+                {% for group in groups %}
+                    <option value="{{ group.id }}" {% if group.id==group_id %}selected{% endif %}>
+                        {{ group.name }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <h3><label for="selected_date">дата</label></h3>
+            <input class="form-control" id="selected_date" name="selected_date" type="date" value="{{ selected_date }}">
+        </div>
+        <input class="btn btn-default" type="submit" value="искать">
+    </form>
+
+    <table class="table">
+        <tr>
+            <th>дата</th>
+            <th>группа</th>
+            <th>посещение</th>
+        </tr>
+        {% for lesson in lessons %}
+            <tr>
+                <td>{{ lesson.date }}</td>
+                <td>{{ lesson.group.name }}</td>
+                <td>
+                    {% set state = lesson.attending_of_student(current_user.student.id).state %}
+                    {% if state == attending_was %}
+                        <div class="state_text label label-success">был</div>
+                    {% elif state == attending_was_not_ill %}
+                        <div class="state_text label label-warning">болел</div>
+                    {% else %}
+                        <div class="state_text label label-default">не был</div>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <h3><i>нет занятий</i></h3>
+        {% endfor %}
+
+    </table>
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'student.lessons', group_id=group_id, selected_date=selected_date) }}
+    </div>
+
+{% endblock %}

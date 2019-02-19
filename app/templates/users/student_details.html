@@ -36,16 +36,18 @@
     </ul>
     группы:
     <ul>
-        {% for group in student.groups.order_by(Group.teacher_id != current_user.teacher_id_or_zero, Group.start_month.desc(), Group.name).all() %}
+        {#  todo: sort groups for current_user #}
+        {% for sig in student.students_in_groups.all() %}
             <li>
-                <div {% if current_user.is_teacher and group.teacher_id==current_user.teacher.id %}class="colored_link"{% endif %}>
-                    <a href="{{ url_for('structure.groups_list',search=group.name) }}">
-                        {{ group.name }}
+                <div {% if current_user.is_teacher and sig.group.teacher_id==current_user.teacher.id %}class="colored_link"{% endif %}>
+                    <a href="{{ url_for('structure.groups_list',search=sig.group.name) }}">
+                        {{ sig.group.name }}
                     </a>
-                    (<a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
-                    {{ render_system_user_fio(group.teacher.system_user) }}
+                    (<a href="{{ url_for('users.teachers_list',search=sig.group.teacher.fio) }}">
+                    {{ render_system_user_fio(sig.group.teacher.system_user) }}
                 </a>
-                    ; учеников: {{ group.students.count() }})
+                    ; учеников: {{ sig.group.students.count() }})
+                ({{ get_month_name(sig.enter_month) }} — {{ get_month_name(sig.exit_month) }})
                 </div>
             </li>
         {% else %}
