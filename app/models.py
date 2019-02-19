@@ -412,6 +412,12 @@ class Group(db.Model):
             .filter(Payment.confirmed == False) \
             .scalar()
 
+    @property
+    def students_in_group_by_fio(self):
+        return self.students_in_group \
+            .join(Student, Student.id == StudentInGroup.student_id) \
+            .order_by(Student.fio)
+
 
 class StudentInGroup(db.Model):
     __tablename__ = 'student_in_groups'

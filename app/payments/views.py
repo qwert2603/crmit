@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 
 from app import db
 from app.decorators import check_access_group_write
-from app.models import Group, StudentInGroup, Student, Payment
+from app.models import Group, Payment
 from app.payments import payments
 from app.payments.utils import payments_dicts, get_sum_not_confirmed_teacher, get_sum_not_confirmed_by_group
 
@@ -57,10 +57,7 @@ def payments_in_group(group_id):
     else:
         sum_not_confirmed_by_group = None
         sum_not_confirmed_all = None
-    students_in_group = group.students_in_group \
-        .join(Student, Student.id == StudentInGroup.student_id) \
-        .order_by(Student.fio) \
-        .all()
+    students_in_group = group.students_in_group_by_fio.all()
     return render_template('payments/payments_in_group.html', group=group, students_in_group=students_in_group,
                            payments=pd[0], confirmed=pd[1], cash=pd[2], comments=pd[3], confirmed_count_months=pd[4],
                            confirmed_count_students=pd[5], non_zero_count_months=pd[6], non_zero_count_students=pd[7],

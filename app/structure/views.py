@@ -15,10 +15,7 @@ from app.utils import can_user_write_group
 @check_master_or_teacher
 def students_in_group(group_id):
     group = Group.query.get_or_404(group_id)
-    students_in_group = group.students_in_group \
-        .join(Student, Student.id == StudentInGroup.student_id) \
-        .order_by(Student.fio) \
-        .all()
+    students_in_group = group.students_in_group_by_fio.all()
     in_group_students_ids = [s.student.id for s in students_in_group]
     if 'submit' in request.form:
         if not can_user_write_group(current_user, group): abort(403)
@@ -47,7 +44,8 @@ def students_in_group(group_id):
         return redirect(url_for('structure.groups_list'))
     other_students = Student.query \
         .filter(Student.id.notin_(in_group_students_ids)) \
-        .order_by(Student.fio).all()
+        .order_by(Student.fio) \
+        .all()
     return render_template('structure/students_in_group.html', group=group, students_in_group=students_in_group,
                            other_students=other_students, write_mode=can_user_write_group(current_user, group))
 
@@ -57,10 +55,7 @@ def students_in_group(group_id):
 @check_master_or_teacher
 def group_details(group_id):
     group = Group.query.get_or_404(group_id)
-    students_in_group = group.students_in_group \
-        .join(Student, Student.id == StudentInGroup.student_id) \
-        .order_by(Student.fio) \
-        .all()
+    students_in_group = group.students_in_group_by_fio.all()
     can_edit_discount = current_user.is_master
     if 'submit' in request.form:
         if not can_user_write_group(current_user, group): abort(403)
