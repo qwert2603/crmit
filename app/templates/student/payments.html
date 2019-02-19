@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block title %}платежи{% endblock %}
+
+{% block page_content %}
+    <div class="page-header">
+        <h1>платежи</h1>
+    </div>
+
+    {% for student_in_group in students_in_groups %}
+        <h3>{{ student_in_group.group.name }}</h3>
+        <table class="table">
+            <tr>
+                <th>месяц</th>
+                {% for month_number in range(student_in_group.enter_month, student_in_group.exit_month + 1) %}
+                    <th>{{ get_month_name(month_number) }}</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                <th>платеж</th>
+                {% for month_number in range(student_in_group.enter_month, student_in_group.exit_month + 1) %}
+                    <td>
+                        {% set payment = student_in_group.payment_of_month(month_number) %}
+                        {{ payment.value or 0 }} / {{ student_in_group.max_payment_value }}
+                        <br/>
+                        <input type="checkbox" {% if payment.cash %}checked{% endif %} disabled>
+                        нал.
+                        <br/>
+                        <input type="checkbox" {% if payment.confirmed %}checked{% endif %} disabled>
+                        <span style="{% if payment.confirmed %}color: green;{% endif %}">подт.</span>
+                        <br/>
+                        <span style="font-size: smaller"><i>{{ payment.comment }}</i></span>
+                    </td>
+                {% endfor %}
+            </tr>
+        </table>
+    {% endfor %}
+
+{% endblock %}

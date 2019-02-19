@@ -462,6 +462,13 @@ class StudentInGroup(db.Model):
         return Notification.query.filter(Notification.receiver_type == receiver_type_student_in_group,
                                          Notification.receiver_id == self.id)
 
+    def payment_of_month(self, month_number):
+        return self.payments.filter(Payment.month == month_number).first()
+
+    @property
+    def max_payment_value(self):
+        return self.group.section.price - self.discount
+
 
 class Payment(db.Model):
     __tablename__ = 'payments'
@@ -476,7 +483,7 @@ class Payment(db.Model):
 
     @property
     def max_value(self):
-        return self.student_in_group.group.section.price - self.student_in_group.discount
+        return self.student_in_group.max_payment_value
 
 
 class Lesson(db.Model):

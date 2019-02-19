@@ -46,7 +46,8 @@ def lessons():
 @login_required
 @check_student
 def payments():
-    return 'payments'
+    return render_template('student/payments.html',
+                           students_in_groups=current_user.student.students_in_groups_sorted_for_current_user)
 
 
 @student.route('/messages')
