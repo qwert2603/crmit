@@ -34,7 +34,7 @@
             <p><i>нет родитей</i></p>
         {% endfor %}
     </ul>
-    группы:
+    <h4>группы:</h4>
     <ul>
         {% for sig in student.students_in_groups_sorted_for_current_user.all() %}
             <li>
@@ -53,6 +53,8 @@
             <p><i>нет групп</i></p>
         {% endfor %}
     </ul>
+
     <a href="{{ url_for('users.edit_student', id=student.id) }}"
        class="btn btn-warning margined_button">редактировать</a>
+
 {% endblock %}

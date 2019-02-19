@@ -33,4 +33,18 @@
             <p><i>нет родитей</i></p>
         {% endfor %}
     </ul>
+    <h4>группы:</h4>
+    <ul>
+        {% for sig in student.students_in_groups_sorted_for_current_user.all() %}
+            <li>
+                <div>
+                    {{ sig.group.name }}
+                    ({{ sig.group.teacher.fio }})
+                    ({{ get_month_name(sig.enter_month) }} — {{ get_month_name(sig.exit_month) }})
+                </div>
+            </li>
+        {% else %}
+            <p><i>нет групп</i></p>
+        {% endfor %}
+    </ul>
 {% endmacro %}
