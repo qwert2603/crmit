@@ -1,5 +1,3 @@
-from datetime import date
-
 from flask_wtf import FlaskForm
 from wtforms import StringField, ValidationError, IntegerField, SelectField, SubmitField, Label, SelectMultipleField
 from wtforms.validators import Length, DataRequired, Email, Optional
@@ -118,12 +116,6 @@ class GroupForm(FlaskForm):
         self.start_m.choices = [(m + 1, month_names[m]) for m in range(0, months_per_year)]
         self.end_y.choices = [(y, y) for y in range(earliest_year, last_year + 1)]
         self.end_m.choices = [(m + 1, month_names[m]) for m in range(0, months_per_year)]
-
-        if group is None:
-            self.start_y.data = date.today().year
-            self.start_m.data = date.today().month
-            self.end_y.data = date.today().year
-            self.end_m.data = date.today().month
 
         self.group = group
         if group is not None:

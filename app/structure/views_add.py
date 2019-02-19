@@ -1,3 +1,5 @@
+from datetime import date
+
 from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
 
@@ -72,4 +74,9 @@ def add_group():
                              start_month=form.start_month(), end_month=form.end_month()))
         flash('группа {} создана'.format(form.name.data))
         return redirect(url_for('.groups_list'))
+    if not form.is_submitted():
+        form.start_y.data = date.today().year
+        form.start_m.data = date.today().month
+        form.end_y.data = date.today().year
+        form.end_m.data = date.today().month
     return render_template('structure/form_add_edit.html', form=form, class_name='группы', creating=True)

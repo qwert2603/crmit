@@ -294,6 +294,12 @@ class Student(db.Model):
         elif self.contact_phone == contact_phone_father:
             return 'отец'
 
+    @property
+    def students_in_groups_sorted_for_current_user(self):
+        return self.students_in_groups \
+            .join(Group, Group.id == StudentInGroup.group_id) \
+            .order_by(Group.teacher_id != current_user.teacher_id_or_zero, Group.start_month.desc(), Group.name)
+
 
 class ParentOfStudent(db.Model):
     __tablename__ = 'parent_of_students'

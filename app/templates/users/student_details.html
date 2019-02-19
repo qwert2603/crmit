@@ -36,8 +36,7 @@
     </ul>
     группы:
     <ul>
-        {#  todo: sort groups for current_user #}
-        {% for sig in student.students_in_groups.all() %}
+        {% for sig in student.students_in_groups_sorted_for_current_user.all() %}
             <li>
                 <div {% if current_user.is_teacher and sig.group.teacher_id==current_user.teacher.id %}class="colored_link"{% endif %}>
                     <a href="{{ url_for('structure.groups_list',search=sig.group.name) }}">
