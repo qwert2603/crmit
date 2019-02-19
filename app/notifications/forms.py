@@ -3,6 +3,7 @@ from wtforms import SubmitField, StringField, TextAreaField, SelectField
 from wtforms.validators import Length
 
 from app.form import prefix_field_required
+from app.models import Student, StudentInGroup
 
 
 class SendNotificationForm(FlaskForm):
@@ -13,5 +14,9 @@ class SendNotificationForm(FlaskForm):
 
     def __init__(self, group, *args, **kwargs):
         super(SendNotificationForm, self).__init__(*args, *kwargs)
+        sigs = group.students_in_group \
+            .join(Student, Student.id == StudentInGroup.student_id) \
+            .order_by(Student.fio) \
+            .all()
         self.receiver.choices = [(0, '{} (учеников: {})'.format(group.name, group.students_in_group.count()))] + \
-                                [(s.id, s.student.fio) for s in group.students_in_group.all()]
+                                [(s.id, s.student.fio) for s in sigs]

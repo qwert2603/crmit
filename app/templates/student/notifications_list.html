@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+
+{% block title %}уведомления{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>уведомления</h1>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>время</th>
+            <th>отправитель</th>
+            <th>получатель</th>
+            <th>тема</th>
+            <th>сообщение</th>
+        </tr>
+        {% for notification in notifications %}
+            <tr>
+                <td>{{ moment(notification.send_time).format('LLL') }}</td>
+                <td>{{ notification.sender.details  .fio }}</td>
+                <td>
+                    {% if notification.receiver_type == receiver_type_group %}
+                        {{ notification.group.name }}
+                    {% elif notification.receiver_type == receiver_type_student_in_group %}
+                        {{ notification.student_in_group.student.fio }}
+                    {% endif %}
+                </td>
+                <td>{{ notification.subject }}</td>
+                <td>{{ notification.body }}</td>
+            </tr>
+        {% else %}
+            <h3><i>нет уведомлений</i></h3>
+        {% endfor %}
+
+    </table>
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'student.notifications') }}
+    </div>
+{% endblock %}

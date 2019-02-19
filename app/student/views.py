@@ -2,7 +2,7 @@ from flask import request, render_template
 from flask_login import login_required, current_user
 
 from app.decorators import check_student
-from app.models import Lesson, Group, StudentInGroup
+from app.models import Lesson, Group, StudentInGroup, Notification
 from app.student import student
 from app.utils import parse_date_or_none, start_date_of_month, end_date_of_month
 
@@ -39,14 +39,14 @@ def lessons():
         .all()
 
     return render_template('student/lessons_list.html', group_id=group_id, selected_date=selected_date,
-                           pagination=pagination, lessons=pagination.items, groups=groups)
+                           pagination=pagination, lessons=pagination.items, groups=groups, hide_who_u_r=True)
 
 
 @student.route('/payments')
 @login_required
 @check_student
 def payments():
-    return render_template('student/payments.html',
+    return render_template('student/payments.html', hide_who_u_r=True,
                            students_in_groups=current_user.student.students_in_groups_sorted_for_current_user)
 
 
@@ -55,3 +55,23 @@ def payments():
 @check_student
 def messages():
     return 'messages'
+
+
+@student.route('/notifications')
+@login_required
+@check_student
+def notifications():
+    page = request.args.get('page', 1, type=int)
+
+    pagination = Notification.query.filter(False)
+
+    for sig in current_user.student.students_in_groups:
+        pagination = pagination.union(sig.notifications)
+        pagination = pagination.union(sig.group.notifications)
+
+    pagination = pagination.order_by(Notification.send_time.desc())
+
+    pagination = pagination.paginate(page, per_page=20, error_out=False)
+
+    return render_template('student/notifications_list.html', pagination=pagination, notifications=pagination.items,
+                           hide_who_u_r=True)
