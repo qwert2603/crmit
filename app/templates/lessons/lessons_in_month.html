@@ -32,7 +32,7 @@
                     {{ lesson.date.day }}
                     {% if lesson.teacher.id != group.teacher.id %}
                         <br/>
-                        <a href="{{ url_for('users.teachers_list',search=lesson.teacher.fio) }}">
+                        <a href="{{ url_for('users.teachers_list',search=lesson.teacher.fio) }}" style="font-size: smaller">
                             {{ lesson.teacher.fio }}
                         </a>
                     {% endif %}
