@@ -83,7 +83,7 @@ def edit_developer(id):
         developer.system_user.login = form.login.data
         developer.system_user.enabled = form.enabled.data
         flash('разработчик {} изменен'.format(form.fio.data))
-        return redirect(url_for('.bots_list'))
+        return redirect(url_for('.developers_list'))
     if not form.is_submitted():
         form.login.data = developer.system_user.login
         form.fio.data = developer.fio

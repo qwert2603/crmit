@@ -2,11 +2,11 @@ from flask import render_template, jsonify
 from flask_login import login_required
 
 from app.decorators import check_master, check_developer
-from app.init_model import role_master_name, role_teacher_name, role_student_name
+from app.init_model import role_master_name, role_teacher_name, role_student_name, role_bot_name, role_developer_name
 from app.main import main
 from app.main.dump_utils import db_to_dump
 from app.models import Group, attending_states, Master, Teacher, Student, SystemUser, SystemRole, StudentInGroup, \
-    Attending
+    Attending, Bot, Developer
 from app.utils import start_date_of_month, end_date_of_month, get_month_name
 
 
@@ -44,17 +44,33 @@ def check_db_integrity():
     for student in Student.query.all():
         if student.system_user.system_role.name != role_student_name:
             problems.append('у ученика id={} ({}) неверная системная роль'.format(student.id, student.fio))
-#todo
+    for bot in Bot.query.all():
+        if bot.system_user.system_role.name != role_bot_name:
+            problems.append('у бота id={} ({}) неверная системная роль'.format(bot.id, bot.fio))
+    for developer in Developer.query.all():
+        if developer.system_user.system_role.name != role_developer_name:
+            problems.append('у разработчика id={} ({}) неверная системная роль'.format(developer.id, developer.fio))
+
     system_role_id_master = SystemRole.query.filter(SystemRole.name == role_master_name).first().id
     system_role_id_teacher = SystemRole.query.filter(SystemRole.name == role_teacher_name).first().id
     system_role_id_student = SystemRole.query.filter(SystemRole.name == role_student_name).first().id
+    system_role_id_bot = SystemRole.query.filter(SystemRole.name == role_bot_name).first().id
+    system_role_id_developer = SystemRole.query.filter(SystemRole.name == role_developer_name).first().id
+
     if SystemUser.query.filter(SystemUser.system_role_id == system_role_id_master).count() != Master.query.count():
         problems.append('неверное кол-во мастеров')
     if SystemUser.query.filter(SystemUser.system_role_id == system_role_id_teacher).count() != Teacher.query.count():
         problems.append('неверное кол-во учителей')
     if SystemUser.query.filter(SystemUser.system_role_id == system_role_id_student).count() != Student.query.count():
         problems.append('неверное кол-во учеников')
-    if SystemUser.query.count() != Master.query.count() + Teacher.query.count() + Student.query.count():
+    if SystemUser.query.filter(SystemUser.system_role_id == system_role_id_bot).count() != Bot.query.count():
+        problems.append('неверное кол-во ботов')
+    if SystemUser.query \
+            .filter(SystemUser.system_role_id == system_role_id_developer).count() != Developer.query.count():
+        problems.append('неверное кол-во разработчиков')
+
+    if SystemUser.query.count() != Master.query.count() + Teacher.query.count() + Student.query.count() \
+            + Bot.query.count() + Developer.query.count():
         problems.append('кол-во системных пользователей не равно кол-ву пользователей')
 
     for group in Group.query.all():
