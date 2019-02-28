@@ -647,3 +647,10 @@ class AccessToken(db.Model):
     token_hash = db.Column(db.String(255), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False)
     expires = db.Column(db.DateTime, nullable=False)
+
+
+class PageVisit(db.Model):
+    __tablename__ = 'page_visits'
+    id = db.Column(db.Integer, primary_key=True)
+    page_name = db.Column(db.String(255), nullable=False, index=True, unique=True)
+    visits_count = db.Column(db.Integer, nullable=False)

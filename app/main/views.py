@@ -6,7 +6,7 @@ from app.init_model import role_master_name, role_teacher_name, role_student_nam
 from app.main import main
 from app.main.dump_utils import db_to_dump
 from app.models import Group, attending_states, Master, Teacher, Student, SystemUser, SystemRole, StudentInGroup, \
-    Attending, Bot, Developer
+    Attending, Bot, Developer, PageVisit
 from app.utils import start_date_of_month, end_date_of_month, get_month_name
 
 
@@ -126,3 +126,11 @@ def check_db_integrity_attengings_correct_group_of_students():
                     .format(attending.id, attending.student.fio, attending.lesson.date, attending.lesson.group.name))
 
     return render_template('check_db_integrity__attengings_correct_group_of_students.html', problems=problems)
+
+
+@main.route('/visit_stats')
+@login_required
+@check_developer
+def visit_stats():
+    pages = PageVisit.query.order_by(PageVisit.visits_count.desc(), PageVisit.page_name).all()
+    return render_template("visit_stats.html", pages=pages)

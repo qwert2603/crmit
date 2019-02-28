@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+{% from '_macros.html' import render_search %}
+{% from '_macros.html' import render_last_seen with context %}
+
+{% set title = 'статистика посещений' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>страница</th>
+            <th>посещения</th>
+        </tr>
+        {% for page in pages %}
+            <tr>
+                <td>{{ page.page_name }}</td>
+                <td>{{ page.visits_count }}</td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
