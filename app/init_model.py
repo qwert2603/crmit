@@ -11,8 +11,6 @@ role_developer_name = 'разработчик'
 default_citizenship_name = 'Россия'
 default_citizenship_id = 1
 
-developer_login = 'qwert2603'  # todo: remove
-
 actual_app_build_code = 3
 
 
