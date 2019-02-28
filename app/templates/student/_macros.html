@@ -34,17 +34,22 @@
         {% endfor %}
     </ul>
     <h4>группы:</h4>
-    <ul>
+    <table class="table">
+        <tr>
+            <th>группа</th>
+            <th>преподаватель</th>
+            <th>телефон</th>
+            <th>период</th>
+        </tr>
         {% for sig in student.students_in_groups_sorted_for_current_user.all() %}
-            <li>
-                <div>
-                    {{ sig.group.name }}
-                    ({{ sig.group.teacher.fio }})
-                    ({{ get_month_name(sig.enter_month) }} — {{ get_month_name(sig.exit_month) }})
-                </div>
-            </li>
+            <tr>
+                <td>{{ sig.group.name }}</td>
+                <td>{{ sig.group.teacher.fio }}</td>
+                <td>{{ sig.group.teacher.phone }}</td>
+                <td>{{ get_month_name(sig.enter_month) }} — {{ get_month_name(sig.exit_month) }}</td>
+            </tr>
         {% else %}
             <p><i>нет групп</i></p>
         {% endfor %}
-    </ul>
+    </table>
 {% endmacro %}
