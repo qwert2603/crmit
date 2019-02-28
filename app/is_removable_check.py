@@ -22,6 +22,9 @@ def is_teacher_removable(teacher): return teacher.groups.count() == 0 and teache
 def is_master_removable(master): return master.system_user_id != current_user.id
 
 
+def is_developer_removable(master): return master.system_user_id != current_user.id
+
+
 def is_student_removable(student): return student.students_in_groups.count() == 0 and student.attendings.count() == 0
 
 

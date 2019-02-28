@@ -6,11 +6,12 @@ role_master_name = 'руководитель'
 role_teacher_name = 'преподаватель'
 role_student_name = 'ученик'
 role_bot_name = 'бот'
+role_developer_name = 'разработчик'
 
 default_citizenship_name = 'Россия'
 default_citizenship_id = 1
 
-developer_login = 'qwert2603'
+developer_login = 'qwert2603'  # todo: remove
 
 actual_app_build_code = 3
 
@@ -20,7 +21,8 @@ def create_system_roles():
     role_teacher = SystemRole(name=role_teacher_name, details_table_name=Teacher.__tablename__)
     role_student = SystemRole(name=role_student_name, details_table_name=Student.__tablename__)
     role_bot = SystemRole(name=role_bot_name, details_table_name=Bot.__tablename__)
-    roles = [role_master, role_teacher, role_student, role_bot]
+    role_developer = SystemRole(name=role_developer_name, details_table_name=Bot.__tablename__)
+    roles = [role_master, role_teacher, role_student, role_bot, role_developer]
     for role in roles:
         db.session.add(role)
 

@@ -40,6 +40,7 @@ class SystemUser(UserMixin, db.Model):
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)
     student = db.relationship('Student', backref='system_user', uselist=False)
     bot = db.relationship('Bot', backref='system_user', uselist=False)
+    developer = db.relationship('Developer', backref='system_user', uselist=False)
     notifications = db.relationship('Notification', backref='sender', lazy='dynamic')
     access_tokens = db.relationship('AccessToken', backref='system_user', lazy='dynamic')
 
@@ -47,7 +48,8 @@ class SystemUser(UserMixin, db.Model):
     def is_master(self):
         from app.init_model import role_master_name
 
-        return self.system_role.name == role_master_name
+        # developer is subkind of master.
+        return self.system_role.name == role_master_name or self.is_developer
 
     @property
     def is_teacher(self):
@@ -68,7 +70,14 @@ class SystemUser(UserMixin, db.Model):
         return self.system_role.name == role_bot_name
 
     @property
+    def is_developer(self):
+        from app.init_model import role_developer_name
+
+        return self.system_role.name == role_developer_name
+
+    @property
     def details(self):
+        if self.is_developer: return self.developer
         if self.is_master: return self.master
         if self.is_teacher: return self.teacher
         if self.is_student: return self.student
@@ -356,6 +365,13 @@ class Teacher(db.Model):
 
 class Bot(db.Model):
     __tablename__ = 'bots'
+    id = db.Column(db.Integer, primary_key=True)
+    fio = db.Column(db.String(255), nullable=False)
+    system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, unique=True)
+
+
+class Developer(db.Model):
+    __tablename__ = 'developers'
     id = db.Column(db.Integer, primary_key=True)
     fio = db.Column(db.String(255), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, unique=True)

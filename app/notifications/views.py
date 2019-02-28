@@ -4,8 +4,8 @@ from sqlalchemy import or_
 
 from app import db
 from app.decorators import check_master_or_teacher, check_access_group_write
-from app.init_model import developer_login
-from app.models import Notification, SystemUser, Group, receiver_type_group, receiver_type_student_in_group
+from app.init_model import role_master_name, role_teacher_name
+from app.models import Notification, SystemUser, Group, receiver_type_group, receiver_type_student_in_group, SystemRole
 from app.notifications import notifications
 from app.notifications.forms import SendNotificationForm
 from app.notifications.utils import parents_of_student_in_group, parents_of_group, do_send_notification
@@ -21,8 +21,8 @@ def notifications_list():
     if sender_id > 0: pagination = pagination.filter(Notification.sender_id == sender_id)
     pagination = pagination.paginate(page, per_page=20, error_out=False)
     senders = SystemUser.query \
-        .filter(or_(SystemUser.system_role_id == 1, SystemUser.system_role_id == 2)) \
-        .filter(SystemUser.login != developer_login) \
+        .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
+        .filter(or_(SystemRole.name == role_master_name, SystemRole.name == role_teacher_name)) \
         .all()
     if current_user.is_master:
         groups = Group.query

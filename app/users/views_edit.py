@@ -1,10 +1,9 @@
-from flask import render_template, redirect, url_for, flash, abort
+from flask import render_template, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 from app import db
-from app.decorators import check_master, check_master_or_teacher
-from app.init_model import developer_login
-from app.models import Master, Teacher, Student, ParentOfStudent, Parent, Bot
+from app.decorators import check_master, check_master_or_teacher, check_developer
+from app.models import Master, Teacher, Student, ParentOfStudent, Parent, Bot, Developer
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm, \
     create_new_parent_id, no_parent_id, RegistrationBotForm
@@ -16,8 +15,6 @@ from app.utils import password_from_date, notification_types_list_to_int
 @check_master
 def edit_master(id):
     master = Master.query.get_or_404(id)
-    if master.system_user.login == developer_login:
-        abort(404)
     form = RegistrationMasterForm(master)
     if form.validate_on_submit():
         master.fio = form.fio.data
@@ -58,7 +55,7 @@ def edit_teacher(id):
 
 @users.route('/bot/<int:id>', methods=['GET', 'POST'])
 @login_required
-@check_master
+@check_developer
 def edit_bot(id):
     bot = Bot.query.get_or_404(id)
     form = RegistrationBotForm(bot)
@@ -73,6 +70,25 @@ def edit_bot(id):
         form.fio.data = bot.fio
         form.enabled.data = bot.system_user.enabled
     return render_template('users/form_register_edit.html', form=form, class_name='бота', creating=False)
+
+
+@users.route('/developer/<int:id>', methods=['GET', 'POST'])
+@login_required
+@check_developer
+def edit_developer(id):
+    developer = Developer.query.get_or_404(id)
+    form = RegistrationBotForm(developer)
+    if form.validate_on_submit():
+        developer.fio = form.fio.data
+        developer.system_user.login = form.login.data
+        developer.system_user.enabled = form.enabled.data
+        flash('разработчик {} изменен'.format(form.fio.data))
+        return redirect(url_for('.bots_list'))
+    if not form.is_submitted():
+        form.login.data = developer.system_user.login
+        form.fio.data = developer.fio
+        form.enabled.data = developer.system_user.enabled
+    return render_template('users/form_register_edit.html', form=form, class_name='разработчика', creating=False)
 
 
 @users.route('/student/<int:id>', methods=['GET', 'POST'])

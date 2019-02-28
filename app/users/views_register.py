@@ -2,13 +2,14 @@ from flask import render_template, redirect, url_for, flash
 from flask_login import login_required
 
 from app import db
-from app.decorators import check_master, check_master_or_teacher
-from app.init_model import role_master_name, role_teacher_name, role_student_name, default_citizenship_id, role_bot_name
+from app.decorators import check_master, check_master_or_teacher, check_developer
+from app.init_model import role_master_name, role_teacher_name, role_student_name, default_citizenship_id, \
+    role_bot_name, role_developer_name
 from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentOfStudent, Parent, StudentInGroup, Group, \
-    contact_phone_student, Bot
+    contact_phone_student, Bot, Developer
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm, \
-    RegistrationStudentFastForm, RegistrationBotForm
+    RegistrationStudentFastForm, RegistrationBotForm, RegistrationDeveloperForm
 from app.users.forms import create_new_parent_id
 from app.utils import generate_login_student, password_from_date, notification_types_list_to_int
 
@@ -49,7 +50,7 @@ def register_teacher():
 
 @users.route('/register/bot', methods=['GET', 'POST'])
 @login_required
-@check_master
+@check_developer
 def register_bot():
     form = RegistrationBotForm()
     if form.validate_on_submit():
@@ -62,6 +63,23 @@ def register_bot():
         flash('бот {} создан.'.format(form.login.data))
         return redirect(url_for('.bots_list'))
     return render_template('users/form_register_edit.html', form=form, class_name='бота', creating=True)
+
+
+@users.route('/register/developer', methods=['GET', 'POST'])
+@login_required
+@check_developer
+def register_developer():
+    form = RegistrationDeveloperForm()
+    if form.validate_on_submit():
+        role_developer = SystemRole.query.filter_by(name=role_developer_name).first()
+        user_developer = SystemUser(login=form.login.data, password=form.password.data, system_role=role_developer,
+                              enabled=form.enabled.data)
+        developer = Developer(fio=form.fio.data, system_user=user_developer)
+        db.session.add(user_developer)
+        db.session.add(developer)
+        flash('разработчик {} создан.'.format(form.login.data))
+        return redirect(url_for('.developers_list'))
+    return render_template('users/form_register_edit.html', form=form, class_name='разработчика', creating=True)
 
 
 @users.route('/register/student', methods=['GET', 'POST'])

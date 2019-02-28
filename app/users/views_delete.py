@@ -2,10 +2,10 @@ from flask import flash, abort
 from flask_login import login_required
 
 from app import db
-from app.decorators import check_master, check_master_or_teacher
-from app.init_model import developer_login
-from app.is_removable_check import is_master_removable, is_teacher_removable, is_student_removable
-from app.models import Master, Teacher, Student, Bot
+from app.decorators import check_master, check_master_or_teacher, check_developer
+from app.is_removable_check import is_master_removable, is_teacher_removable, is_student_removable, \
+    is_developer_removable
+from app.models import Master, Teacher, Student, Bot, Developer
 from app.users import users
 from app.utils import redirect_back_or_home
 
@@ -15,8 +15,6 @@ from app.utils import redirect_back_or_home
 @check_master
 def delete_master(id):
     master = Master.query.get_or_404(id)
-    if master.system_user.login == developer_login:
-        abort(404)
     if not is_master_removable(master): abort(409)
     for at in master.system_user.access_tokens.all():
         db.session.delete(at)
@@ -57,7 +55,7 @@ def delete_student(id):
 
 @users.route('/delete_bot/<int:id>')
 @login_required
-@check_master
+@check_developer
 def delete_bot(id):
     bot = Bot.query.get_or_404(id)
     for at in bot.system_user.access_tokens.all():
@@ -65,4 +63,18 @@ def delete_bot(id):
     db.session.delete(bot)
     db.session.delete(bot.system_user)
     flash('бот {} удалён'.format(bot.fio))
+    return redirect_back_or_home()
+
+
+@users.route('/delete_developer/<int:id>')
+@login_required
+@check_developer
+def delete_developer(id):
+    developer = Developer.query.get_or_404(id)
+    if not is_developer_removable(developer): abort(409)
+    for at in developer.system_user.access_tokens.all():
+        db.session.delete(at)
+    db.session.delete(developer)
+    db.session.delete(developer.system_user)
+    flash('разработчик {} удалён'.format(developer.fio))
     return redirect_back_or_home()

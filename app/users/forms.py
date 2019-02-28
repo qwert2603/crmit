@@ -90,6 +90,17 @@ class RegistrationBotForm(RegistrationForm):
             self.setup_for_editing()
 
 
+class RegistrationDeveloperForm(RegistrationForm):
+    submit = SubmitField('создать разработчика')
+
+    def __init__(self, developer=None, *args, **kwargs):
+        super(RegistrationDeveloperForm, self).__init__(*args, **kwargs)
+        self.developer = developer
+        if developer is not None:
+            self.system_user = developer.system_user
+            self.setup_for_editing()
+
+
 no_parent_id = -1
 create_new_parent_id = -2
 

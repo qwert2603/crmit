@@ -1,8 +1,8 @@
-from flask import render_template, jsonify, abort
-from flask_login import login_required, current_user
+from flask import render_template, jsonify
+from flask_login import login_required
 
-from app.decorators import check_master
-from app.init_model import developer_login, role_master_name, role_teacher_name, role_student_name
+from app.decorators import check_master, check_developer
+from app.init_model import role_master_name, role_teacher_name, role_student_name
 from app.main import main
 from app.main.dump_utils import db_to_dump
 from app.models import Group, attending_states, Master, Teacher, Student, SystemUser, SystemRole, StudentInGroup, \
@@ -30,8 +30,9 @@ def dump():
 
 
 @main.route('/check_db_integrity')
+@login_required
+@check_developer
 def check_db_integrity():
-    if current_user.login != developer_login: abort(404)
     problems = list()
 
     for master in Master.query.all():
@@ -43,7 +44,7 @@ def check_db_integrity():
     for student in Student.query.all():
         if student.system_user.system_role.name != role_student_name:
             problems.append('у ученика id={} ({}) неверная системная роль'.format(student.id, student.fio))
-
+#todo
     system_role_id_master = SystemRole.query.filter(SystemRole.name == role_master_name).first().id
     system_role_id_teacher = SystemRole.query.filter(SystemRole.name == role_teacher_name).first().id
     system_role_id_student = SystemRole.query.filter(SystemRole.name == role_student_name).first().id
@@ -89,8 +90,9 @@ def check_db_integrity():
 
 
 @main.route('/check_db_integrity/attengings_correct_group_of_students')
+@login_required
+@check_developer
 def check_db_integrity_attengings_correct_group_of_students():
-    if current_user.login != developer_login: abort(404)
     problems = list()
 
     students_group_map = dict()

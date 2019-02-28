@@ -8,7 +8,7 @@ from app import db
 from app.api_1_0_1 import api_1_0_1
 from app.api_1_0_1.consts import access_token_expires_days, account_type_master, \
     account_type_teacher, login_error_reason_student_account_is_not_supported, login_error_reason_account_disabled, \
-    login_error_reason_wrong_login_or_password, account_type_bot
+    login_error_reason_wrong_login_or_password, account_type_bot, account_type_developer
 from app.api_1_0_1.decorators import access_token_required, check_master_or_teacher_access_token, \
     check_developer_access_token, check_bot_access_token
 from app.api_1_0_1.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
@@ -17,8 +17,8 @@ from app.api_1_0_1.json_utils import section_to_json, teacher_to_json, master_to
     sort_groups
 from app.api_1_0_1.utils import create_json_list, create_attendings_for_all_students, token_to_hash, \
     create_payments_for_all_students
-from app.init_model import developer_login, role_master_name, role_teacher_name, \
-    actual_app_build_code
+from app.init_model import role_master_name, role_teacher_name, \
+    actual_app_build_code, role_developer_name
 from app.main.dump_utils import db_to_dump
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
     attending_states, AccessToken, Payment, SystemRole, last_seen_android
@@ -50,12 +50,7 @@ def teachers_list():
 @access_token_required()
 @check_master_or_teacher_access_token
 def masters_list():
-    return create_json_list(Master, Master.fio, master_to_json,
-                            more_filter=lambda query: query
-                            .join(SystemUser, SystemUser.id == Master.system_user_id)
-                            .filter(SystemUser.login != developer_login),
-                            order_by=lambda query: query.order_by(Master.fio)
-                            )
+    return create_json_list(Master, Master.fio, master_to_json, order_by=lambda query: query.order_by(Master.fio))
 
 
 @api_1_0_1.route('/students_list')
@@ -98,10 +93,7 @@ def teacher_details(teacher_id):
 @access_token_required()
 @check_master_or_teacher_access_token
 def master_details(master_id):
-    master = Master.query.get_or_404(master_id)
-    if master.system_user.login == developer_login and g.current_user_app.login != developer_login:
-        abort(404)
-    return jsonify(master_to_json(master))
+    return jsonify(master_to_json(Master.query.get_or_404(master_id)))
 
 
 @api_1_0_1.route('students_in_group/<int:group_id>')
@@ -265,13 +257,16 @@ def login():
 
     account_type = 0
     details_id = 0
-    if user.is_master:
+    if user.is_developer:
+        account_type = account_type_developer
+        details_id = user.developer.id
+    elif user.is_master:
         account_type = account_type_master
         details_id = user.master.id
-    if user.is_teacher:
+    elif user.is_teacher:
         account_type = account_type_teacher
         details_id = user.teacher.id
-    if user.is_bot:
+    elif user.is_bot:
         account_type = account_type_bot
         details_id = user.bot.id
 
@@ -292,11 +287,12 @@ def app_info():
 
 @api_1_0_1.route('last_seens')
 @access_token_required()
-@check_developer_access_token()
+@check_developer_access_token
 def last_seens():
     system_users = SystemUser.query \
         .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
-        .filter(or_(SystemRole.name == role_master_name, SystemRole.name == role_teacher_name)) \
+        .filter(or_(SystemRole.name == role_master_name, SystemRole.name == role_teacher_name,
+                    SystemRole.name == role_developer_name)) \
         .order_by(SystemUser.last_seen.desc()) \
         .all()
     return jsonify([system_user_to_last_seen_info_json(system_user) for system_user in system_users])
@@ -304,7 +300,7 @@ def last_seens():
 
 @api_1_0_1.route('access_tokens')
 @access_token_required()
-@check_developer_access_token()
+@check_developer_access_token
 def access_tokens():
     system_user_ids = [r[0] for r in db.session.query(AccessToken.system_user_id).distinct().all()]
     result_list = [system_user_access_tokens_to_json(SystemUser.query.get(suid)) for suid in system_user_ids]
