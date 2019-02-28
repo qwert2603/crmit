@@ -8,9 +8,9 @@ from app import db
 from app.api_1_0_1 import api_1_0_1
 from app.api_1_0_1.consts import access_token_expires_days, account_type_master, \
     account_type_teacher, login_error_reason_student_account_is_not_supported, login_error_reason_account_disabled, \
-    login_error_reason_wrong_login_or_password
+    login_error_reason_wrong_login_or_password, account_type_bot
 from app.api_1_0_1.decorators import access_token_required, check_master_or_teacher_access_token, \
-    check_developer_access_token, check_master_access_token
+    check_developer_access_token, check_bot_access_token
 from app.api_1_0_1.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
     attending_to_json, payment_to_json, system_user_to_last_seen_info_json, system_user_access_tokens_to_json, \
@@ -21,7 +21,7 @@ from app.init_model import developer_login, role_master_name, role_teacher_name,
     actual_app_build_code
 from app.main.dump_utils import db_to_dump
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
-    attending_states, AccessToken, Payment, SystemRole
+    attending_states, AccessToken, Payment, SystemRole, last_seen_android
 from app.utils import can_user_write_group
 
 
@@ -260,6 +260,9 @@ def login():
 
     g.current_user_app = user
 
+    g.current_user_app.last_seen = datetime.datetime.utcnow()
+    g.current_user_app.last_seen_where = last_seen_android
+
     account_type = 0
     details_id = 0
     if user.is_master:
@@ -268,6 +271,9 @@ def login():
     if user.is_teacher:
         account_type = account_type_teacher
         details_id = user.teacher.id
+    if user.is_bot:
+        account_type = account_type_bot
+        details_id = user.bot.id
 
     return jsonify(token=token, accountType=account_type, detailsId=details_id)
 
@@ -308,6 +314,6 @@ def access_tokens():
 
 @api_1_0_1.route('dump')
 @access_token_required()
-@check_master_access_token
+@check_bot_access_token
 def dump():
     return jsonify(db_to_dump())

@@ -357,7 +357,7 @@ class Teacher(db.Model):
 class Bot(db.Model):
     __tablename__ = 'bots'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(255), nullable=False)
+    fio = db.Column(db.String(255), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, unique=True)
 
 

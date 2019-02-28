@@ -5,7 +5,7 @@ from flask import request, abort, g
 
 from app import db
 from app.api_1_0_1.utils import token_to_hash
-from app.init_model import role_master_name, role_teacher_name, developer_login
+from app.init_model import role_master_name, role_teacher_name, developer_login, role_bot_name
 from app.models import AccessToken, last_seen_android
 
 
@@ -63,6 +63,10 @@ def check_master_access_token(f):
 
 def check_teacher_access_token(f):
     return check_system_role_access_token([role_teacher_name])(f)
+
+
+def check_bot_access_token(f):
+    return check_system_role_access_token([role_bot_name])(f)
 
 
 def check_master_or_teacher_access_token(f):

@@ -4,5 +4,6 @@ login_error_reason_student_account_is_not_supported = 'STUDENT_ACCOUNT_IN_NOT_SU
 
 account_type_master = 'MASTER'
 account_type_teacher = 'TEACHER'
+account_type_bot = 'BOT'
 
 access_token_expires_days = 42

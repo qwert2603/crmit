@@ -56,5 +56,5 @@ def students_list():
 @check_master
 def bots_list():
     page = request.args.get('page', 1, type=int)
-    pagination = Bot.query.order_by(Bot.name).paginate(page, per_page=20, error_out=False)
+    pagination = Bot.query.order_by(Bot.fio).paginate(page, per_page=20, error_out=False)
     return render_template("users/bots_list.html", pagination=pagination, items=pagination.items)

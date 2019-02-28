@@ -56,7 +56,7 @@ def register_bot():
         role_bot = SystemRole.query.filter_by(name=role_bot_name).first()
         user_bot = SystemUser(login=form.login.data, password=form.password.data, system_role=role_bot,
                               enabled=form.enabled.data)
-        bot = Bot(name=form.fio.data, system_user=user_bot)
+        bot = Bot(fio=form.fio.data, system_user=user_bot)
         db.session.add(user_bot)
         db.session.add(bot)
         flash('бот {} создан.'.format(form.login.data))

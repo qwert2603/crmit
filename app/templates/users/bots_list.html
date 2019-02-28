@@ -29,9 +29,9 @@
             <tr>
                 <td>
                     {% if bot.system_user.enabled %}
-                        {{ bot.name }}
+                        {{ bot.fio }}
                     {% else %}
-                        <del>{{ bot.name }}</del>(отключен)
+                        <del>{{ bot.fio }}</del>(отключен)
                     {% endif %}
                 </td>
                 <td>{{ bot.system_user.login }}</td>
@@ -48,7 +48,7 @@
                     </a>
                 </td>
                 <td>
-                    <a onclick="askDelete('{{ bot.name }}', '{{ url_for('users.delete_bot',id=bot.id) }}')"
+                    <a onclick="askDelete('{{ bot.fio }}', '{{ url_for('users.delete_bot',id=bot.id) }}')"
                        class="btn btn-danger">
                         <span class="glyphicon glyphicon-remove"></span>
                     </a>

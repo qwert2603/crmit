@@ -64,5 +64,5 @@ def delete_bot(id):
         db.session.delete(at)
     db.session.delete(bot)
     db.session.delete(bot.system_user)
-    flash('бот {} удалён'.format(bot.name))
+    flash('бот {} удалён'.format(bot.fio))
     return redirect_back_or_home()
