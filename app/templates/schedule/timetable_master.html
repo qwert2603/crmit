@@ -4,43 +4,38 @@
 
 {% block page_content %}
 
-    <div class="page-header">
-        <h1>расписание</h1>
-    </div>
+    {# this file is NOT formatter for optimization (to remove a lot of whitespaces) #}
 
-    <table class="table">
-        <tr>
-            <th>время</th>
-            {% for day_of_week in days_of_week %}
-                <th>{{ day_of_week }}</th>
-            {% endfor %}
-        </tr>
-        {% for time in schedule_times %}
-            <tr>
-                <th>
-                    <input form="save_form" class="form-control" type="time" name="time_{{ time.id }}"
-                           value="{{ time.time }}">
-                </th>
-                {% for day_of_week in days_of_week %}
-                    {% set day_index = loop.index0 %}
-                    <td>
-                        <select form="save_form" class="form-control" name="group_{{ time.id }}_{{ day_index }}">
-                            <option value="0"></option>
-                            {% for group in groups %}
-                                <option value="{{ group.id }}"
-                                        {% if schedule_groups.get(time.id, dict()).get(day_index).group_id == group.id %}selected{% endif %}>
-                                    {{ group.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </table>
+<div class="page-header">
+<h1>расписание</h1>
+</div>
 
-    <form method="post" id="save_form">
-        <p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
-    </form>
+<table class="table">
+<tr>
+<th>время</th>
+{% for day_of_week in days_of_week %}
+<th>{{ day_of_week }}</th>
+{% endfor %}
+</tr>
+{% for time in schedule_times %}
+<tr>
+<th>
+<input form="save_form" class="form-control" type="time" name="time_{{ time.id }}" value="{{ time.time }}">
+</th>
+{% for day_of_week in days_of_week %}
+{% set day_index = loop.index0 %}
+<td>
+<select form="save_form" class="form-control" name="group_{{ time.id }}_{{ day_index }}"><option value="0"></option>
+{% for group in groups %}<option value="{{ group.id }}" {% if schedule_groups.get(time.id, dict()).get(day_index).group_id == group.id %}selected{% endif %}>{{ group.name }}</option>{% endfor %}
+</select>
+</td>
+{% endfor %}
+</tr>
+{% endfor %}
+</table>
+
+<form method="post" id="save_form">
+<p><input class="btn btn-default" type="submit" name="submit" value="сохранить"></p>
+</form>
 
 {% endblock %}
