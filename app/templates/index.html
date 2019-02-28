@@ -6,24 +6,23 @@
     {% if current_user.is_authenticated %}
         <h3>добро пожаловать, {{ current_user.login }} ({{ current_user.details.fio }})</h3>
         <h4>вы - {{ current_user.system_role.name }}</h4>
-        {% if current_user.is_master or current_user.is_teacher %}
-            <div class="btn-block">
-                <a href="{{ url_for('users.change_password') }}" class="btn btn-warning">изменить пароль</a>
-            </div>
 
-            {% if current_user.access_tokens_not_expired().count() > 0 %}
-                <div style="margin-top: 100px">
-                    <div class="btn-block">
-                        <p>вы авторизованы также через мобильное приложение,
-                            <br/>тут вы можете завершить все сессии в мобильном приложении</p>
-                        <a onclick="askLogoutApp('{{ url_for('users.logout_app') }}')" class="btn btn-danger">
-                            завершить
-                        </a>
-                    </div>
+        <div class="btn-block">
+            <a href="{{ url_for('users.change_password') }}" class="btn btn-warning">изменить пароль</a>
+        </div>
+
+        {% if current_user.access_tokens_not_expired().count() > 0 %}
+            <div style="margin-top: 100px">
+                <div class="btn-block">
+                    <p>вы авторизованы также через мобильное приложение,
+                        <br/>тут вы можете завершить все сессии в мобильном приложении</p>
+                    <a onclick="askLogoutApp('{{ url_for('users.logout_app') }}')" class="btn btn-danger">
+                        завершить
+                    </a>
                 </div>
-            {% endif %}
-
+            </div>
         {% endif %}
+
     {% else %}
         <i>вы не авторизованы</i>
         <a href="{{ url_for('users.login') }}" class="btn btn-default">войти</a>
@@ -43,7 +42,9 @@
     {% endif %}
 
     {% if current_user.is_student %}
-        {{ render_students_my_info(current_user.student) }}
+        <div style="margin-top: 100px">
+            {{ render_students_my_info(current_user.student) }}
+        </div>
     {% endif %}
 
 {% endblock %}

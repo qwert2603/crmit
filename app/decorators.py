@@ -33,8 +33,13 @@ def check_master_or_teacher(f):
     return check_system_role([role_master_name, role_teacher_name])(f)
 
 
+def check_master_or_teacher_or_student(f):
+    return check_system_role([role_master_name, role_teacher_name, role_student_name])(f)
+
+
 def check_student(f):
     return check_system_role([role_student_name])(f)
+
 
 def check_access_group_write():
     def decorator(f):

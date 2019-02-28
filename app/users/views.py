@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import login_required, login_user, logout_user, current_user
 
 from app import db
-from app.decorators import check_master_or_teacher, check_master
+from app.decorators import check_master_or_teacher, check_master, check_master_or_teacher_or_student
 from app.init_model import developer_login
 from app.models import SystemUser, Student
 from app.users import users
@@ -46,7 +46,7 @@ def logout_app():
 
 @users.route('/change_password', methods=['GET', 'POST'])
 @login_required
-@check_master_or_teacher
+@check_master_or_teacher_or_student
 def change_password():
     form = ChangePasswordForm()
     if form.validate_on_submit():
@@ -58,7 +58,7 @@ def change_password():
             flash('ваш пароль изменен и все ваши сессии в мобильном приложении завершены')
             return redirect(url_for('main.index'))
         flash('неверный старый пароль!')
-    return render_template('users/change_password.html', form=form)
+    return render_template('users/change_password.html', form=form, hide_who_u_r=current_user.is_student)
 
 
 @users.route('/force_change_password/<int:system_user_id>', methods=['GET', 'POST'])
