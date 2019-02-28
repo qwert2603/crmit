@@ -2,7 +2,7 @@ from flask import render_template, redirect, request, url_for, flash, abort
 from flask_login import login_required, login_user, logout_user, current_user
 
 from app import db
-from app.decorators import check_master_or_teacher, check_master, check_master_or_teacher_or_student
+from app.decorators import check_master_or_teacher, check_master_or_teacher_or_student
 from app.init_model import developer_login
 from app.models import SystemUser, Student
 from app.users import users
@@ -63,14 +63,13 @@ def change_password():
 
 @users.route('/force_change_password/<int:system_user_id>', methods=['GET', 'POST'])
 @login_required
-@check_master
+@check_master_or_teacher
 def force_change_password(system_user_id):
     system_user = SystemUser.query.get_or_404(system_user_id)
-    if not system_user.is_master and not system_user.is_teacher:
-        flash('пароль ученика менять нельзя!')
-        return redirect(url_for('main.index'))
     if system_user_id == current_user.id:
         return redirect(url_for('main.index'))
+    if current_user.is_teacher and not system_user.is_student:
+        abort(403)
     if system_user.login == developer_login:
         abort(404)
     form = ForceChangePasswordForm()
@@ -80,7 +79,8 @@ def force_change_password(system_user_id):
         for at in system_user.access_tokens.all():
             db.session.delete(at)
         db.session.add(system_user)
-        flash('пароль пользователя {} изменен и все его сессии в мобильном приложении завершены'.format(system_user.login))
+        flash('пароль пользователя {} изменен и все его сессии в мобильном приложении завершены'.format(
+            system_user.login))
         return redirect(url_for('main.index'))
     return render_template('users/force_change_password.html', form=form, system_user=system_user)
 

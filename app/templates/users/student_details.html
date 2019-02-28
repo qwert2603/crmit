@@ -46,7 +46,7 @@
                     {{ render_system_user_fio(sig.group.teacher.system_user) }}
                 </a>
                     ; учеников: {{ sig.group.students.count() }})
-                ({{ get_month_name(sig.enter_month) }} — {{ get_month_name(sig.exit_month) }})
+                    ({{ get_month_name(sig.enter_month) }} — {{ get_month_name(sig.exit_month) }})
                 </div>
             </li>
         {% else %}
@@ -54,7 +54,13 @@
         {% endfor %}
     </ul>
 
-    <a href="{{ url_for('users.edit_student', id=student.id) }}"
-       class="btn btn-warning margined_button">редактировать</a>
+    <div style="margin-bottom: 32px">
+        <a href="{{ url_for('users.edit_student', id=student.id) }}"
+           class="btn btn-warning margined_button">редактировать
+        </a>
+        <a href="{{ url_for('users.force_change_password',system_user_id=student.system_user.id) }}"
+           class="btn btn-danger margined_button">сброс пароля
+        </a>
+    </div>
 
 {% endblock %}
