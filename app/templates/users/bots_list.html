@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+{% from '_macros.html' import render_last_seen with context %}
+
+{% set title = 'боты' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    {% if current_user.is_master %}
+        <a href="{{ url_for('users.register_bot') }}" class="btn btn-default">добавить бота</a>
+    {% endif %}
+
+    <table class="table">
+        <tr>
+            <th>имя</th>
+            <th>логин</th>
+            <th>последний визит</th>
+            <th></th>
+            <th></th>
+            <th></th>
+        </tr>
+        {% for bot in items %}
+            <tr>
+                <td>
+                    {% if bot.system_user.enabled %}
+                        {{ bot.name }}
+                    {% else %}
+                        <del>{{ bot.name }}</del>(отключен)
+                    {% endif %}
+                </td>
+                <td>{{ bot.system_user.login }}</td>
+                <td>{{ render_last_seen(bot.system_user) }}</td>
+                <td>
+                    <a href="{{ url_for('users.edit_bot',id=bot.id) }}" class="btn btn-warning">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ url_for('users.force_change_password',system_user_id=bot.system_user.id) }}"
+                       class="btn btn-danger">
+                        сброс пароля
+                    </a>
+                </td>
+                <td>
+                    <a onclick="askDelete('{{ bot.name }}', '{{ url_for('users.delete_bot',id=bot.id) }}')"
+                       class="btn btn-danger">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                </td>
+            </tr>
+        {% else %}
+            <p><i>список пуст</i></p>
+        {% endfor %}
+    </table>
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'users.bots_list') }}
+    </div>
+{% endblock %}

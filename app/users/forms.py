@@ -78,6 +78,18 @@ class RegistrationTeacherForm(RegistrationForm):
             self.setup_for_editing()
 
 
+class RegistrationBotForm(RegistrationForm):
+    submit = SubmitField('создать бота')
+
+    def __init__(self, bot=None, *args, **kwargs):
+        super(RegistrationBotForm, self).__init__(*args, **kwargs)
+        self.bot = bot
+        self.fio.label = Label(self.fio.id, prefix_field_required + "имя")
+        if bot is not None:
+            self.system_user = bot.system_user
+            self.setup_for_editing()
+
+
 no_parent_id = -1
 create_new_parent_id = -2
 

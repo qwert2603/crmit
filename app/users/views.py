@@ -17,6 +17,9 @@ def login():
         if user is not None and user.verify_password(form.password.data):
             if user.enabled:
                 user.force_ask_to_login = False
+                if user.is_bot:
+                    flash('боты не могут авторизовываться на сайте!')
+                    return redirect(url_for('.login'))
                 login_user(user, form.remember_me.data)
                 return redirect(request.args.get('next') or url_for('main.index'))
             else:

@@ -1,11 +1,11 @@
-from flask import flash, redirect, url_for, abort
+from flask import flash, abort
 from flask_login import login_required
 
 from app import db
 from app.decorators import check_master, check_master_or_teacher
 from app.init_model import developer_login
 from app.is_removable_check import is_master_removable, is_teacher_removable, is_student_removable
-from app.models import Master, Teacher, Student
+from app.models import Master, Teacher, Student, Bot
 from app.users import users
 from app.utils import redirect_back_or_home
 
@@ -52,4 +52,17 @@ def delete_student(id):
     db.session.delete(student)
     db.session.delete(student.system_user)
     flash('ученик {} удалён'.format(student.fio))
+    return redirect_back_or_home()
+
+
+@users.route('/delete_bot/<int:id>')
+@login_required
+@check_master
+def delete_bot(id):
+    bot = Bot.query.get_or_404(id)
+    for at in bot.system_user.access_tokens.all():
+        db.session.delete(at)
+    db.session.delete(bot)
+    db.session.delete(bot.system_user)
+    flash('бот {} удалён'.format(bot.name))
     return redirect_back_or_home()

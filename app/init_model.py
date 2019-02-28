@@ -1,10 +1,11 @@
 from app import db
 from app.models import SystemRole, SystemUser, Master, Teacher, Section, Group, Student, Citizenship, School, \
-    StudentInGroup, Payment, ScheduleTime, contact_phone_student
+    StudentInGroup, Payment, ScheduleTime, contact_phone_student, Bot
 
 role_master_name = 'руководитель'
 role_teacher_name = 'преподаватель'
 role_student_name = 'ученик'
+role_bot_name = 'бот'
 
 default_citizenship_name = 'Россия'
 default_citizenship_id = 1
@@ -18,7 +19,8 @@ def create_system_roles():
     role_master = SystemRole(name=role_master_name, details_table_name=Master.__tablename__)
     role_teacher = SystemRole(name=role_teacher_name, details_table_name=Teacher.__tablename__)
     role_student = SystemRole(name=role_student_name, details_table_name=Student.__tablename__)
-    roles = [role_master, role_teacher, role_student]
+    role_bot = SystemRole(name=role_bot_name, details_table_name=Bot.__tablename__)
+    roles = [role_master, role_teacher, role_student, role_bot]
     for role in roles:
         db.session.add(role)
 

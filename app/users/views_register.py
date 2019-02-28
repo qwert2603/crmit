@@ -3,12 +3,12 @@ from flask_login import login_required
 
 from app import db
 from app.decorators import check_master, check_master_or_teacher
-from app.init_model import role_master_name, role_teacher_name, role_student_name, default_citizenship_id
+from app.init_model import role_master_name, role_teacher_name, role_student_name, default_citizenship_id, role_bot_name
 from app.models import SystemUser, SystemRole, Master, Teacher, Student, ParentOfStudent, Parent, StudentInGroup, Group, \
-    contact_phone_student
+    contact_phone_student, Bot
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm, \
-    RegistrationStudentFastForm
+    RegistrationStudentFastForm, RegistrationBotForm
 from app.users.forms import create_new_parent_id
 from app.utils import generate_login_student, password_from_date, notification_types_list_to_int
 
@@ -45,6 +45,23 @@ def register_teacher():
         flash('преподаватель {} создан.'.format(form.login.data))
         return redirect(url_for('.teachers_list'))
     return render_template('users/form_register_edit.html', form=form, class_name='преподавателя', creating=True)
+
+
+@users.route('/register/bot', methods=['GET', 'POST'])
+@login_required
+@check_master
+def register_bot():
+    form = RegistrationBotForm()
+    if form.validate_on_submit():
+        role_bot = SystemRole.query.filter_by(name=role_bot_name).first()
+        user_bot = SystemUser(login=form.login.data, password=form.password.data, system_role=role_bot,
+                              enabled=form.enabled.data)
+        bot = Bot(name=form.fio.data, system_user=user_bot)
+        db.session.add(user_bot)
+        db.session.add(bot)
+        flash('бот {} создан.'.format(form.login.data))
+        return redirect(url_for('.bots_list'))
+    return render_template('users/form_register_edit.html', form=form, class_name='бота', creating=True)
 
 
 @users.route('/register/student', methods=['GET', 'POST'])

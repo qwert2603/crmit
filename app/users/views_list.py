@@ -1,10 +1,10 @@
 from flask import request, render_template
 from flask_login import login_required
 
-from app.decorators import check_master_or_teacher
+from app.decorators import check_master_or_teacher, check_master
 from app.init_model import developer_login
 from app.list_route import create_list_route
-from app.models import Master, Teacher, Student, Group, SystemUser
+from app.models import Master, Teacher, Student, Group, SystemUser, Bot
 from app.users import users
 
 
@@ -49,3 +49,12 @@ def students_list():
         .paginate(page, per_page=20, error_out=False)
     return render_template('users/students_list.html', pagination=pagination, items=pagination.items, search=search,
                            groups=Group.list_sorted_for_current_user().all(), selected_group=selected_group)
+
+
+@users.route('/bots')
+@login_required
+@check_master
+def bots_list():
+    page = request.args.get('page', 1, type=int)
+    pagination = Bot.query.order_by(Bot.name).paginate(page, per_page=20, error_out=False)
+    return render_template("users/bots_list.html", pagination=pagination, items=pagination.items)

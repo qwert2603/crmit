@@ -4,10 +4,10 @@ from flask_login import login_required, current_user
 from app import db
 from app.decorators import check_master, check_master_or_teacher
 from app.init_model import developer_login
-from app.models import Master, Teacher, Student, ParentOfStudent, Parent
+from app.models import Master, Teacher, Student, ParentOfStudent, Parent, Bot
 from app.users import users
 from app.users.forms import RegistrationMasterForm, RegistrationTeacherForm, RegistrationStudentForm, \
-    create_new_parent_id, no_parent_id
+    create_new_parent_id, no_parent_id, RegistrationBotForm
 from app.utils import password_from_date, notification_types_list_to_int
 
 
@@ -54,6 +54,25 @@ def edit_teacher(id):
         form.phone.data = teacher.phone
         form.enabled.data = teacher.system_user.enabled
     return render_template('users/form_register_edit.html', form=form, class_name='преподавателя', creating=False)
+
+
+@users.route('/bot/<int:id>', methods=['GET', 'POST'])
+@login_required
+@check_master
+def edit_bot(id):
+    bot = Bot.query.get_or_404(id)
+    form = RegistrationBotForm(bot)
+    if form.validate_on_submit():
+        bot.name = form.fio.data
+        bot.system_user.login = form.login.data
+        bot.system_user.enabled = form.enabled.data
+        flash('бот {} изменен'.format(form.fio.data))
+        return redirect(url_for('.bots_list'))
+    if not form.is_submitted():
+        form.login.data = bot.system_user.login
+        form.fio.data = bot.name
+        form.enabled.data = bot.system_user.enabled
+    return render_template('users/form_register_edit.html', form=form, class_name='бота', creating=False)
 
 
 @users.route('/student/<int:id>', methods=['GET', 'POST'])

@@ -39,6 +39,7 @@ class SystemUser(UserMixin, db.Model):
     master = db.relationship('Master', backref='system_user', uselist=False)
     teacher = db.relationship('Teacher', backref='system_user', uselist=False)
     student = db.relationship('Student', backref='system_user', uselist=False)
+    bot = db.relationship('Bot', backref='system_user', uselist=False)
     notifications = db.relationship('Notification', backref='sender', lazy='dynamic')
     access_tokens = db.relationship('AccessToken', backref='system_user', lazy='dynamic')
 
@@ -61,10 +62,17 @@ class SystemUser(UserMixin, db.Model):
         return self.system_role.name == role_student_name
 
     @property
+    def is_bot(self):
+        from app.init_model import role_bot_name
+
+        return self.system_role.name == role_bot_name
+
+    @property
     def details(self):
         if self.is_master: return self.master
         if self.is_teacher: return self.teacher
         if self.is_student: return self.student
+        if self.is_bot: return self.bot
 
     @property
     def teacher_id_or_zero(self):
@@ -344,6 +352,13 @@ class Teacher(db.Model):
     phone = db.Column(db.String(255), nullable=False)
     groups = db.relationship('Group', backref='teacher', lazy='dynamic')
     lessons = db.relationship('Lesson', backref='teacher', lazy='dynamic')
+
+
+class Bot(db.Model):
+    __tablename__ = 'bots'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(255), nullable=False)
+    system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, unique=True)
 
 
 class Section(db.Model):

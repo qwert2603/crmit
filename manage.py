@@ -6,7 +6,7 @@ from flask_migrate import Migrate
 import app.models as models
 import app_holder
 from app import create_app, db
-from app.init_model import role_master_name, role_teacher_name, role_student_name, developer_login
+from app.init_model import role_master_name, role_teacher_name, role_student_name, developer_login, role_bot_name
 from app.is_removable_check import is_section_removable, is_group_removable, is_parent_removable, is_school_removable, \
     is_citizenship_removable, is_student_removable, is_master_removable, is_teacher_removable, is_lesson_removable
 from app.utils import start_date_of_month, end_date_of_month, number_of_month_for_date, get_month_name, \
@@ -28,12 +28,13 @@ def make_shell_context():
                 SectionPreference=models.SectionPreference, ParentOfStudent=models.ParentOfStudent,
                 Citizenship=models.Citizenship, School=models.School, Section=models.Section,
                 Notification=models.Notification, ScheduleTime=models.ScheduleTime, ScheduleGroup=models.ScheduleGroup,
-                AccessToken=models.AccessToken)
+                AccessToken=models.AccessToken, Bot=models.Bot)
 
 
 context_dict = dict(role_master_name=role_master_name, role_teacher_name=role_teacher_name,
-                    role_student_name=role_student_name, start_date_of_month=start_date_of_month,
-                    end_date_of_month=end_date_of_month, number_of_month_for_date=number_of_month_for_date,
+                    role_student_name=role_student_name, role_bot_name=role_bot_name,
+                    start_date_of_month=start_date_of_month, end_date_of_month=end_date_of_month,
+                    number_of_month_for_date=number_of_month_for_date,
                     get_month_name=get_month_name, can_user_write_group=can_user_write_group,
                     is_section_removable=is_section_removable, is_group_removable=is_group_removable,
                     is_parent_removable=is_parent_removable, is_school_removable=is_school_removable,
