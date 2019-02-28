@@ -22,7 +22,7 @@ login_manager.anonymous_user = AnonUser
 @login_manager.user_loader
 def load_user(user_id):
     system_user = SystemUser.query.get(int(user_id))
-    if system_user.is_bot: return None
+    if system_user is not None and system_user.is_bot: return None
     if system_user is not None and system_user.enabled and not system_user.force_ask_to_login: return system_user
 
 
