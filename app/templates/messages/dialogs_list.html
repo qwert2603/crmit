@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% from '_macros.html' import pagination_widget %}
+
+{% set title='диалоги' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    {# todo: search for masters & teachers  #}
+    <form method="get" class="form-group" action="{{ url_for('messages.messages_forward') }}">
+        <div class="receiver_select">
+            <label for="group_id">получатель</label>
+            <select class="form-control" id="receiver_id" name="receiver_id">
+                {% for receiver in available_receivers %}
+                    <option value="{{ receiver.id }}">{{ receiver.details.fio }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <input class="btn btn-success margined_button" type="submit" value="выбрать">
+    </form>
+
+    <table class="table">
+        <tr>
+            <th>время</th>
+            <th>собеседник</th>
+            <th>сообщение</th>
+        </tr>
+        {% for dialog in dialogs %}
+            {% set last_message = current_user.last_message_with(dialog.receiver_id) %}
+            <tr>
+                <td>
+                    {{ moment(last_message.message_details.send_time).format('LLL') }}
+                </td>
+                <td>
+                    <a href="{{ url_for('messages.messages_list',receiver_id=dialog.receiver_id) }}">
+                        {{ last_message.receiver.details.fio }}
+                        {% if dialog.unread_count > 0 %}
+                            <span style="color: orangered"><b>({{ dialog.unread_count }})</b></span>
+                        {% endif %}
+                    </a>
+                </td>
+                <td>
+                    {% set message_body = last_message.message_details.body[:84] %}
+                    {% if len(last_message.message_details.body) > 84 %}
+                        {% set message_body = message_body + '...' %}
+                    {% endif %}
+                    {% if last_message.message_details.unread %}
+                        {% if last_message.forward %}
+                            <span style="color: gray">(непрочитано)</span> {{ message_body }}
+                        {% else %}
+                            <b style="color: orangered">{{ message_body }}</b>
+                        {% endif %}
+                    {% else %}
+                        {{ message_body }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <h3><i>нет диалогов</i></h3>
+        {% endfor %}
+
+    </table>
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'messages.dialogs_list') }}
+    </div>
+{% endblock %}

@@ -61,6 +61,14 @@
                         <li><a href="{{ url_for('notifications.notifications_list') }}">увед-я</a></li>
 
                         <li><a href="{{ url_for('schedule.timetable') }}">расп-е</a></li>
+
+                        {% set unread_dialogs_count = current_user.unread_dialogs_count %}
+                        <li><a href="{{ url_for('messages.dialogs_list') }}">
+                            сообщ-я <b style="color: black">β</b>
+                            {% if unread_dialogs_count > 0 %}
+                                <span style="color: orangered"><b>({{ unread_dialogs_count }})</b></span>
+                            {% endif %}
+                        </a></li>
                     {% endif %}
 
                     {% if current_user.is_master %}
@@ -68,10 +76,17 @@
                     {% endif %}
 
                     {% if current_user.is_student %}
-                        <li><a href="{{ url_for('student.lessons', selected_date=current_date_fun()) }}">занятия</a></li>
+                        <li><a href="{{ url_for('student.lessons', selected_date=current_date_fun()) }}">занятия</a>
+                        </li>
                         <li><a href="{{ url_for('student.payments') }}">платежи</a></li>
                         <li><a href="{{ url_for('student.notifications') }}">уведомления</a></li>
-                        <li><a href="{{ url_for('student.messages') }}">сообщения</a></li>
+                        {% set unread_dialogs_count = current_user.unread_dialogs_count %}
+                        <li><a href="{{ url_for('messages.dialogs_list') }}">
+                            сообщения <b style="color: black">β</b>
+                            {% if unread_dialogs_count > 0 %}
+                                <span style="color: orangered"><b>({{ unread_dialogs_count }})</b></span>
+                            {% endif %}
+                        </a></li>
                     {% endif %}
                 </ul>
                 <ul class="nav navbar-nav navbar-right">
@@ -95,8 +110,8 @@
             </div>
         {% endfor %}
 
-        {% if current_user.is_authenticated and hide_who_u_r != True %}
-            <p><i>вы действуете как {{ current_user.login }} ({{ current_user.system_role.name }})</i></p>
+        {% if current_user.is_authenticated and not current_user.is_student and hide_who_u_r != True %}
+            <p style="color: gray">вы действуете как {{ current_user.login }} ({{ current_user.system_role.name }})</p>
         {% endif %}
 
         {% block page_content %}{% endblock %}

@@ -102,9 +102,7 @@
                     </td>
                     <td>
                         {% if confirmed.get(student_in_group.id) %}
-                            <span style="font-size: smaller">
-                                    <i>{{ comments.get(student_in_group.id) }}</i>
-                            </span>
+                            <span style="font-size: smaller">{{ comments.get(student_in_group.id) }}</span>
                         {% else %}
                             <input form="save_form" name="comment_{{ student_in_group.id }}"
                                    maxlength="32" value="{{ comments.get(student_in_group.id, '') }}"

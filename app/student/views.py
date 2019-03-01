@@ -39,22 +39,15 @@ def lessons():
         .all()
 
     return render_template('student/lessons_list.html', group_id=group_id, selected_date=selected_date,
-                           pagination=pagination, lessons=pagination.items, groups=groups, hide_who_u_r=True)
+                           pagination=pagination, lessons=pagination.items, groups=groups)
 
 
 @student.route('/payments')
 @login_required
 @check_student
 def payments():
-    return render_template('student/payments.html', hide_who_u_r=True,
+    return render_template('student/payments.html',
                            students_in_groups=current_user.student.students_in_groups_sorted_for_current_user)
-
-
-@student.route('/messages')
-@login_required
-@check_student
-def messages():
-    return 'messages'
 
 
 @student.route('/notifications')
@@ -73,5 +66,4 @@ def notifications():
 
     pagination = pagination.paginate(page, per_page=20, error_out=False)
 
-    return render_template('student/notifications_list.html', pagination=pagination, notifications=pagination.items,
-                           hide_who_u_r=True)
+    return render_template('student/notifications_list.html', pagination=pagination, notifications=pagination.items)

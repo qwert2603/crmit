@@ -24,3 +24,12 @@
 .colored_link a:hover {
     color: red;
 }
+
+@font-face {
+    font-family: google_sans;
+    src: url('google_sans.ttf');
+}
+
+body {
+    font-family: google_sans, sans-serif
+}

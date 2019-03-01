@@ -1,6 +1,6 @@
 from app import db
 from app.models import SystemRole, SystemUser, Master, Teacher, Section, Group, Student, Citizenship, School, \
-    StudentInGroup, Payment, ScheduleTime, contact_phone_student, Bot
+    StudentInGroup, Payment, ScheduleTime, contact_phone_student, Bot, Developer
 
 role_master_name = 'руководитель'
 role_teacher_name = 'преподаватель'
@@ -80,4 +80,13 @@ def create_stub_models():
 def create_schedule_times():
     for i in range(0, 20):
         db.session.add(ScheduleTime())
+    db.session.commit()
+
+
+def create_developer():
+    role_developer = SystemRole.query.filter_by(name=role_developer_name).first()
+    user_developer = SystemUser(login='dev1', password='12', system_role=role_developer, enabled=True)
+    developer = Developer(fio='аккаунт разработчика', system_user=user_developer)
+    db.session.add(user_developer)
+    db.session.add(developer)
     db.session.commit()

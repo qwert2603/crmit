@@ -4,6 +4,8 @@ from flask import request, url_for
 from werkzeug.utils import redirect
 
 
+# todo: remove italic everywhere.
+
 def generate_login_student(last_name, first_name, second_name):
     login = ''
     login += translit(first_name[0])

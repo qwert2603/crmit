@@ -107,6 +107,23 @@ class SystemUser(UserMixin, db.Model):
     def access_tokens_expired(self):
         return self.access_tokens.filter(AccessToken.expires < datetime.utcnow())
 
+    def messages(self):
+        return Message.query.filter(Message.sender_id == self.id)
+
+    @property
+    def unread_dialogs_count(self):
+        return self.messages() \
+            .join(MessageDetails, MessageDetails.id == Message.message_details_id) \
+            .filter(Message.forward == False, MessageDetails.unread == True) \
+            .count()
+
+    def last_message_with(self, system_user_id):
+        return self.messages() \
+            .filter(Message.receiver_id == system_user_id) \
+            .join(MessageDetails, MessageDetails.id == Message.message_details_id) \
+            .order_by(MessageDetails.send_time.desc()) \
+            .first()
+
 
 class School(db.Model):
     __tablename__ = 'schools'
@@ -574,6 +591,7 @@ receiver_type_group = 1
 receiver_type_student_in_group = 2
 
 
+# todo: check_db_integrity receiver exits
 class Notification(db.Model):
     __tablename__ = 'notifications'
     id = db.Column(db.Integer, primary_key=True)
@@ -654,3 +672,35 @@ class PageVisit(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     page_name = db.Column(db.String(255), nullable=False, index=True, unique=True)
     visits_count = db.Column(db.Integer, nullable=False)
+
+
+# todo: check_db_integrity: this MessageDetails referenced from exactly 2 Message (where forward = True & False).
+class MessageDetails(db.Model):
+    __tablename__ = 'message_details'
+    id = db.Column(db.Integer, primary_key=True)
+    body = db.Column(db.Text, nullable=False)
+    send_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    unread = db.Column(db.Boolean, nullable=False, default=True)
+    messages_q = db.relationship('Message', backref='message_details', lazy='dynamic')
+
+
+# todo: ? remove messages, when delete user
+# todo: check_db_integrity: Messages are symmetrical.
+# todo: check_db_integrity: don't send messages from / to bots and developers.
+class Message(db.Model):
+    __tablename__ = 'messages'
+    id = db.Column(db.Integer, primary_key=True)
+    sender_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, index=True)
+    receiver_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, index=True)
+    message_details_id = db.Column(db.Integer, db.ForeignKey('message_details.id'), nullable=False, index=True)
+    forward = db.Column(db.Boolean, nullable=False)  # if True then "from sender to receiver" False otherwise.
+
+    @property
+    def sender(self): return SystemUser.query.get(self.sender_id)
+
+    @property
+    def receiver(self): return SystemUser.query.get(self.receiver_id)
+
+    @property
+    def message_details(self):
+        return MessageDetails.query.get(self.message_details_id)

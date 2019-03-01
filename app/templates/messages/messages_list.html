@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+{% from '_macros.html' import pagination_widget %}
+
+{% set title='диалог с ' + receiver.details.fio %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>{{ title }}</h1>
+    </div>
+
+    <div class="col-md-12" style="margin-bottom: 42px">
+        {{ wtf.quick_form(form) }}
+    </div>
+
+    <table class="table">
+        <tr>
+            <th>время</th>
+            <th>отправитель</th>
+            <th>сообщение</th>
+        </tr>
+        {% for message in messages %}
+            <tr>
+                <td>{{ moment(message.message_details.send_time).format('LLL') }}</td>
+                <td>
+                    {% if message.forward %}
+                        {{ message.sender.details.fio }}
+                    {% else %}
+                        {{ message.receiver.details.fio }}
+                    {% endif %}
+                </td>
+                <td>
+                    {% if message.message_details.unread %}
+                        {% if message.forward %}
+                             <span style="color: gray">(непрочитано)</span> {{ message.message_details.body }}
+                        {% else %}
+                            <b style="color: orangered">{{ message.message_details.body }}</b>
+                        {% endif %}
+                    {% else %}
+                        {{ message.message_details.body }}
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <h3>нет сообщений</h3>
+        {% endfor %}
+
+    </table>
+
+    <div class="footer">
+        {{ pagination_widget(pagination, 'messages.messages_list',receiver_id=receiver.id) }}
+    </div>
+{% endblock %}

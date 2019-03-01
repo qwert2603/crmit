@@ -45,9 +45,7 @@
                             <br/>
                             {% if confirmed[m].get(student_in_group.id) %}
                                 {% if comments[m].get(student_in_group.id) %}
-                                    <span style="font-size: smaller">
-                                        <i>{{ comments[m].get(student_in_group.id) }}</i>
-                                    </span>
+                                    <span style="font-size: smaller">{{ comments[m].get(student_in_group.id) }}</span>
                                     <br/>
                                 {% endif %}
                             {% else %}
@@ -62,7 +60,7 @@
                                    {% if not can_confirm %}disabled{% endif %}>
                             <span style="{% if confirmed[m].get(student_in_group.id) %}color: green;{% endif %}">подт.</span>
                         {% else %}
-                            <i>n/a</i>
+                            n/a
                         {% endif %}
                     </td>
                 {% endfor %}

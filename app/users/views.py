@@ -60,7 +60,7 @@ def change_password():
             flash('ваш пароль изменен и все ваши сессии в мобильном приложении завершены')
             return redirect(url_for('main.index'))
         flash('неверный старый пароль!')
-    return render_template('users/change_password.html', form=form, hide_who_u_r=current_user.is_student)
+    return render_template('users/change_password.html', form=form)
 
 
 @users.route('/force_change_password/<int:system_user_id>', methods=['GET', 'POST'])

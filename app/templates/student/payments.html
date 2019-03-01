@@ -29,7 +29,7 @@
                         <input type="checkbox" {% if payment.confirmed %}checked{% endif %} disabled>
                         <span style="{% if payment.confirmed %}color: green;{% endif %}">подт.</span>
                         <br/>
-                        <span style="font-size: smaller"><i>{{ payment.comment }}</i></span>
+                        <span style="font-size: smaller">{{ payment.comment }}</span>
                     </td>
                 {% endfor %}
             </tr>

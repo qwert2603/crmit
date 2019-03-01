@@ -37,10 +37,12 @@
                     </a>
                 </td>
                 <td>
+                    {% if developer.system_user.id != current_user.id %}
                     <a href="{{ url_for('users.force_change_password',system_user_id=developer.system_user.id) }}"
                        class="btn btn-danger">
                         сброс пароля
                     </a>
+                    {% endif %}
                 </td>
                 <td>
                     {% if developer.system_user.id != current_user.id %}
