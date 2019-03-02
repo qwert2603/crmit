@@ -59,7 +59,7 @@ def context_processor():
 
 
 if __name__ == '__main__':
-    use_redirect = True
+    use_redirect = False
     if use_redirect:
         create_redirect_app().run(
             host='0.0.0.0',
