@@ -1,6 +1,6 @@
 virtualenv -p python3 venv
 
-export FLASK_APP=manage.py
+export FLASK_APP=start_dev.py
 export FLASK_DEBUG=1
 flask run --port 1918
 
@@ -20,3 +20,15 @@ tar -xvf crmit_0_8.tar.gz
 
 scp PycharmProjects/crmit/crmit_1_0_3.tar.gz kristallp@ssh.kristallp.nichost.ru:/home/kristallp/crm.cmit22.ru/cgi/
 rm -rf app/ comms.txt config.py fla.cgi manage.py migrations/ __pycache__/ README.md requiments.txt
+
+
+
+
+# run server via ssh and keep it alive.
+kristallp@kristallp:~/crm.cmit22.ru/cgi$ nohup ./start_prod_wsgi.py &
+[1] 51493
+kristallp@kristallp:~/crm.cmit22.ru/cgi$ logout
+# login again and stop server.
+alex@alex-Inspiron-3543 ~ $ ssh kristallp@ssh.kristallp.nichost.ru
+kristallp@kristallp:~/crm.cmit22.ru/cgi$ ps ax | grep start_prod_wsgi
+kristallp@kristallp:~/crm.cmit22.ru/cgi$ kill 51493

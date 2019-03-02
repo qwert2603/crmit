@@ -18,7 +18,7 @@ app_holder.mail_instance = mail
 
 @app.context_processor
 def context_processor():
-    from manage import context_dict
+    from start_dev import context_dict
     return context_dict
 
 

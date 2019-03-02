@@ -2,7 +2,7 @@
 
 from flask_mail import Mail
 import app_holder
-from app import create_app
+from app import create_app, create_redirect_app
 from wsgiref.handlers import CGIHandler
 import os
 
@@ -13,9 +13,15 @@ mail = Mail(app)
 
 app_holder.mail_instance = mail
 
+
 @app.context_processor
 def context_processor():
-    from manage import context_dict
+    from start_dev import context_dict
     return context_dict
 
-CGIHandler().run(app)
+
+use_redirect = False
+if use_redirect:
+    CGIHandler().run(create_redirect_app())
+else:
+    CGIHandler().run(app)
