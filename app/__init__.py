@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, redirect
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_moment import Moment
@@ -24,6 +24,22 @@ def load_user(user_id):
     system_user = SystemUser.query.get(int(user_id))
     if system_user is not None and system_user.is_bot: return None
     if system_user is not None and system_user.enabled and not system_user.force_ask_to_login: return system_user
+
+
+def create_redirect_app():
+    app = Flask(__name__)
+
+    redirect_url = 'http://crm.cmit22.ru:1918'
+
+    @app.route('/')
+    def main():
+        return redirect(redirect_url)
+
+    @app.errorhandler(404)
+    def error404(e):
+        return redirect(redirect_url)
+
+    return app
 
 
 def create_app(config_name):

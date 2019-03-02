@@ -1,11 +1,12 @@
 #!./venv/bin/python3
 import datetime
+
 from flask_mail import Mail
 from flask_migrate import Migrate
 
 import app.models as models
 import app_holder
-from app import create_app, db
+from app import create_app, db, create_redirect_app
 from app.init_model import role_master_name, role_teacher_name, role_student_name, role_bot_name
 from app.is_removable_check import is_section_removable, is_group_removable, is_parent_removable, is_school_removable, \
     is_citizenship_removable, is_student_removable, is_master_removable, is_teacher_removable, is_lesson_removable
@@ -58,7 +59,14 @@ def context_processor():
 
 
 if __name__ == '__main__':
-    app.run(
-        host='0.0.0.0',
-        port=1918
-    )
+    use_redirect = True
+    if use_redirect:
+        create_redirect_app().run(
+            host='0.0.0.0',
+            port=1918
+        )
+    else:
+        app.run(
+            host='0.0.0.0',
+            port=1918
+        )
