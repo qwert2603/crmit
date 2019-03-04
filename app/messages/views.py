@@ -42,7 +42,9 @@ def dialogs_list():
     if current_user.is_master or current_user.is_teacher:
         available_receivers = available_receivers.union(available_receivers_students)
 
-    available_receivers = available_receivers.order_by(SystemUser.id)
+    available_receivers = available_receivers \
+        .filter(SystemUser.id != current_user.id) \
+        .order_by(SystemUser.id)
 
     return render_template('messages/dialogs_list.html', pagination=pagination, dialogs=dialogs,
                            available_receivers=available_receivers)
