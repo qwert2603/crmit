@@ -31,7 +31,7 @@
         {% for parent in student.parents.all() %}
             <li>{{ render_parent(parent) }}</li>
         {% else %}
-            <p><i>нет родитей</i></p>
+            <p>нет родитей</p>
         {% endfor %}
     </ul>
     <h4>группы:</h4>
@@ -50,7 +50,7 @@
                 </div>
             </li>
         {% else %}
-            <p><i>нет групп</i></p>
+            <p>нет групп</p>
         {% endfor %}
     </ul>
 

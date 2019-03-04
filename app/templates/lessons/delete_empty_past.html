@@ -19,10 +19,10 @@
                 </label>
             </div>
             {% if loop.index==100 %}
-                <p><i>показаны первые 100 занятий</i></p>
+                <h3>показаны первые 100 занятий</h3>
             {% endif %}
         {% else %}
-            <p><i>в прошлом нет пустых занятий</i></p>
+            <h3>в прошлом нет пустых занятий</h3>
         {% endfor %}
 
         <input class="btn btn-warning" type="submit" name="submit" value="удалить"

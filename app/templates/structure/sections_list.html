@@ -46,7 +46,7 @@
                                 </div>
                             </li>
                         {% else %}
-                            <p><i>нет групп</i></p>
+                            <p>нет групп</p>
                         {% endfor %}
                     </ul>
                 </td>
@@ -64,7 +64,7 @@
                 {% endif %}
             </tr>
         {% else %}
-            {% if search %}<p><i>ничего не найдено</i></p>{% endif %}
+            {% if search %}<h4>ничего не найдено</h4>{% endif %}
         {% endfor %}
     </table>
 
