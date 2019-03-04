@@ -30,6 +30,7 @@
             <th>последний визит</th>
             <th></th>
             <th></th>
+            <th></th>
         </tr>
         {% for student in items %}
             <tr>
@@ -72,6 +73,12 @@
                 </td>
                 <td>{{ student.contact_phone_number }} ({{ student.contact_phone_who }})</td>
                 <td>{{ render_last_seen(student.system_user) }}</td>
+                <td>
+                    <a href="{{ url_for('messages.messages_list', receiver_id=student.system_user.id) }}"
+                       class="btn btn-default">
+                        <span class="glyphicon glyphicon-envelope"></span>
+                    </a>
+                </td>
                 <td>
                     <a href="{{ url_for('users.edit_student',id=student.id) }}" class="btn btn-warning">
                         <span class="glyphicon glyphicon-pencil"></span>

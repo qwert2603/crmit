@@ -24,6 +24,7 @@
             <th>фио</th>
             <th>логин</th>
             <th>последний визит</th>
+            <th></th>
             {% if current_user.is_master %}
                 <th></th>
                 <th></th>
@@ -35,6 +36,14 @@
                 <td>{{ render_system_user_fio(master.system_user, show_disabled_text=true) }}</td>
                 <td>{{ master.system_user.login }}</td>
                 <td>{{ render_last_seen(master.system_user) }}</td>
+                <td>
+                    {% if master.system_user.id != current_user.id %}
+                        <a href="{{ url_for('messages.messages_list', receiver_id=teacher.system_user.id) }}"
+                           class="btn btn-default">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </a>
+                    {% endif %}
+                </td>
                 {% if current_user.is_master %}
                     <td>
                         <a href="{{ url_for('users.edit_master',id=master.id) }}" class="btn btn-warning">

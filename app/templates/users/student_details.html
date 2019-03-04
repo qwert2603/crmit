@@ -55,6 +55,10 @@
     </ul>
 
     <div style="margin-bottom: 32px">
+        <a href="{{ url_for('messages.messages_list', receiver_id=student.system_user.id) }}"
+           class="btn btn-default">
+            написать сообщение
+        </a>
         <a href="{{ url_for('users.edit_student', id=student.id) }}"
            class="btn btn-warning margined_button">редактировать
         </a>

@@ -25,6 +25,7 @@
             <th>группы</th>
             <th>телефон</th>
             <th>последний визит</th>
+            <th></th>
             {% if current_user.is_master %}
                 <th></th>
                 <th></th>
@@ -52,6 +53,14 @@
                 </td>
                 <td>{{ teacher.phone }}</td>
                 <td>{{ render_last_seen(teacher.system_user) }}</td>
+                <td>
+                    {% if teacher.system_user.id != current_user.id %}
+                        <a href="{{ url_for('messages.messages_list', receiver_id=teacher.system_user.id) }}"
+                           class="btn btn-default">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                        </a>
+                    {% endif %}
+                </td>
                 {% if current_user.is_master %}
                     <td>
                         <a href="{{ url_for('users.edit_teacher',id=teacher.id) }}" class="btn btn-warning">
