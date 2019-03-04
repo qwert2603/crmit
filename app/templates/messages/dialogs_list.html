@@ -20,7 +20,15 @@
 
     <form method="get" class="form-group" action="{{ url_for('messages.messages_forward') }}">
         <div class="receiver_select">
-            <label for="group_id">получатель</label>
+
+            {% if not current_user.is_student %}
+                <div class="form-group ">
+                    <label class="control-label" for="receiver_search">поиск получателя</label>
+                    <input class="form-control" id="receiver_search" name="receiver_search" type="text" value="">
+                </div>
+            {% endif %}
+
+            <label for="receiver_id">получатель</label>
             <select class="form-control" id="receiver_id" name="receiver_id">
                 {% for receiver in available_receivers %}
                     <option value="{{ receiver.id }}">
@@ -84,4 +92,9 @@
     <div class="footer">
         {{ pagination_widget(pagination, 'messages.dialogs_list') }}
     </div>
+{% endblock %}
+
+{% block scripts %}
+    {{ super() }}
+    <script src="{{ url_for('static', filename='search.js') }}"></script>
 {% endblock %}

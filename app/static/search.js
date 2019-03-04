@@ -20,3 +20,7 @@ if (document.getElementById('mother_search')) {
     makeSearch('mother_search', 'mother');
     makeSearch('father_search', 'father');
 }
+
+if (document.getElementById('receiver_search')) {
+    makeSearch('receiver_search', 'receiver_id');
+}
