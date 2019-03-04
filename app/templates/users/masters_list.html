@@ -38,7 +38,7 @@
                 <td>{{ render_last_seen(master.system_user) }}</td>
                 <td>
                     {% if master.system_user.id != current_user.id %}
-                        <a href="{{ url_for('messages.messages_list', receiver_id=teacher.system_user.id) }}"
+                        <a href="{{ url_for('messages.messages_list', receiver_id=master.system_user.id) }}"
                            class="btn btn-default">
                             <span class="glyphicon glyphicon-envelope"></span>
                         </a>

@@ -7,6 +7,7 @@ from app.is_removable_check import is_master_removable, is_teacher_removable, is
     is_developer_removable
 from app.models import Master, Teacher, Student, Bot, Developer
 from app.users import users
+from app.users.utils import delete_all_messages_with_user
 from app.utils import redirect_back_or_home
 
 
@@ -18,6 +19,7 @@ def delete_master(id):
     if not is_master_removable(master): abort(409)
     for at in master.system_user.access_tokens.all():
         db.session.delete(at)
+    delete_all_messages_with_user(master.system_user_id)
     db.session.delete(master)
     db.session.delete(master.system_user)
     flash('руководитель {} удалён'.format(master.fio))
@@ -32,6 +34,7 @@ def delete_teacher(id):
     if not is_teacher_removable(teacher): abort(409)
     for at in teacher.system_user.access_tokens.all():
         db.session.delete(at)
+    delete_all_messages_with_user(teacher.system_user_id)
     db.session.delete(teacher)
     db.session.delete(teacher.system_user)
     flash('преподаватель {} удалён'.format(teacher.fio))
@@ -47,6 +50,7 @@ def delete_student(id):
     for at in student.system_user.access_tokens.all():
         db.session.delete(at)
     student.parent_of_students.delete()
+    delete_all_messages_with_user(student.system_user_id)
     db.session.delete(student)
     db.session.delete(student.system_user)
     flash('ученик {} удалён'.format(student.fio))
