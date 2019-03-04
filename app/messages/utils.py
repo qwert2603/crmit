@@ -9,14 +9,18 @@ class Dialog:
 
 def get_dialogs(sender_id, offset, limit):
     sql = '''
-        select r.receiver_id, count(message_details.unread) AS unread_count
-        from (select distinct id, receiver_id from messages WHERE messages.sender_id = {}) r
+        select r.receiver_id,
+               count(message_details.unread)        as unread_count,
+               max(message_details_times.send_time) as last_message_time
+        from (select distinct id, receiver_id, message_details_id from messages where messages.sender_id = {}) r
                left join (select * from messages where messages.forward = false) messages
                          on messages.id = r.id
                left join (select * from message_details where message_details.unread = true) message_details
                          on messages.message_details_id = message_details.id
+               left join (select * from message_details) message_details_times
+                         on r.message_details_id = message_details_times.id
         group by r.receiver_id
-        order by unread_count desc
+        order by unread_count desc, last_message_time desc
         offset {} limit {}
     '''.format(sender_id, offset, limit)
 
