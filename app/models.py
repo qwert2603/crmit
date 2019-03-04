@@ -346,19 +346,22 @@ class ParentOfStudent(db.Model):
     unique_3 = db.UniqueConstraint(student_id, is_mother)
 
     @staticmethod
-    def change_parent(student_id, old_parent_id, new_parent_id, is_mother):
+    def change_parent(student_id, is_mother, new_parent_id, new_parent):
         pos = ParentOfStudent.query.filter(
-            ParentOfStudent.parent_id == old_parent_id,
             ParentOfStudent.student_id == student_id,
             ParentOfStudent.is_mother == is_mother).first()
         if pos:
             if new_parent_id:
                 pos.parent_id = new_parent_id
+            elif new_parent:
+                pos.parent = new_parent
             else:
                 db.session.delete(pos)
         else:
             if new_parent_id:
                 db.session.add(ParentOfStudent(parent_id=new_parent_id, student_id=student_id, is_mother=is_mother))
+            elif new_parent:
+                db.session.add(ParentOfStudent(parent=new_parent, student_id=student_id, is_mother=is_mother))
             else:
                 pass
 

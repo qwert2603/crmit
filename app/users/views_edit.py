@@ -133,10 +133,11 @@ def edit_student(id):
                             home_phone=form.m_home_phone.data, vk_link=form.m_vk_link.data,
                             notification_types=notification_types_list_to_int(form.m_notification_types.data))
             db.session.add(mother)
-            db.session.add(ParentOfStudent(student=student, parent=mother, is_mother=True))
+            ParentOfStudent.change_parent(student_id=student.id, is_mother=True, new_parent_id=None, new_parent=mother)
             flash('родитель {} создан'.format(form.m_fio.data))
         else:
-            ParentOfStudent.change_parent(student.id, mother_id, new_mother_id, True)
+            ParentOfStudent.change_parent(student_id=student.id, is_mother=True, new_parent_id=new_mother_id,
+                                          new_parent=None)
 
         if new_father_id == create_new_parent_id:
             father = Parent(fio=form.f_fio.data, phone=form.f_phone.data, email=form.f_email.data,
@@ -144,10 +145,11 @@ def edit_student(id):
                             home_phone=form.f_home_phone.data, vk_link=form.f_vk_link.data,
                             notification_types=notification_types_list_to_int(form.f_notification_types.data))
             db.session.add(father)
-            db.session.add(ParentOfStudent(student=student, parent=father, is_mother=False))
+            ParentOfStudent.change_parent(student_id=student.id, is_mother=False, new_parent_id=None, new_parent=father)
             flash('родитель {} создан'.format(form.f_fio.data))
         else:
-            ParentOfStudent.change_parent(student.id, father_id, new_father_id, False)
+            ParentOfStudent.change_parent(student_id=student.id, is_mother=False, new_parent_id=new_father_id,
+                                          new_parent=None)
 
         flash('ученик {} изменен'.format(form.fio.data))
         return redirect(url_for('.students_list'))
