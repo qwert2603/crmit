@@ -112,9 +112,10 @@ class SystemUser(UserMixin, db.Model):
 
     @property
     def unread_dialogs_count(self):
-        return self.messages() \
+        return db.session.query(Message.receiver_id) \
             .join(MessageDetails, MessageDetails.id == Message.message_details_id) \
-            .filter(Message.forward == False, MessageDetails.unread == True) \
+            .filter(Message.sender_id == self.id, Message.forward == False, MessageDetails.unread == True) \
+            .group_by(Message.receiver_id) \
             .count()
 
     def last_message_with(self, system_user_id):
