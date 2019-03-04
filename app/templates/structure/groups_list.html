@@ -16,7 +16,31 @@
         <a href="{{ url_for('structure.add_group') }}" class="btn btn-default">добавить группу</a>
     {% endif %}
 
-    {{ render_search(search) }}
+    <form method="get" class="form-group">
+        <div class="form-group">
+            <h3><label for="teacher_id">преподаватель</label></h3>
+            <select class="form-control" id="teacher_id" name="teacher_id">
+                <option value="0">все</option>
+                {% for teacher in teachers %}
+                    <option value="{{ teacher.id }}" {% if teacher.id==selected_teacher.id %}selected{% endif %}>
+                        {{ teacher.fio }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <h3><label for="search">поиск</label></h3>
+            <input class="form-control" id="search" name="search" type="text" value="{{ search }}">
+        </div>
+
+        <input class="btn btn-default" type="submit" value="искать">
+    </form>
+
+    {% if search or selected_teacher %}результаты поиска
+        {% if selected_teacher %}в группах <b>{{ selected_teacher.fio }}</b>{% endif %}
+        {% if search %}по запросу "<b>{{ search }}</b>"{% endif %}
+    {% endif %}
 
     <table class="table">
         <tr>
@@ -103,6 +127,6 @@
     </table>
 
     <div class="footer">
-        {{ pagination_widget(pagination, 'structure.groups_list', search=search) }}
+        {{ pagination_widget(pagination, 'structure.groups_list', teacher_id=selected_teacher.id, search=search) }}
     </div>
 {% endblock %}

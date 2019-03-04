@@ -47,20 +47,9 @@
 
                         <li><a href="{{ url_for('structure.parents_list') }}">род-ли</a></li>
                         <li><a href="{{ url_for('structure.sections_list') }}">секции</a></li>
-                        <li><a href="{{ url_for('structure.groups_list') }}">группы</a></li>
-
-                        {% if current_user.is_teacher %}
-                            <li>
-                                <a href="{{ url_for('lessons.lessons_list', teacher_id=current_user.teacher.id, selected_date=current_date_fun()) }}">занятия</a>
-                            </li>
-                        {% else %}
-                            <li>
-                                <a href="{{ url_for('lessons.lessons_list', selected_date=current_date_fun()) }}">занятия</a>
-                            </li>
-                        {% endif %}
-
+                        <li><a href="{{ url_for('structure.groups_list', teacher_id=current_user.teacher_id_or_zero) }}">группы</a></li>
+                        <li><a href="{{ url_for('lessons.lessons_list', teacher_id=current_user.teacher_id_or_zero, selected_date=current_date_fun()) }}">занятия</a></li>
                         <li><a href="{{ url_for('notifications.notifications_list') }}">увед-я</a></li>
-
                         <li><a href="{{ url_for('schedule.timetable') }}">расп-е</a></li>
 
                         {% set unread_dialogs_count = current_user.unread_dialogs_count %}
