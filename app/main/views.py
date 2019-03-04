@@ -7,7 +7,7 @@ from app.main import main
 from app.main.dump_utils import db_to_dump
 from app.models import Group, attending_states, Master, Teacher, Student, SystemUser, SystemRole, StudentInGroup, \
     Attending, Bot, Developer, PageVisit, Notification, receiver_type_student_in_group, receiver_type_group, Message, \
-    MessageDetails
+    MessageDetails, Parent, notification_types_list
 from app.utils import start_date_of_month, end_date_of_month, get_month_name
 
 
@@ -103,6 +103,13 @@ def check_db_integrity():
                     problems.append('неверная сумма платежа id={} ({} / {} / {})'
                                     .format(payment.id, group.name, student_in_group.student.fio,
                                             get_month_name(payment.month)))
+    notification_types_overflow = 1
+    for i in range(0, len(notification_types_list)):
+        notification_types_overflow <<= 1
+    for parent in Parent.query.all():
+        if parent.notification_types < 0 or parent.notification_types >= notification_types_overflow:
+            problems.append('у родителя id={} неверные типы уведомлений'.format(parent.id))
+
     return render_template('check_db_integrity.html', problems=problems)
 
 
