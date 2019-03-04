@@ -21,15 +21,17 @@
                 {% for month_number in range(student_in_group.enter_month, student_in_group.exit_month + 1) %}
                     <td>
                         {% set payment = student_in_group.payment_of_month(month_number) %}
-                        {{ payment.value or 0 }} / {{ student_in_group.max_payment_value }}
-                        <br/>
-                        <input type="checkbox" {% if payment.cash %}checked{% endif %} disabled>
-                        нал.
-                        <br/>
-                        <input type="checkbox" {% if payment.confirmed %}checked{% endif %} disabled>
-                        <span style="{% if payment.confirmed %}color: green;{% endif %}">подт.</span>
-                        <br/>
-                        <span style="font-size: smaller">{{ payment.comment }}</span>
+                        <span style="{% if payment.confirmed %}color: green;{% endif %}">
+                            {{ payment.value or 0 }} / {{ student_in_group.max_payment_value }}
+                            <br/>
+                            <input type="checkbox" {% if payment.cash %}checked{% endif %} disabled>
+                            нал.
+                            <br/>
+                            <input type="checkbox" {% if payment.confirmed %}checked{% endif %} disabled>
+                            подт.
+                            <br/>
+                            <span style="font-size: smaller">{{ payment.comment }}</span>
+                        </span>
                     </td>
                 {% endfor %}
             </tr>

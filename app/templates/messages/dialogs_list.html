@@ -11,6 +11,12 @@
         <h1>{{ title }}</h1>
     </div>
 
+    {% if current_user.is_student and len(dialogs) == 0 %}
+        <h4 style="color: gray; margin-bottom: 42px">
+            здесь Вы можете отправлять сообщения преподавателям и руководителю ЦМИТ.<br/>чтобы начать, выберите получателя из списка:
+        </h4>
+    {% endif %}
+
     {# todo: search for masters & teachers  #}
     <form method="get" class="form-group" action="{{ url_for('messages.messages_forward') }}">
         <div class="receiver_select">
@@ -64,7 +70,7 @@
                 </td>
             </tr>
         {% else %}
-            <h3><i>нет диалогов</i></h3>
+            <h3>нет диалогов</h3>
         {% endfor %}
 
     </table>
