@@ -28,7 +28,8 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a class="navbar-brand" href="{{ url_for('main.index') }}">
-                    <span style="color: {% if current_user.is_master %}#ff4500
+                    <span style="color: {% if current_user.is_developer %}fuchsia
+                    {% elif current_user.is_master %}#ff4500
                     {% elif current_user.is_teacher %}#1E90FF
                     {% elif current_user.is_student %}#228B22
                     {% else %}#000000
