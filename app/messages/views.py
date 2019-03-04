@@ -22,7 +22,7 @@ def dialogs_list():
 
     dialogs = get_dialogs(current_user.id, per_page * (page - 1), per_page)
 
-    pagination = db.session.query(Message.receiver_id).filter(Message.sender_id == current_user.id).distinct()
+    pagination = db.session.query(Message.receiver_id).filter(Message.owner_id == current_user.id).distinct()
     pagination = pagination.paginate(page, per_page=per_page, error_out=False)
 
     available_receivers_masters = SystemUser.query \
@@ -73,9 +73,9 @@ def messages_list(receiver_id):
     form = SendMessageForm()
     if form.validate_on_submit():
         message_details = MessageDetails(body=form.body.data)
-        message_forward = Message(sender_id=current_user.id, receiver_id=receiver_id, message_details=message_details,
+        message_forward = Message(owner_id=current_user.id, receiver_id=receiver_id, message_details=message_details,
                                   forward=True)
-        message_backward = Message(sender_id=receiver_id, receiver_id=current_user.id, message_details=message_details,
+        message_backward = Message(owner_id=receiver_id, receiver_id=current_user.id, message_details=message_details,
                                    forward=False)
         db.session.add(message_details)
         db.session.add(message_forward)

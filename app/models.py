@@ -108,13 +108,13 @@ class SystemUser(UserMixin, db.Model):
         return self.access_tokens.filter(AccessToken.expires < datetime.utcnow())
 
     def messages(self):
-        return Message.query.filter(Message.sender_id == self.id)
+        return Message.query.filter(Message.owner_id == self.id)
 
     @property
     def unread_dialogs_count(self):
         return db.session.query(Message.receiver_id) \
             .join(MessageDetails, MessageDetails.id == Message.message_details_id) \
-            .filter(Message.sender_id == self.id, Message.forward == False, MessageDetails.unread == True) \
+            .filter(Message.owner_id == self.id, Message.forward == False, MessageDetails.unread == True) \
             .group_by(Message.receiver_id) \
             .count()
 
@@ -688,20 +688,20 @@ class MessageDetails(db.Model):
     messages_q = db.relationship('Message', backref='message_details', lazy='dynamic')
 
 
-# todo: ? remove messages, when delete user
+# todo: remove messages, when delete user
 # todo: check_db_integrity: Messages are symmetrical.
 # todo: check_db_integrity: don't send messages from / to bots and developers and btw students.
 class Message(db.Model):
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)
-    sender_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, index=True)
+    owner_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, index=True)
     receiver_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, index=True)
     message_details_id = db.Column(db.Integer, db.ForeignKey('message_details.id'), nullable=False, index=True)
     forward = db.Column(db.Boolean, nullable=False,
-                        index=True)  # if True then "from sender to receiver" False otherwise.
+                        index=True)  # if True then "from owner to receiver" False otherwise.
 
     @property
-    def sender(self): return SystemUser.query.get(self.sender_id)
+    def owner(self): return SystemUser.query.get(self.owner_id)
 
     @property
     def receiver(self): return SystemUser.query.get(self.receiver_id)
