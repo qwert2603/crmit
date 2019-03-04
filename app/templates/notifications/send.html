@@ -18,7 +18,7 @@
 
     <div class="col-md-6">
         {#todo#}
-        <h1 style="color: red">в настоящий момент отправка уведомлений <b>не работает</b></h1>
+        <h2 style="color: red">в настоящий момент отправка уведомлений <b>не работает</b></h2>
 
         <ul>
             {% for student in group.students %}
@@ -32,17 +32,17 @@
                                 {% if types %}
                                     {{ types }}
                                 {% else %}
-                                    <i style="color: red">типы уведомлений не выбраны</i>
+                                    <span style="color: red">типы уведомлений не выбраны</span>
                                 {% endif %}
                                 <br/>
                             </li>
                         {% else %}
-                            <i style="color: red">родители не указаны</i>
+                            <span style="color: red">родители не указаны</span>
                         {% endfor %}
                     </ul>
                 </li>
             {% else %}
-                <i style="color: red">в группе нет учеников</i>
+                <p style="color: red">в группе нет учеников</p>
             {% endfor %}
         </ul>
     </div>

@@ -595,7 +595,6 @@ receiver_type_group = 1
 receiver_type_student_in_group = 2
 
 
-# todo: check_db_integrity receiver exits
 class Notification(db.Model):
     __tablename__ = 'notifications'
     id = db.Column(db.Integer, primary_key=True)

@@ -220,4 +220,3 @@ def check_db_integrity_notifications_and_messages():
 def visit_stats():
     pages = PageVisit.query.order_by(PageVisit.visits_count.desc(), PageVisit.page_name).all()
     return render_template("visit_stats.html", pages=pages)
-# todo: check </i>
