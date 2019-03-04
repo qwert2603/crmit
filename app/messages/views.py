@@ -1,6 +1,5 @@
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for, flash, abort
 from flask_login import login_required, current_user
-from sqlalchemy import or_
 
 from app import db
 from app.decorators import check_master_or_teacher_or_student
@@ -15,6 +14,8 @@ from app.models import Message, SystemUser, SystemRole, MessageDetails
 @login_required
 @check_master_or_teacher_or_student
 def dialogs_list():
+    if current_user.is_developer: abort(403)
+
     page = request.args.get('page', 1, type=int)
 
     per_page = 20
@@ -24,11 +25,24 @@ def dialogs_list():
     pagination = db.session.query(Message.receiver_id).filter(Message.sender_id == current_user.id).distinct()
     pagination = pagination.paginate(page, per_page=per_page, error_out=False)
 
-    available_receivers = SystemUser.query \
+    available_receivers_masters = SystemUser.query \
         .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
-        .filter(or_(SystemRole.name == role_master_name, SystemRole.name == role_teacher_name,
-                    SystemRole.name == role_student_name)) \
-        .all()
+        .filter(SystemRole.name == role_master_name)
+
+    available_receivers_teachers = SystemUser.query \
+        .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
+        .filter(SystemRole.name == role_teacher_name)
+
+    available_receivers_students = SystemUser.query \
+        .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
+        .filter(SystemRole.name == role_student_name)
+
+    available_receivers = available_receivers_masters.union(available_receivers_teachers)
+
+    if current_user.is_master or current_user.is_teacher:
+        available_receivers = available_receivers.union(available_receivers_students)
+
+    available_receivers = available_receivers.order_by(SystemUser.id)
 
     return render_template('messages/dialogs_list.html', pagination=pagination, dialogs=dialogs,
                            available_receivers=available_receivers)

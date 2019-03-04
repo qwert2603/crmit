@@ -13,7 +13,8 @@
 
     {% if current_user.is_student and len(dialogs) == 0 %}
         <h4 style="color: gray; margin-bottom: 42px">
-            здесь Вы можете отправлять сообщения преподавателям и руководителю ЦМИТ.<br/>чтобы начать, выберите получателя из списка:
+            здесь Вы можете отправлять сообщения преподавателям и руководителю ЦМИТ.<br/>чтобы начать, выберите
+            получателя из списка:
         </h4>
     {% endif %}
 
@@ -23,7 +24,10 @@
             <label for="group_id">получатель</label>
             <select class="form-control" id="receiver_id" name="receiver_id">
                 {% for receiver in available_receivers %}
-                    <option value="{{ receiver.id }}">{{ receiver.details.fio }}</option>
+                    <option value="{{ receiver.id }}">
+                        {{ receiver.details.fio }}
+                        {% if receiver.is_master or receiver.is_teacher %}({{ receiver.system_role.name }}){% endif %}
+                    </option>
                 {% endfor %}
             </select>
         </div>
@@ -45,6 +49,9 @@
                 <td>
                     <a href="{{ url_for('messages.messages_list',receiver_id=dialog.receiver_id) }}">
                         {{ last_message.receiver.details.fio }}
+                        {% if last_message.receiver.is_master or last_message.receiver.is_teacher %}
+                            ({{ last_message.receiver.system_role.name }})
+                        {% endif %}
                         {% if dialog.unread_count > 0 %}
                             <span style="color: orangered"><b>({{ dialog.unread_count }})</b></span>
                         {% endif %}

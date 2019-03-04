@@ -4,12 +4,34 @@
 
 {% set title='диалог с ' + receiver.details.fio %}
 
-{% block title %}{{ title }}{% endblock %}
+{% block title %}диалог с {{ receiver.details.fio }}{% endblock %}
 
 {% block page_content %}
 
     <div class="page-header">
-        <h1>{{ title }}</h1>
+        <h1>диалог с
+            {% if current_user.is_student %}
+                {{ receiver.details.fio }}
+                {% if receiver.is_master or receiver.is_teacher %}
+                    ({{ receiver.system_role.name }})
+                {% endif %}
+            {% else %}
+                <a href="
+                {% if receiver.is_master %}
+                    {{ url_for('users.masters_list',search=receiver.master.fio) }}
+                {% elif receiver.is_teacher %}
+                    {{ url_for('users.teachers_list',search=receiver.teacher.fio) }}
+                {% else %}
+                    {{ url_for('users.student_details',id=receiver.student.id) }}
+                {% endif %}
+                ">
+                    {{ receiver.details.fio }}
+                    {% if receiver.is_master or receiver.is_teacher %}
+                        ({{ receiver.system_role.name }})
+                    {% endif %}
+                </a>
+            {% endif %}
+        </h1>
     </div>
 
     <div class="col-md-12" style="margin-bottom: 42px">
@@ -35,7 +57,7 @@
                 <td>
                     {% if message.message_details.unread %}
                         {% if message.forward %}
-                             <span style="color: gray">(непрочитано)</span> {{ message.message_details.body }}
+                            <span style="color: gray">(непрочитано)</span> {{ message.message_details.body }}
                         {% else %}
                             <b style="color: orangered">{{ message.message_details.body }}</b>
                         {% endif %}
