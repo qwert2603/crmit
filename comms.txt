@@ -20,6 +20,8 @@ tar -xvf crmit_0_8.tar.gz
 
 scp PycharmProjects/crmit/crmit_1_0_3.tar.gz kristallp@ssh.kristallp.nichost.ru:/home/kristallp/crm.cmit22.ru/cgi/
 rm -rf app/ comms.txt config.py fla.cgi manage.py migrations/ __pycache__/ README.md requiments.txt
+rm -rf app_holder.py credentials.txt make_crmit_dump.py tests/
+rm -rf start_dev.py start_prod_default.py start_prod_wsgi.py
 
 
 
