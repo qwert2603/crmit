@@ -85,6 +85,11 @@
         {% endif %}
     </div>
 
+
+    <a href="{{ url_for('structure.login_table', group_id=group.id) }}" class="margined_button btn btn-success" style="margin-left: 16px">
+        таблица логинов
+    </a>
+
     {% if can_user_write_group(current_user, group) %}
         {% include '_cancel_button.html' %}
     {% endif %}

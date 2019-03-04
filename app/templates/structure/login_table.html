@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ group.name }}. ученики (детали){% endblock %}
+
+{% block page_content %}
+
+    <div class="page-header">
+        <h1>логины учеников в <a href="{{ url_for('structure.groups_list',search=group.name) }}">{{ group.name }}</a>
+        </h1>
+    </div>
+
+    <div class="col-md-12">
+        <table class="table">
+            <tr>
+                <th>фио</th>
+                <th>сайт</th>
+                <th>логин</th>
+            </tr>
+            {% for student_in_group in students_in_group %}
+                <tr>
+                    <td>{{ student_in_group.student.fio }}</td>
+                    <td>http://crm.cmit22.ru/</td>
+                    <td>{{ student_in_group.student.system_user.login }}</td>
+                </tr>
+            {% endfor %}
+        </table>
+    </div>
+{% endblock %}

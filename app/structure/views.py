@@ -100,3 +100,12 @@ def group_details(group_id):
         return redirect(url_for('structure.groups_list'))
     return render_template('structure/group_details.html', group=group, students_in_group=students_in_group,
                            can_edit_discount=can_edit_discount)
+
+
+@structure.route('/login_table/<int:group_id>')
+@login_required
+@check_master_or_teacher
+def login_table(group_id):
+    group = Group.query.get_or_404(group_id)
+    students_in_group = group.students_in_group_by_fio.all()
+    return render_template('structure/login_table.html', group=group, students_in_group=students_in_group)
