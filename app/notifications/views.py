@@ -53,9 +53,10 @@ def send_notification():
             receiver_type = receiver_type_student_in_group
             parents = parents_of_student_in_group(receiver_id)
         receivers = do_send_notification(parents, subject, body)
-        if receivers is not None:
+        is_ok = True  # receivers is not None
+        if is_ok:
             db.session.add(Notification(sender_id=current_user.id, receiver_type=receiver_type, receiver_id=receiver_id,
-                                        subject=subject, body=body, receivers=receivers))
+                                        subject=subject, body=body, receivers=receivers or ''))
             flash('уведомление отправлено!')
         else:
             flash('уведомление не отправлено, так как у родителей не выбраны типы уведомлений!')
