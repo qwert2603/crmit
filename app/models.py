@@ -678,7 +678,6 @@ class PageVisit(db.Model):
     visits_count = db.Column(db.Integer, nullable=False)
 
 
-# todo: check_db_integrity: this MessageDetails referenced from exactly 2 Message (where forward = True & False).
 class MessageDetails(db.Model):
     __tablename__ = 'message_details'
     id = db.Column(db.Integer, primary_key=True)
@@ -688,9 +687,6 @@ class MessageDetails(db.Model):
     messages_q = db.relationship('Message', backref='message_details', lazy='dynamic')
 
 
-# todo: remove messages, when delete user
-# todo: check_db_integrity: Messages are symmetrical.
-# todo: check_db_integrity: don't send messages from / to bots and developers and btw students.
 class Message(db.Model):
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)

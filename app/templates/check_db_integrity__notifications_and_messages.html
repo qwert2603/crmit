@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% set title='проверка целостности: ученики посещают занятия только своих групп' %}
+{% set title='проверка целостности: уведомления и сообщения' %}
 
 {% block title %}{{ title }}{% endblock %}
 
@@ -14,7 +14,7 @@
         {% for problem in problems %}
             <li>{{ problem }}</li>
         {% else %}
-            <p style="color: green">нет проблем</p>
+            <p style="color: green">нет проблем</i>
         {% endfor %}
     </ul>
 

@@ -6,7 +6,8 @@ from app.init_model import role_master_name, role_teacher_name, role_student_nam
 from app.main import main
 from app.main.dump_utils import db_to_dump
 from app.models import Group, attending_states, Master, Teacher, Student, SystemUser, SystemRole, StudentInGroup, \
-    Attending, Bot, Developer, PageVisit
+    Attending, Bot, Developer, PageVisit, Notification, receiver_type_student_in_group, receiver_type_group, Message, \
+    MessageDetails
 from app.utils import start_date_of_month, end_date_of_month, get_month_name
 
 
@@ -128,9 +129,88 @@ def check_db_integrity_attengings_correct_group_of_students():
     return render_template('check_db_integrity__attengings_correct_group_of_students.html', problems=problems)
 
 
+@main.route('/check_db_integrity/notifications_and_messages')
+@login_required
+@check_developer
+def check_db_integrity_notifications_and_messages():
+    problems = list()
+
+    users_id_by_role_id = dict()
+
+    for system_user in SystemUser.query.all():
+        users_ids = users_id_by_role_id.get(system_user.system_role.id)
+        if users_ids is None:
+            users_ids = set()
+            users_id_by_role_id[system_user.system_role.id] = users_ids
+        users_ids.add(system_user.id)
+
+    masters = users_id_by_role_id.get(SystemRole.query.filter(SystemRole.name == role_master_name).first().id) or set()
+    teachers = users_id_by_role_id.get(
+        SystemRole.query.filter(SystemRole.name == role_teacher_name).first().id) or set()
+    students = users_id_by_role_id.get(
+        SystemRole.query.filter(SystemRole.name == role_student_name).first().id) or set()
+    bots = users_id_by_role_id.get(SystemRole.query.filter(SystemRole.name == role_bot_name).first().id) or set()
+    developers = users_id_by_role_id.get(
+        SystemRole.query.filter(SystemRole.name == role_developer_name).first().id) or set()
+
+    groups_ids = set()
+    students_in_groups_ids = set()
+
+    for group in Group.query.all(): groups_ids.add(group.id)
+    for sig in StudentInGroup.query.all(): students_in_groups_ids.add(sig.id)
+
+    for notification in Notification.query.all():
+        if notification.sender_id not in masters and notification.sender_id not in teachers:
+            problems.append('неверная роль у отправителя уведомления id={}'.format(notification.id))
+        if notification.receiver_type == receiver_type_group:
+            if notification.receiver_id not in groups_ids:
+                problems.append('уведомление id={} отправлено несуществующей группе'.format(notification.id))
+        elif notification.receiver_type == receiver_type_student_in_group:
+            if notification.receiver_id not in students_in_groups_ids:
+                problems.append('увед-е id={} отправлено несуществующему студенту в группе'.format(notification.id))
+        else:
+            problems.append('неверный receiver_type у уведомления id={}'.format(notification.id))
+
+    if Message.query.count() != 2 * MessageDetails.query.count():
+        problems.append('неверное кол-во сообщений / деталей сообщений')
+
+    for message in Message.query.all():
+        if message.owner_id == message.receiver_id:
+            problems.append('сообщение id={} отправлено самому себе'.format(message.id))
+        if message.owner_id in students and message.receiver_id in students:
+            problems.append('сообщение id={} отправлено между учениками'.format(message.id))
+        if message.owner_id in bots or message.receiver_id in bots \
+                or message.owner_id in developers or message.receiver_id in developers:
+            problems.append('сообщение id={} ссылается на бота или разработчика'.format(message.id))
+
+    messages_by_details_id = dict()
+
+    for message in Message.query.all():
+        details_id = message.message_details_id
+        messages_of_details_id = messages_by_details_id.get(details_id)
+        if messages_of_details_id is None:
+            messages_of_details_id = list()
+            messages_by_details_id[details_id] = messages_of_details_id
+        messages_of_details_id.append(message)
+
+    for md in MessageDetails.query.all():
+        messages_of_details_id = messages_by_details_id.get(md.id)
+        if messages_of_details_id is None or len(messages_of_details_id) != 2:
+            problems.append('на детали о сообщений id={} ссылается неверное кол-во сообщений'.format(md.id))
+        else:
+            if messages_of_details_id[0].forward == messages_of_details_id[1].forward:
+                problems.append('на детали о сообщений id={} ссылаются сообщения в одном направлении'.format(md.id))
+            if messages_of_details_id[0].owner_id != messages_of_details_id[1].receiver_id \
+                    or messages_of_details_id[0].receiver_id != messages_of_details_id[1].owner_id:
+                problems.append('на детали о сообщений id={} ссылаются сообщения между разными юзерами'.format(md.id))
+
+    return render_template('check_db_integrity__notifications_and_messages.html', problems=problems)
+
+
 @main.route('/visit_stats')
 @login_required
 @check_developer
 def visit_stats():
     pages = PageVisit.query.order_by(PageVisit.visits_count.desc(), PageVisit.page_name).all()
     return render_template("visit_stats.html", pages=pages)
+# todo: check </i>
