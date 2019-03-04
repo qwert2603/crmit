@@ -20,7 +20,7 @@ def get_dialogs(sender_id, offset, limit):
                left join (select * from message_details) message_details_times
                          on r.message_details_id = message_details_times.id
         group by r.receiver_id
-        order by unread_count desc, last_message_time desc
+        order by last_message_time desc
         offset {} limit {}
     '''.format(sender_id, offset, limit)
 
