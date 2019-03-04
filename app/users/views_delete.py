@@ -19,6 +19,7 @@ def delete_master(id):
     if not is_master_removable(master): abort(409)
     for at in master.system_user.access_tokens.all():
         db.session.delete(at)
+    master.system_user.notifications.delete()
     delete_all_messages_with_user(master.system_user_id)
     db.session.delete(master)
     db.session.delete(master.system_user)
@@ -34,6 +35,7 @@ def delete_teacher(id):
     if not is_teacher_removable(teacher): abort(409)
     for at in teacher.system_user.access_tokens.all():
         db.session.delete(at)
+    teacher.system_user.notifications.delete()
     delete_all_messages_with_user(teacher.system_user_id)
     db.session.delete(teacher)
     db.session.delete(teacher.system_user)
@@ -64,6 +66,7 @@ def delete_bot(id):
     bot = Bot.query.get_or_404(id)
     for at in bot.system_user.access_tokens.all():
         db.session.delete(at)
+    delete_all_messages_with_user(bot.system_user_id)
     db.session.delete(bot)
     db.session.delete(bot.system_user)
     flash('бот {} удалён'.format(bot.fio))
@@ -78,6 +81,7 @@ def delete_developer(id):
     if not is_developer_removable(developer): abort(409)
     for at in developer.system_user.access_tokens.all():
         db.session.delete(at)
+    delete_all_messages_with_user(developer.system_user_id)
     db.session.delete(developer)
     db.session.delete(developer.system_user)
     flash('разработчик {} удалён'.format(developer.fio))
