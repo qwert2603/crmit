@@ -7,7 +7,8 @@ class Dialog:
         self.unread_count = unread_count
 
 
-def get_dialogs(owner_id, offset, limit):
+# todo: test
+def get_dialogs(owner_id, limit, offset):
     sql = '''
         select r.receiver_id,
                count(message_details.unread)        as unread_count,
@@ -21,8 +22,8 @@ def get_dialogs(owner_id, offset, limit):
                          on r.message_details_id = message_details_times.id
         group by r.receiver_id
         order by last_message_time desc
-        offset {} limit {}
-    '''.format(owner_id, offset, limit)
+        limit {} offset {}
+    '''.format(owner_id, limit, offset)
 
     rows = db.engine.execute(sql)
     result = []

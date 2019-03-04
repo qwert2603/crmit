@@ -20,7 +20,7 @@ def dialogs_list():
 
     per_page = 20
 
-    dialogs = get_dialogs(current_user.id, per_page * (page - 1), per_page)
+    dialogs = get_dialogs(owner_id=current_user.id, limit=per_page, offset=per_page * (page - 1))
 
     pagination = db.session.query(Message.receiver_id).filter(Message.owner_id == current_user.id).distinct()
     pagination = pagination.paginate(page, per_page=per_page, error_out=False)
