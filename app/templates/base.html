@@ -65,7 +65,7 @@
 
                         {% set unread_dialogs_count = current_user.unread_dialogs_count %}
                         <li><a href="{{ url_for('messages.dialogs_list') }}">
-                            сообщ-я <b style="color: black">β</b>
+                            сообщ-я
                             {% if unread_dialogs_count > 0 %}
                                 <span style="color: orangered"><b>({{ unread_dialogs_count }})</b></span>
                             {% endif %}
@@ -83,7 +83,7 @@
                         <li><a href="{{ url_for('student.notifications') }}">уведомления</a></li>
                         {% set unread_dialogs_count = current_user.unread_dialogs_count %}
                         <li><a href="{{ url_for('messages.dialogs_list') }}">
-                            сообщения <b style="color: black">β</b>
+                            сообщения
                             {% if unread_dialogs_count > 0 %}
                                 <span style="color: orangered"><b>({{ unread_dialogs_count }})</b></span>
                             {% endif %}

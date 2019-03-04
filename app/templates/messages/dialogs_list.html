@@ -51,11 +51,14 @@
                     {% endif %}
                     {% if last_message.message_details.unread %}
                         {% if last_message.forward %}
-                            <span style="color: gray">(непрочитано)</span> {{ message_body }}
+                            <span style="color: gray">Вы: (непрочитано)</span> {{ message_body }}
                         {% else %}
                             <b style="color: orangered">{{ message_body }}</b>
                         {% endif %}
                     {% else %}
+                        {% if last_message.forward %}
+                            <span style="color: gray">Вы: </span>
+                        {% endif %}
                         {{ message_body }}
                     {% endif %}
                 </td>

@@ -27,7 +27,7 @@
                 <td>{{ moment(message.message_details.send_time).format('LLL') }}</td>
                 <td>
                     {% if message.forward %}
-                        {{ message.sender.details.fio }}
+                        Вы
                     {% else %}
                         {{ message.receiver.details.fio }}
                     {% endif %}
