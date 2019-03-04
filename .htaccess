@@ -11,5 +11,5 @@
    RewriteEngine On
    RewriteBase /
    RewriteCond %{REQUEST_FILENAME} !-f
-   RewriteRule ^(.*)$ ./cgi-bin/fla.cgi/$1 [QSA,L]
+   RewriteRule ^(.*)$ ./cgi-bin/start_prod_default.py/$1 [QSA,L]
 </IfModule>
