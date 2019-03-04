@@ -63,13 +63,23 @@ def check_teacher_access_token(f):
     return check_system_role_access_token([role_teacher_name])(f)
 
 
-def check_bot_access_token(f):
-    return check_system_role_access_token([role_bot_name])(f)
-
-
 def check_master_or_teacher_access_token(f):
     return check_system_role_access_token([role_master_name, role_teacher_name, role_developer_name])(f)
 
 
 def check_developer_access_token(f):
     return check_system_role_access_token([role_developer_name])(f)
+
+
+def check_bot_access_token_with_logins(logins):
+    def decorator(f):
+        @wraps(f)
+        def decorated_function(*args, **kwargs):
+            if g.current_user_app is None or g.current_user_app.system_role.name != role_bot_name \
+                    or g.current_user_app.login not in logins:
+                abort(403)
+            return f(*args, **kwargs)
+
+        return decorated_function
+
+    return decorator

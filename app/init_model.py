@@ -11,6 +11,8 @@ role_developer_name = 'разработчик'
 default_citizenship_name = 'Россия'
 default_citizenship_id = 1
 
+bot_login_dump_creator = 'dump_creator'
+
 actual_app_build_code = 3
 
 
@@ -19,7 +21,7 @@ def create_system_roles():
     role_teacher = SystemRole(name=role_teacher_name, details_table_name=Teacher.__tablename__)
     role_student = SystemRole(name=role_student_name, details_table_name=Student.__tablename__)
     role_bot = SystemRole(name=role_bot_name, details_table_name=Bot.__tablename__)
-    role_developer = SystemRole(name=role_developer_name, details_table_name=Bot.__tablename__)
+    role_developer = SystemRole(name=role_developer_name, details_table_name=Developer.__tablename__)
     roles = [role_master, role_teacher, role_student, role_bot, role_developer]
     for role in roles:
         db.session.add(role)
@@ -37,6 +39,8 @@ def create_stub_models():
     create_system_roles()
     create_default_citizenships()
     create_schedule_times()
+    create_developer()
+    create_bot()
 
     role_master = SystemRole.query.filter_by(name=role_master_name).first()
     user_master = SystemUser(login='ma1', password='12', system_role=role_master, enabled=True)
@@ -89,4 +93,13 @@ def create_developer():
     developer = Developer(fio='аккаунт разработчика', system_user=user_developer)
     db.session.add(user_developer)
     db.session.add(developer)
+    db.session.commit()
+
+
+def create_bot():
+    role_bot = SystemRole.query.filter_by(name=role_bot_name).first()
+    user_bot = SystemUser(login=bot_login_dump_creator, password='12', system_role=role_bot, enabled=True)
+    bot = Bot(fio='создатель дампов', system_user=user_bot)
+    db.session.add(user_bot)
+    db.session.add(bot)
     db.session.commit()
