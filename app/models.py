@@ -689,7 +689,7 @@ class MessageDetails(db.Model):
 
 # todo: ? remove messages, when delete user
 # todo: check_db_integrity: Messages are symmetrical.
-# todo: check_db_integrity: don't send messages from / to bots and developers.
+# todo: check_db_integrity: don't send messages from / to bots and developers and btw students.
 class Message(db.Model):
     __tablename__ = 'messages'
     id = db.Column(db.Integer, primary_key=True)

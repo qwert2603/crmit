@@ -63,6 +63,11 @@ def messages_forward():
 def messages_list(receiver_id):
     receiver = SystemUser.query.get_or_404(receiver_id)
 
+    if current_user.id == receiver_id: abort(403)
+    if current_user.is_developer: abort(403)
+    if receiver.is_bot or receiver.is_developer: abort(403)
+    if current_user.is_student and receiver.is_student: abort(403)
+
     # todo: don't send messages from / to bots and developers.
 
     form = SendMessageForm()
