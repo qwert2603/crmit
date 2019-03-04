@@ -1,4 +1,4 @@
-from flask import render_template, request, flash, redirect, url_for
+from flask import render_template, request, flash, redirect, url_for, abort
 from flask_login import login_required, current_user
 from sqlalchemy import or_
 
@@ -41,6 +41,7 @@ def send_notification():
     group = Group.query.get_or_404(group_id)
     form = SendNotificationForm(group)
     if form.validate_on_submit():
+        if current_user.is_developer: abort(403)
         subject = form.subject.data
         body = form.body.data
         receiver_id = form.receiver.data
