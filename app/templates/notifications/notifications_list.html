@@ -27,7 +27,7 @@
                 <option value="0">все</option>
                 {% for sender in senders %}
                     <option value="{{ sender.id }}" {% if sender.id==sender_id %}selected{% endif %}>
-                        {{ sender.details.fio }}
+                        {{ sender.details.fio }} ({{ sender.system_role.name }})
                     </option>
                 {% endfor %}
             </select>
@@ -50,11 +50,11 @@
                 <td>
                     {% if notification.sender.is_master %}
                         <a href="{{ url_for('users.masters_list',search=notification.sender.details.fio) }}">
-                            {{ render_system_user_fio(notification.sender) }}
+                            {{ render_system_user_fio(notification.sender) }} ({{ notification.sender.system_role.name }})
                         </a>
                     {% elif notification.sender.is_teacher %}
                         <a href="{{ url_for('users.teachers_list',search=notification.sender.details.fio) }}">
-                            {{ render_system_user_fio(notification.sender) }}
+                            {{ render_system_user_fio(notification.sender) }} ({{ notification.sender.system_role.name }})
                         </a>
                     {% endif %}
                 </td>

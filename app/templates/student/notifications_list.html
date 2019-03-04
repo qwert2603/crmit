@@ -20,7 +20,7 @@
         {% for notification in notifications %}
             <tr>
                 <td>{{ moment(notification.send_time).format('LLL') }}</td>
-                <td>{{ notification.sender.details  .fio }}</td>
+                <td>{{ notification.sender.details.fio }} ({{ notification.sender.system_role.name }})</td>
                 <td>
                     {% if notification.receiver_type == receiver_type_group %}
                         {{ notification.group.name }}
