@@ -31,8 +31,8 @@ class SystemUser(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(255), nullable=False, unique=True)
     password_hash = db.Column(db.String(255), nullable=False, unique=True)
-    system_role_id = db.Column(db.Integer, db.ForeignKey('system_roles.id'), nullable=False)
-    last_seen = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    system_role_id = db.Column(db.Integer, db.ForeignKey('system_roles.id'), nullable=False, index=True)
+    last_seen = db.Column(db.DateTime, default=datetime.utcnow, nullable=False, index=True)
     last_seen_where = db.Column(db.Integer, default=last_seen_registration, nullable=False)
     enabled = db.Column(db.Boolean, nullable=False)
     force_ask_to_login = db.Column(db.Boolean, nullable=False, default=False)
@@ -600,7 +600,7 @@ class Notification(db.Model):
     receiver_id = db.Column(db.Integer, nullable=False, index=True)
     subject = db.Column(db.Text, nullable=False)
     body = db.Column(db.Text, nullable=False)
-    send_time = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    send_time = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
     receivers = db.Column(db.Text, nullable=False)
 
     @property
@@ -664,7 +664,7 @@ class AccessToken(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     token_hash = db.Column(db.String(255), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False)
-    expires = db.Column(db.DateTime, nullable=False)
+    expires = db.Column(db.DateTime, nullable=False, index=True)
 
 
 class PageVisit(db.Model):
@@ -679,7 +679,7 @@ class MessageDetails(db.Model):
     __tablename__ = 'message_details'
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.Text, nullable=False)
-    send_time = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    send_time = db.Column(db.DateTime, nullable=False, index=True, default=datetime.utcnow)
     unread = db.Column(db.Boolean, nullable=False, default=True)
     messages_q = db.relationship('Message', backref='message_details', lazy='dynamic')
 
@@ -693,7 +693,8 @@ class Message(db.Model):
     sender_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, index=True)
     receiver_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False, index=True)
     message_details_id = db.Column(db.Integer, db.ForeignKey('message_details.id'), nullable=False, index=True)
-    forward = db.Column(db.Boolean, nullable=False)  # if True then "from sender to receiver" False otherwise.
+    forward = db.Column(db.Boolean, nullable=False,
+                        index=True)  # if True then "from sender to receiver" False otherwise.
 
     @property
     def sender(self): return SystemUser.query.get(self.sender_id)
