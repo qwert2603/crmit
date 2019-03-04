@@ -45,7 +45,7 @@
             <th>сообщение</th>
         </tr>
         {% for message in messages %}
-            <tr>
+            <tr {% if not message.forward and message.message_details.unread %}style="background-color: #f4f4f4;"{% endif %}>
                 <td>{{ moment(message.message_details.send_time).format('LLL') }}</td>
                 <td>
                     {% if message.forward %}

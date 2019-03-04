@@ -41,7 +41,7 @@
         </tr>
         {% for dialog in dialogs %}
             {% set last_message = current_user.last_message_with(dialog.receiver_id) %}
-            <tr>
+            <tr {% if not last_message.forward and last_message.message_details.unread %}style="background-color: #f4f4f4;"{% endif %}>
                 <td>
                     {{ moment(last_message.message_details.send_time).format('LLL') }}
                 </td>
