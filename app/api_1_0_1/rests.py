@@ -2,7 +2,6 @@ import datetime
 import uuid
 
 from flask import jsonify, request, abort, g
-from sqlalchemy import or_
 
 from app import db
 from app.api_1_0_1 import api_1_0_1
@@ -17,11 +16,10 @@ from app.api_1_0_1.json_utils import section_to_json, teacher_to_json, master_to
     sort_groups
 from app.api_1_0_1.utils import create_json_list, create_attendings_for_all_students, token_to_hash, \
     create_payments_for_all_students
-from app.init_model import role_master_name, role_teacher_name, \
-    actual_app_build_code, role_developer_name, bot_login_dump_creator
+from app.init_model import actual_app_build_code, bot_login_dump_creator
 from app.main.dump_utils import db_to_dump
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
-    attending_states, AccessToken, Payment, SystemRole, last_seen_android
+    attending_states, AccessToken, Payment, SystemRole, last_seen_android, last_seen_registration
 from app.utils import can_user_write_group
 
 
@@ -291,8 +289,7 @@ def app_info():
 def last_seens():
     system_users = SystemUser.query \
         .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
-        .filter(or_(SystemRole.name == role_master_name, SystemRole.name == role_teacher_name,
-                    SystemRole.name == role_developer_name)) \
+        .filter(SystemUser.last_seen_where != last_seen_registration) \
         .order_by(SystemUser.last_seen.desc()) \
         .all()
     return jsonify([system_user_to_last_seen_info_json(system_user) for system_user in system_users])
