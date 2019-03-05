@@ -76,7 +76,7 @@ def create_stub_models():
 
     student_in_group = StudentInGroup(student=student, group=group, discount=100, enter_month=8, exit_month=16)
     db.session.add(student_in_group)
-    db.session.add(Payment(student_in_group=student_in_group, month=1, value=800, comment=''))
+    db.session.add(Payment(student_in_group=student_in_group, month=9, value=400, comment='comment'))
 
     db.session.commit()
 
