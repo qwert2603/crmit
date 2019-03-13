@@ -7,7 +7,6 @@ class Dialog:
         self.unread_count = unread_count
 
 
-# todo: test
 def get_dialogs(owner_id, limit, offset):
     sql = '''
         select r.receiver_id,
