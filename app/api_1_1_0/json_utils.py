@@ -1,6 +1,8 @@
 import datetime
 
-from app.models import Group, Lesson, Attending, attending_was, AccessToken
+from sqlalchemy.sql.functions import coalesce
+
+from app.models import Group, Lesson, Attending, attending_was, AccessToken, ScheduleGroup, ScheduleTime
 
 
 def sort_groups(query):
@@ -124,6 +126,7 @@ def group_to_json_brief(group):
         'teacherFio': group.teacher.fio,
         'startMonth': group.start_month,
         'endMonth': group.end_month,
+        'sumNotConfirmed': group.sum_not_confirmed or 0,
     }
 
 
@@ -139,6 +142,18 @@ def group_to_json_full(group):
         'endMonth': group.end_month,
         'studentsCount': group.students.count(),
         'lessonsDoneCount': group.lessons.filter(Lesson.date <= datetime.date.today()).count(),
+        'sumNotConfirmed': group.sum_not_confirmed or 0,
+        'schedule': [schedule_group_to_json(schedule_group) for schedule_group in
+                     group.schedule_groups
+                         .join(ScheduleTime, ScheduleTime.id == ScheduleGroup.schedule_time_id)
+                         .order_by(ScheduleGroup.day_of_week, coalesce(ScheduleTime.time, '25:59'), ScheduleTime.id)]
+    }
+
+
+def schedule_group_to_json(schedule_group):
+    return {
+        'dayOfWeek': schedule_group.day_of_week,
+        'time': schedule_group.schedule_time.time
     }
 
 

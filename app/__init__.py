@@ -83,9 +83,6 @@ def create_app(config_name):
     from app.messages import messages as messages_blueprint
     app.register_blueprint(messages_blueprint, url_prefix='/messages')
 
-    from app.api_1_0_1 import api_1_0_1 as api_1_0_1_blueprint
-    app.register_blueprint(api_1_0_1_blueprint, url_prefix='/api/v1.0.1')
-
     from app.api_1_1_0 import api_1_1_0 as api_1_1_0_blueprint
     app.register_blueprint(api_1_1_0_blueprint, url_prefix='/api/v1.1.0')
 

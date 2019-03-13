@@ -9,7 +9,7 @@ from app.api_1_1_0.consts import access_token_expires_days, account_type_master,
     account_type_teacher, login_error_reason_student_account_is_not_supported, login_error_reason_account_disabled, \
     login_error_reason_wrong_login_or_password, account_type_bot, account_type_developer
 from app.api_1_1_0.decorators import access_token_required, check_master_or_teacher_access_token, \
-    check_bot_access_token_with_logins
+    check_bot_access_token_with_logins, check_developer_access_token
 from app.api_1_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
     attending_to_json, payment_to_json, system_user_to_last_seen_info_json, system_user_access_tokens_to_json, \
@@ -285,7 +285,7 @@ def app_info():
 
 @api_1_1_0.route('last_seens')
 @access_token_required()
-#todo @check_developer_access_token
+@check_developer_access_token
 def last_seens():
     system_users = SystemUser.query \
         .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
@@ -297,7 +297,7 @@ def last_seens():
 
 @api_1_1_0.route('access_tokens')
 @access_token_required()
-#todo @check_developer_access_token
+@check_developer_access_token
 def access_tokens():
     system_user_ids = [r[0] for r in db.session.query(AccessToken.system_user_id).distinct().all()]
     result_list = [system_user_access_tokens_to_json(SystemUser.query.get(suid)) for suid in system_user_ids]
