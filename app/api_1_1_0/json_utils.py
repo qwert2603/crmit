@@ -168,13 +168,14 @@ def schedule_group_to_json(schedule_group):
 
 
 def student_in_group_to_json(student_in_group):
+    with_discount = can_user_write_group(g.current_user_app, student_in_group.group)
     return {
         'id': student_in_group.id,
         'systemUserEnabled': student_in_group.student.system_user.enabled,
         'studentId': student_in_group.student_id,
         'studentFio': student_in_group.student.fio,
         'groupId': student_in_group.group.id,
-        'discount': student_in_group.discount,
+        'discount': student_in_group.discount if with_discount else -1,
         'enterMonth': student_in_group.enter_month,
         'exitMonth': student_in_group.exit_month,
         'lessonsAttendedCount': student_in_group.attendings_was.count(),
