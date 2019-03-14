@@ -146,16 +146,19 @@ def last_lessons():
     return jsonify([lesson_to_json(lesson) for lesson in lessons])
 
 
-@api_1_1_0.route('attendings_of_lesson/<int:lesson_id>')
+@api_1_1_0.route('lesson_details/<int:lesson_id>')
 @access_token_required()
 @check_master_or_teacher_access_token
-def attendings_of_lesson(lesson_id):
+def lesson_details(lesson_id):
     lesson = Lesson.query.get_or_404(lesson_id)
     create_attendings_for_all_students(lesson)
     attendings = lesson.attendings \
         .join(Student, Student.id == Attending.student_id) \
         .order_by(Student.fio)
-    return jsonify([attending_to_json(attending) for attending in attendings])
+    return jsonify(group=group_to_json_brief(lesson.group),
+                   teacher=teacher_to_json(lesson.teacher),
+                   lesson=lesson_to_json(lesson),
+                   attendings=[attending_to_json(attending) for attending in attendings])
 
 
 @api_1_1_0.route('save_attending_state', methods=['POST'])
