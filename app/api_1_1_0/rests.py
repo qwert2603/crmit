@@ -13,13 +13,13 @@ from app.api_1_1_0.decorators import access_token_required, check_master_or_teac
 from app.api_1_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
     attending_to_json, payment_to_json, system_user_to_last_seen_info_json, system_user_access_tokens_to_json, \
-    sort_groups
+    sort_groups, developer_to_json
 from app.api_1_1_0.utils import create_json_list, create_attendings_for_all_students, token_to_hash, \
     create_payments_for_all_students
 from app.init_model import actual_app_build_code, bot_login_dump_creator
 from app.main.dump_utils import db_to_dump
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
-    attending_states, AccessToken, Payment, SystemRole, last_seen_android, last_seen_registration
+    attending_states, AccessToken, Payment, SystemRole, last_seen_android, last_seen_registration, Developer
 from app.utils import can_user_write_group
 
 
@@ -49,6 +49,14 @@ def teachers_list():
 @check_master_or_teacher_access_token
 def masters_list():
     return create_json_list(Master, Master.fio, master_to_json, order_by=lambda query: query.order_by(Master.fio))
+
+
+@api_1_1_0.route('/developers_list')
+@access_token_required()
+@check_developer_access_token
+def developers_list():
+    return create_json_list(Developer, Developer.fio, developer_to_json,
+                            order_by=lambda query: query.order_by(Developer.fio))
 
 
 @api_1_1_0.route('/students_list')
@@ -85,6 +93,13 @@ def section_details(section_id):
 @check_master_or_teacher_access_token
 def teacher_details(teacher_id):
     return jsonify(teacher_to_json(Teacher.query.get_or_404(teacher_id)))
+
+
+@api_1_1_0.route('developer_details/<int:developer_id>')
+@access_token_required()
+@check_developer_access_token
+def developer_details(developer_id):
+    return jsonify(developer_to_json(Developer.query.get_or_404(developer_id)))
 
 
 @api_1_1_0.route('master_details/<int:master_id>')

@@ -42,6 +42,14 @@ def system_user_to_json(system_user):
     }
 
 
+def developer_to_json(developer):
+    return {
+        'id': developer.id,
+        'fio': developer.fio,
+        'systemUser': system_user_to_json(developer.system_user),
+    }
+
+
 def master_to_json(master):
     return {
         'id': master.id,
