@@ -104,7 +104,7 @@ class SystemUser(UserMixin, db.Model):
     def access_tokens_not_expired(self):
         return self.access_tokens \
             .filter(AccessToken.expires > datetime.utcnow()) \
-            .order_by(AccessToken.last_use)
+            .order_by(AccessToken.last_use.desc())
 
     def access_tokens_expired(self):
         return self.access_tokens.filter(AccessToken.expires < datetime.utcnow())
