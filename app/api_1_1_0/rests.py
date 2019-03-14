@@ -126,11 +126,11 @@ def lessons_in_group(group_id):
     return jsonify([lesson_to_json(lesson) for lesson in group.lessons.order_by(Lesson.date)])
 
 
-@api_1_1_0.route('last_lessons')
+@api_1_1_0.route('cabinet_info')
 @access_token_required()
 @check_master_or_teacher_access_token
-def last_lessons():
-    count = request.args.get('count', type=int, default=10)
+def cabinet_info():
+    last_lessons_count = request.args.get('last_lessons_count', type=int, default=10)
     lessons = None
     if g.current_user_app.is_master:
         lessons = Lesson.query
@@ -140,10 +140,13 @@ def last_lessons():
         abort(404)
     lessons = lessons \
         .filter(Lesson.date <= datetime.date.today()) \
-        .order_by(Lesson.date.desc()) \
-        .limit(count) \
+        .order_by(Lesson.date.desc(), Lesson.id) \
+        .limit(last_lessons_count) \
         .all()
-    return jsonify([lesson_to_json(lesson) for lesson in lessons])
+
+    return jsonify(lastLessons=[lesson_to_json(lesson) for lesson in lessons],
+                   actualAppBuildCode=actual_app_build_code,
+                   fio=g.current_user_app.details.fio)
 
 
 @api_1_1_0.route('lesson_details/<int:lesson_id>')
