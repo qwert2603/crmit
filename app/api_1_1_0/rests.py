@@ -211,6 +211,11 @@ def save_payment():
     if not can_user_write_group(g.current_user_app, payment.student_in_group.group):
         abort(403)
 
+    can_confirm = g.current_user_app.is_master
+
+    if not can_confirm and payment.confirmed:
+        abort(403)
+
     if value < 0: value = 0
     max_value = payment.max_value
     if value > max_value: value = max_value
@@ -221,7 +226,7 @@ def save_payment():
     payment.value = value
     payment.comment = comment
     payment.cash = is_cash
-    can_confirm = g.current_user_app.is_master
+
     if can_confirm: payment.confirmed = is_confirmed
 
     return 'ok'
