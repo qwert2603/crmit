@@ -12,15 +12,36 @@
         </div>
 
         {% if current_user.access_tokens_not_expired().count() > 0 %}
-            <div style="margin-top: 100px">
-                <div class="btn-block">
-                    <p>вы авторизованы также через мобильное приложение,
-                        <br/>тут вы можете завершить все сессии в мобильном приложении</p>
-                    <a onclick="askLogoutApp('{{ url_for('users.logout_app') }}')" class="btn btn-danger">
-                        завершить
-                    </a>
-                </div>
+            <div style="margin-top: 100px; margin-bottom: 42px">
+                <p>вы авторизованы также через мобильное приложение,
+                    <br/>тут вы можете завершить сессии в мобильном приложении</p>
             </div>
+
+            <table class="table">
+                <tr>
+                    <th>устройство</th>
+                    <th>последнее использование</th>
+                    <th>истекает</th>
+                    <th></th>
+                </tr>
+                {% for access_token in current_user.access_tokens_not_expired().all() %}
+                    <tr>
+                        <td>{{ access_token.device }}</td>
+                        <td>{{ moment(access_token.last_use).format('LLL') }}</td>
+                        <td>{{ moment(access_token.expires).format('LLL') }}</td>
+                        <td>
+                            <a onclick="askLogoutApp('{{ url_for('users.logout_app',token_id=access_token.id) }}')"
+                               class="btn btn-danger">
+                                завершить
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+
+            <a onclick="askLogoutAppAll('{{ url_for('users.logout_app_all') }}')" class="btn btn-danger">
+                завершить все
+            </a>
         {% endif %}
 
     {% else %}

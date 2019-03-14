@@ -102,7 +102,9 @@ class SystemUser(UserMixin, db.Model):
         return check_password_hash(self.password_hash, password)
 
     def access_tokens_not_expired(self):
-        return self.access_tokens.filter(AccessToken.expires > datetime.utcnow())
+        return self.access_tokens \
+            .filter(AccessToken.expires > datetime.utcnow()) \
+            .order_by(AccessToken.last_use)
 
     def access_tokens_expired(self):
         return self.access_tokens.filter(AccessToken.expires < datetime.utcnow())

@@ -9,8 +9,14 @@ function askDelete(entity_name, delete_url) {
     }
 }
 
-function askLogoutApp(success_url) {
+function askLogoutAppAll(success_url) {
     if (confirm('завершить все сессии в мобильном приложении?')) {
+        window.location.replace(success_url);
+    }
+}
+
+function askLogoutApp(success_url) {
+    if (confirm('завершить сессию в мобильном приложении?')) {
         window.location.replace(success_url);
     }
 }

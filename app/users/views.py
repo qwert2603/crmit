@@ -3,7 +3,7 @@ from flask_login import login_required, login_user, logout_user, current_user
 
 from app import db
 from app.decorators import check_master_or_teacher, check_master_or_teacher_or_student
-from app.models import SystemUser, Student
+from app.models import SystemUser, Student, AccessToken
 from app.users import users
 from app.users.forms import LoginForm, ChangePasswordForm, ForceChangePasswordForm
 
@@ -36,13 +36,24 @@ def logout():
     return redirect(url_for('.login'))
 
 
-@users.route('/logout_app')
+@users.route('/logout_app_all')
 @login_required
 @check_master_or_teacher
-def logout_app():
+def logout_app_all():
     for at in current_user.access_tokens.all():
         db.session.delete(at)
     flash('все ваши сессии в мобильном приложении завершены')
+    return redirect(url_for('main.index'))
+
+
+@users.route('/logout_app/<int:token_id>')
+@login_required
+@check_master_or_teacher
+def logout_app(token_id):
+    access_token = AccessToken.query.get_or_404(token_id)
+    if current_user.id != access_token.system_user_id: abort(403)
+    db.session.delete(access_token)
+    flash('ваша сессия в мобильном приложении завершена')
     return redirect(url_for('main.index'))
 
 
