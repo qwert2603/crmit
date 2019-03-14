@@ -236,6 +236,7 @@ def save_payment():
 def login():
     user_login = str(request.json['login'])
     password = str(request.json['password'])
+    device = str(request.json['device'])
 
     user = SystemUser.query.filter(SystemUser.login == user_login).first()
 
@@ -250,7 +251,8 @@ def login():
 
     expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
     token = uuid.uuid4()
-    access_token = AccessToken(token_hash=token_to_hash(token), system_user_id=user.id, expires=expires)
+    access_token = AccessToken(token_hash=token_to_hash(token), system_user_id=user.id,
+                               last_use=datetime.datetime.utcnow(), expires=expires, device=device)
     db.session.add(access_token)
 
     g.current_user_app = user

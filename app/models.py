@@ -667,7 +667,9 @@ class AccessToken(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     token_hash = db.Column(db.String(255), nullable=False)
     system_user_id = db.Column(db.Integer, db.ForeignKey('system_users.id'), nullable=False)
+    last_use = db.Column(db.DateTime, nullable=False, index=True)
     expires = db.Column(db.DateTime, nullable=False, index=True)
+    device = db.Column(db.Text, nullable=False)
 
 
 class PageVisit(db.Model):

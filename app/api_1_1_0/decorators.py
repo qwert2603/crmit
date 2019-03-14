@@ -28,6 +28,7 @@ def access_token_required():
             g.access_token = access_token
             g.current_user_app = access_token.system_user
             from app.api_1_1_0.rests import access_token_expires_days
+            access_token.last_use = datetime.datetime.utcnow()
             access_token.expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
 
             g.current_user_app.last_seen = datetime.datetime.utcnow()
