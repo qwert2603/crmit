@@ -472,6 +472,12 @@ class Group(db.Model):
             .join(Student, Student.id == StudentInGroup.student_id) \
             .order_by(Student.fio)
 
+    @property
+    def payments(self):
+        return Payment.query \
+            .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
+            .filter(StudentInGroup.group_id == self.id)
+
 
 class StudentInGroup(db.Model):
     __tablename__ = 'student_in_groups'

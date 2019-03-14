@@ -29,13 +29,14 @@ def create_attendings_for_all_students(lesson):
     db.session.commit()
 
 
-def create_payments_for_all_students(group, month_number):
-    payment_exist_student_in_group_ids = [p.student_in_group_id for p in group.payments_in_month(month_number)]
+def create_payments_for_all_students(group):
+    for month_number in range(group.start_month, group.end_month + 1):
+        payment_exist_student_in_group_ids = [p.student_in_group_id for p in group.payments_in_month(month_number)]
 
-    for student_in_group in group.students_in_group_in_month(month_number):
-        if student_in_group.id not in payment_exist_student_in_group_ids:
-            db.session.add(Payment(student_in_group=student_in_group, month=month_number, value=0, cash=True,
-                                   confirmed=False, comment=""))
+        for student_in_group in group.students_in_group_in_month(month_number):
+            if student_in_group.id not in payment_exist_student_in_group_ids:
+                db.session.add(Payment(student_in_group=student_in_group, month=month_number, value=0, cash=True,
+                                       confirmed=False, comment=""))
     db.session.commit()
 
 

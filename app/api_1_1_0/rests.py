@@ -184,23 +184,21 @@ def save_attending_state():
     return 'ok'
 
 
-@api_1_1_0.route('payments/<int:group_id>/<int:month_number>')
+@api_1_1_0.route('payments/<int:group_id>')
 @access_token_required()
 @check_master_or_teacher_access_token
-def payments_in_month(group_id, month_number):
+def payments_in_group(group_id):
     group = Group.query.get_or_404(group_id)
     if not can_user_write_group(g.current_user_app, group):
         abort(403)
-    if month_number < group.start_month or month_number > group.end_month:
-        abort(404)
 
-    create_payments_for_all_students(group, month_number)
+    create_payments_for_all_students(group)
 
-    payments = group.payments_in_month(month_number) \
+    payments = group.payments \
         .join(Student, Student.id == StudentInGroup.student_id) \
         .order_by(Student.fio)
 
-    return jsonify([payment_to_json(p) for p in payments])
+    return jsonify(group=group_to_json_brief(group), payments=[payment_to_json(p) for p in payments])
 
 
 @api_1_1_0.route('save_payment', methods=['POST'])
