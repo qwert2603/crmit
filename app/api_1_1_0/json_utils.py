@@ -60,6 +60,14 @@ def master_to_json(master):
     }
 
 
+def bot_to_json(bot):
+    return {
+        'id': bot.id,
+        'fio': bot.fio,
+        'systemUser': system_user_to_json(bot.system_user),
+    }
+
+
 def student_to_json_brief(student):
     return {
         'id': student.id,
