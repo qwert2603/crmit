@@ -47,8 +47,12 @@
 
                         <li><a href="{{ url_for('structure.parents_list') }}">род-ли</a></li>
                         <li><a href="{{ url_for('structure.sections_list') }}">секции</a></li>
-                        <li><a href="{{ url_for('structure.groups_list', teacher_id=current_user.teacher_id_or_zero) }}">группы</a></li>
-                        <li><a href="{{ url_for('lessons.lessons_list', teacher_id=current_user.teacher_id_or_zero, selected_date=current_date_fun()) }}">занятия</a></li>
+                        <li>
+                            <a href="{{ url_for('structure.groups_list', teacher_id=current_user.teacher_id_or_zero) }}">группы</a>
+                        </li>
+                        <li>
+                            <a href="{{ url_for('lessons.lessons_list', teacher_id=current_user.teacher_id_or_zero, selected_date=current_date_fun()) }}">занятия</a>
+                        </li>
                         <li><a href="{{ url_for('notifications.notifications_list') }}">увед-я</a></li>
                         <li><a href="{{ url_for('schedule.timetable') }}">расп-е</a></li>
 
@@ -101,7 +105,16 @@
         {% endfor %}
 
         {% if current_user.is_authenticated and not current_user.is_student and hide_who_u_r != True %}
-            <p style="color: gray">вы действуете как {{ current_user.login }} ({{ current_user.system_role.name }})</p>
+            <span style="color: gray">вы действуете как {{ current_user.login }} ({{ current_user.system_role.name }})</span>
+        {% endif %}
+
+        {% if current_user.is_authenticated and not current_user.is_student %}
+            <span style="font-size: 16px">
+                <span style="color: red">Android-приложение</span>
+                <span style="color: fuchsia">версии 1.1.0 и ниже больше не поддерживается!</span>
+                <span style="color: green">Новая версия</span>
+                <span style="color: blue">доступна в Google Play</span>
+            </span>
         {% endif %}
 
         {% block page_content %}{% endblock %}
