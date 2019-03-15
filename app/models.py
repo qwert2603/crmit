@@ -678,6 +678,7 @@ class AccessToken(db.Model):
     last_use = db.Column(db.DateTime, nullable=False, index=True)
     expires = db.Column(db.DateTime, nullable=False, index=True)
     device = db.Column(db.Text, nullable=False)
+    app_version = db.Column(db.Text, nullable=False)
 
 
 class PageVisit(db.Model):

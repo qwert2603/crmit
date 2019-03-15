@@ -256,6 +256,7 @@ def login():
     user_login = str(request.json['login'])
     password = str(request.json['password'])
     device = str(request.json['device'])
+    app_version = str(request.json['appVersion'])
 
     user = SystemUser.query.filter(SystemUser.login == user_login).first()
 
@@ -271,7 +272,8 @@ def login():
     expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
     token = uuid.uuid4()
     access_token = AccessToken(token_hash=token_to_hash(token), system_user_id=user.id,
-                               last_use=datetime.datetime.utcnow(), expires=expires, device=device)
+                               last_use=datetime.datetime.utcnow(), expires=expires, device=device,
+                               app_version=app_version)
     db.session.add(access_token)
 
     g.current_user_app = user
@@ -327,7 +329,7 @@ def last_seens():
 def access_tokens():
     system_user_ids = [r[0] for r in db.session.query(AccessToken.system_user_id).distinct().all()]
     result_list = [system_user_access_tokens_to_json(SystemUser.query.get(suid)) for suid in system_user_ids]
-    result_list = sorted(result_list, key=lambda r: r.get('expiresList')[0], reverse=True)
+    result_list = sorted(result_list, key=lambda r: r.get('tokens')[0].get('lastUse'), reverse=True)
     return jsonify(result_list)
 
 

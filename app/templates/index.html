@@ -20,6 +20,7 @@
             <table class="table">
                 <tr>
                     <th>устройство</th>
+                    <th>версия приложения</th>
                     <th>последнее использование</th>
                     <th>истекает</th>
                     <th></th>
@@ -27,6 +28,7 @@
                 {% for access_token in current_user.access_tokens_not_expired().all() %}
                     <tr>
                         <td>{{ access_token.device }}</td>
+                        <td>{{ access_token.app_version }}</td>
                         <td>{{ moment(access_token.last_use).format('LLL') }}</td>
                         <td>{{ moment(access_token.expires).format('LLL') }}</td>
                         <td>

@@ -235,6 +235,15 @@ def system_user_access_tokens_to_json(system_user):
     access_tokens = system_user.access_tokens.order_by(AccessToken.expires.desc()).all()
     return {
         'systemUser': system_user_to_json(system_user),
-        'expiresList': [at.expires.strftime("%Y-%m-%d %H:%M") for at in access_tokens],
         'fio': system_user.details.fio,
+        'tokens': [access_token_to_json(at) for at in access_tokens],
+    }
+
+
+def access_token_to_json(access_token):
+    return {
+        'lastUse': access_token.expires.strftime("%Y-%m-%d %H:%M"),
+        'expires': access_token.expires.strftime("%Y-%m-%d %H:%M"),
+        'device': access_token.device,
+        'appVersion': access_token.app_version,
     }
