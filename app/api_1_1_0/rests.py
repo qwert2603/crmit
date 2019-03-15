@@ -140,11 +140,22 @@ def lessons_in_group(group_id):
     return jsonify([lesson_to_json(lesson) for lesson in group.lessons.order_by(Lesson.date)])
 
 
-@api_1_1_0.route('cabinet_info')
+@api_1_1_0.route('cabinet_info', methods=['POST'])
 @access_token_required()
 @check_master_or_teacher_access_token
 def cabinet_info():
-    last_lessons_count = request.args.get('last_lessons_count', type=int, default=10)
+    def get_int_param(key, default):
+        if key not in request.json:
+            return default
+        try:
+            return int(str(request.json[key]))
+        except ValueError:
+            return default
+
+    g.access_token.device = str(request.json['device'])
+    g.access_token.app_version = str(request.json['appVersion'])
+
+    last_lessons_count = get_int_param('lastLessonsCount', 10)
     lessons = None
     if g.current_user_app.is_master:
         lessons = Lesson.query
