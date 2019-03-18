@@ -34,7 +34,7 @@
                                     </a>
                                 </div>
                             {% else %}
-                                <a href="{{ url_for('users.teachers_list',search=group.teacher.fio) }}">
+                                <a href="{{ url_for('structure.groups_list',search=group.name) }}">
                                     {{ group.name }}
                                 </a>
                             {% endif %}
