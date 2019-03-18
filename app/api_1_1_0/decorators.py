@@ -27,12 +27,15 @@ def access_token_required():
                 abort(401)
             g.access_token = access_token
             g.current_user_app = access_token.system_user
-            from app.api_1_1_0.rests import access_token_expires_days
-            access_token.last_use = datetime.datetime.utcnow()
-            access_token.expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
 
-            g.current_user_app.last_seen = datetime.datetime.utcnow()
-            g.current_user_app.last_seen_where = last_seen_android
+            if not g.current_user_app.is_developer:
+                from app.api_1_1_0.rests import access_token_expires_days
+                access_token.last_use = datetime.datetime.utcnow()
+                access_token.expires = datetime.datetime.utcnow() + datetime.timedelta(days=access_token_expires_days)
+
+                g.current_user_app.last_seen = datetime.datetime.utcnow()
+                g.current_user_app.last_seen_where = last_seen_android
+
             for at in g.current_user_app.access_tokens_expired().all():
                 db.session.delete(at)
 
