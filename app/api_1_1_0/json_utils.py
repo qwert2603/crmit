@@ -144,7 +144,7 @@ def group_to_json_brief(group):
         'teacherFio': group.teacher.fio,
         'startMonth': group.start_month,
         'endMonth': group.end_month,
-        'sumNotConfirmed': int(group.sum_not_confirmed or 0 if can_user_write_group(g.current_user_app, group) else -1),
+        'sumNotConfirmed': group.sum_not_confirmed or 0 if can_user_write_group(g.current_user_app, group) else -1,
     }
 
 
@@ -160,7 +160,7 @@ def group_to_json_full(group):
         'endMonth': group.end_month,
         'studentsCount': group.students.count(),
         'lessonsDoneCount': group.lessons.filter(Lesson.date <= datetime.date.today()).count(),
-        'sumNotConfirmed': int(group.sum_not_confirmed or 0 if can_user_write_group(g.current_user_app, group) else -1),
+        'sumNotConfirmed': group.sum_not_confirmed or 0 if can_user_write_group(g.current_user_app, group) else -1,
         'schedule': [schedule_group_to_json(schedule_group) for schedule_group in
                      group.schedule_groups
                          .join(ScheduleTime, ScheduleTime.id == ScheduleGroup.schedule_time_id)
