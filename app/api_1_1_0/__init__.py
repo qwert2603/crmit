@@ -7,12 +7,12 @@ api_1_1_0 = Blueprint('api_1_1_0', __name__)
 from . import rests, errors
 
 
-@api_1_1_0.before_request
+@api_1_1_0.before_app_request
 def before_request():
     g.current_user_app = None
 
 
-@api_1_1_0.after_request
+@api_1_1_0.after_app_request
 def after_request(response):
     dont_rollback_endpoints = [
         'api_1_1_0.login',
