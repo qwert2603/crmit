@@ -250,7 +250,7 @@ def system_user_access_tokens_to_json(system_user):
 
 def access_token_to_json(access_token):
     return {
-        'lastUse': access_token.expires.strftime("%Y-%m-%d %H:%M"),
+        'lastUse': access_token.last_use.strftime("%Y-%m-%d %H:%M"),
         'expires': access_token.expires.strftime("%Y-%m-%d %H:%M"),
         'device': access_token.device,
         'appVersion': access_token.app_version,
