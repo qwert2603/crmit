@@ -179,10 +179,6 @@ def cabinet_info():
 @check_master_or_teacher_access_token
 def lesson_details(lesson_id):
     lesson = Lesson.query.get_or_404(lesson_id)
-
-    if not can_user_write_group(g.current_user_app, lesson.group):
-        abort(403)
-
     create_attendings_for_all_students(lesson)
     attendings = lesson.attendings \
         .join(Student, Student.id == Attending.student_id) \
