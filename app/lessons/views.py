@@ -48,7 +48,7 @@ def months_list(group_id):
 
 @lessons.route('/<int:group_id>/<int:month_number>', methods=['GET', 'POST'])
 @login_required
-@check_master_or_teacher
+@check_access_group_write()
 def lessons_in_month(group_id, month_number):
     group = Group.query.get_or_404(group_id)
     if month_number < group.start_month or month_number > group.end_month:
