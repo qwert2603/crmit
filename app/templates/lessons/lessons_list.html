@@ -51,7 +51,9 @@
             <th>группа</th>
             <th>преподаватель</th>
             <th>учеников</th>
-            <th></th>
+            {% if current_user.is_master or current_user.is_teacher %}
+                <th></th>
+            {% endif %}
         </tr>
         {% for lesson in lessons %}
             <tr>
@@ -70,21 +72,19 @@
                         {{ render_system_user_fio(lesson.teacher.system_user) }}
                     </a>
                 </td>
-                <td>
-                    {% if can_user_write_group(current_user, lesson.group) %}
-                        {{ lesson.attendings_was.count() }} /
-                        {{ lesson.group.students_in_month(number_of_month_for_date(lesson.date)).count() }}
-                    {% endif %}
-                </td>
-                <td>
-                    {% if can_user_write_group(current_user, lesson.group)
+                <td>{{ lesson.attendings_was.count() }}
+                    / {{ lesson.group.students_in_month(number_of_month_for_date(lesson.date)).count() }}</td>
+                {% if current_user.is_master or current_user.is_teacher %}
+                    <td>
+                        {% if can_user_write_group(current_user, lesson.group)
                         and (current_user.is_master or current_user.is_teacher and lesson.date >= current_date_fun()) %}
-                        <a onclick="askDelete('занятие {{ lesson.date }} в {{ lesson.group.name }}', '{{ url_for('lessons.delete_lesson',lesson_id=lesson.id) }}')"
-                           class="btn btn-danger {% if not is_lesson_removable(lesson) %}disabled{% endif %}">
-                            <span class="glyphicon glyphicon-remove"></span>
-                        </a>
-                    {% endif %}
-                </td>
+                            <a onclick="askDelete('занятие {{ lesson.date }} в {{ lesson.group.name }}', '{{ url_for('lessons.delete_lesson',lesson_id=lesson.id) }}')"
+                               class="btn btn-danger {% if not is_lesson_removable(lesson) %}disabled{% endif %}">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </a>
+                        {% endif %}
+                    </td>
+                {% endif %}
             </tr>
         {% else %}
             <h3>нет занятий</h3>
