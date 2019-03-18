@@ -60,7 +60,7 @@ def send_email(subject, text):
 
 
 try:
-    url = 'http://crm.cmit22.ru/api/v1.0.1/dump?access_token={}'.format(access_token)
+    url = 'http://crm.cmit22.ru/api/v1.1.0/dump?access_token={}'.format(access_token)
     response = urllib.request.urlopen(url)
     response_string = response.read().decode("utf-8")
     write_file.write(response_string)
