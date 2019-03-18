@@ -460,11 +460,15 @@ class Group(db.Model):
 
     @property
     def sum_not_confirmed(self):
-        return int(db.session.query(func.sum(Payment.value)) \
-                   .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
-                   .filter(StudentInGroup.group_id == self.id) \
-                   .filter(Payment.confirmed == False) \
-                   .scalar())
+        scalar = db.session.query(func.sum(Payment.value)) \
+            .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
+            .filter(StudentInGroup.group_id == self.id) \
+            .filter(Payment.confirmed == False) \
+            .scalar()
+        if scalar is not None:
+            return int(scalar)
+        else:
+            return 0
 
     @property
     def students_in_group_by_fio(self):
