@@ -17,18 +17,26 @@ from app.notifications.utils import parents_of_student_in_group, parents_of_grou
 def notifications_list():
     sender_id = request.args.get('sender_id', 0, type=int)
     page = request.args.get('page', 1, type=int)
+
     pagination = Notification.query.order_by(Notification.send_time.desc())
-    if sender_id > 0: pagination = pagination.filter(Notification.sender_id == sender_id)
+    if current_user.is_master:
+        if sender_id > 0:
+            pagination = pagination.filter(Notification.sender_id == sender_id)
+    else:
+        pagination = pagination.filter(Notification.sender_id == current_user.id)
     pagination = pagination.paginate(page, per_page=20, error_out=False)
+
     senders = SystemUser.query \
         .join(SystemRole, SystemRole.id == SystemUser.system_role_id) \
         .filter(or_(SystemRole.name == role_master_name, SystemRole.name == role_teacher_name)) \
         .all()
+
     if current_user.is_master:
         groups = Group.query
     else:
         groups = current_user.teacher.groups
     groups = groups.order_by(Group.start_month.desc(), Group.name).all()
+
     return render_template('notifications/notifications_list.html', sender_id=sender_id, pagination=pagination,
                            notifications=pagination.items, senders=senders, groups=groups)
 
@@ -53,7 +61,7 @@ def send_notification():
             receiver_type = receiver_type_student_in_group
             parents = parents_of_student_in_group(receiver_id)
         receivers = do_send_notification(parents, subject, body)
-        is_ok = True  # receivers is not None
+        is_ok = True  # if receivers is not None:
         if is_ok:
             db.session.add(Notification(sender_id=current_user.id, receiver_type=receiver_type, receiver_id=receiver_id,
                                         subject=subject, body=body, receivers=receivers or ''))

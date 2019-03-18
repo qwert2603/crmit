@@ -29,7 +29,7 @@ class DevConfig(Config):
     MAIL_DEFAULT_SENDER = 'natalykanatkina@gmail.com'
     VK_ACCESS_TOKEN = os.getenv('VK_ACCESS_TOKEN')
     ACCESS_TOKEN_SALT = '1918'.encode('utf-8')
-    DEVELOPER_READ_ONLY = True
+    DEVELOPER_READ_ONLY = False
     JSON_AS_ASCII = False
 
 
