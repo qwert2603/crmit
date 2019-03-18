@@ -1,4 +1,4 @@
-from sqlalchemy import func
+from sqlalchemy import func, or_
 
 from app import db
 from app.models import Lesson, Payment, StudentInGroup, Group
@@ -15,7 +15,7 @@ def group_students_count_by_month_dict(group_id):
 def group_payments_count_by_month_dict(group_id):
     pays_by_month = db.session.query(Payment.month, func.count(Payment.id)) \
         .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
-        .filter(StudentInGroup.group_id == group_id, Payment.value > 0) \
+        .filter(StudentInGroup.group_id == group_id, or_(Payment.value > 0, Payment.confirmed == True)) \
         .group_by(Payment.month) \
         .all()
     result = dict()
