@@ -1,7 +1,7 @@
 from flask import render_template
 from flask_login import login_required
 
-from app.decorators import check_master_or_teacher
+from app.decorators import check_access_group_write
 from app.models import Group, Lesson
 from app.stat import stat
 from app.stat.utils import group_students_count_by_month_dict, group_payments_count_by_month_dict, \
@@ -11,7 +11,7 @@ from app.utils import get_month_name
 
 @stat.route('/group/<int:group_id>')
 @login_required
-@check_master_or_teacher
+@check_access_group_write()
 def group_stat(group_id):
     group = Group.query.get_or_404(group_id)
     students_by_month = group_students_count_by_month_dict(group_id)
