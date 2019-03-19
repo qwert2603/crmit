@@ -3,6 +3,7 @@ import datetime
 from flask import g
 from sqlalchemy.sql.functions import coalesce
 
+from app.api_1_1_0.utils import get_account_type
 from app.models import Group, Lesson, Attending, attending_was, AccessToken, ScheduleGroup, ScheduleTime
 from app.utils import can_user_write_group
 
@@ -40,6 +41,7 @@ def system_user_to_json(system_user):
         'lastSeen': system_user.last_seen.strftime("%Y-%m-%d %H:%M"),
         'lastSeenWhere': system_user.last_seen_where,
         'systemRoleName': system_user.system_role.name,
+        'accountType': get_account_type(system_user),
         'enabled': system_user.enabled
     }
 
@@ -236,6 +238,7 @@ def system_user_to_last_seen_info_json(system_user):
     return {
         'systemUser': system_user_to_json(system_user),
         'fio': system_user.details.fio,
+        'detailsId': system_user.details.id,
     }
 
 
@@ -244,6 +247,7 @@ def system_user_access_tokens_to_json(system_user):
     return {
         'systemUser': system_user_to_json(system_user),
         'fio': system_user.details.fio,
+        'detailsId': system_user.details.id,
         'tokens': [access_token_to_json(at) for at in access_tokens],
     }
 

@@ -1,6 +1,8 @@
 from flask import request, jsonify
 
 from app import db
+from app.api_1_1_0.consts import account_type_developer, account_type_master, account_type_teacher, account_type_bot, \
+    account_type_student
 from app.models import Attending, attending_was_not, Payment
 from app.utils import number_of_month_for_date
 
@@ -46,3 +48,16 @@ def token_to_hash(token):
 
     dk = hashlib.pbkdf2_hmac('sha256', str(token).encode('utf-8'), app_instance.config['ACCESS_TOKEN_SALT'], 100000)
     return str(binascii.hexlify(dk))
+
+
+def get_account_type(system_user):
+    if system_user.is_developer:
+        return account_type_developer
+    elif system_user.is_master:
+        return account_type_master
+    elif system_user.is_teacher:
+        return account_type_teacher
+    elif system_user.is_bot:
+        return account_type_bot
+    elif system_user.is_student:
+        return account_type_student

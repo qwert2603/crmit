@@ -6,5 +6,6 @@ account_type_master = 'MASTER'
 account_type_teacher = 'TEACHER'
 account_type_bot = 'BOT'
 account_type_developer = 'DEVELOPER'
+account_type_student = 'STUDENT'
 
 access_token_expires_days = 42

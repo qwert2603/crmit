@@ -306,7 +306,7 @@ def login():
     g.current_user_app.last_seen = datetime.datetime.utcnow()
     g.current_user_app.last_seen_where = last_seen_android
 
-    account_type = 0
+    account_type = ''
     details_id = 0
     if user.is_developer:
         account_type = account_type_developer
@@ -320,6 +320,8 @@ def login():
     elif user.is_bot:
         account_type = account_type_bot
         details_id = user.bot.id
+    else:
+        abort(400)
 
     return jsonify(token=token, accountType=account_type, detailsId=details_id)
 
