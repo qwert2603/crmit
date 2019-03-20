@@ -28,6 +28,7 @@ def after_request(response):
         'users.login',
         'users.logout',
         'users.logout_app',
+        'users.logout_app_all',
         'users.change_password',
     ]
     if request.endpoint in dont_rollback_endpoints: return response
