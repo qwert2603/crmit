@@ -106,7 +106,11 @@ def edit_student(id):
     if form.validate_on_submit():
         student.fio = form.fio.data
         student.system_user.login = form.login.data
-        student.system_user.password = password_from_date(form.birth_date.data)
+
+        if student.system_user.verify_password(password_from_date(student.birth_date)):
+            student.system_user.password = password_from_date(form.birth_date.data)
+            student.system_user.force_ask_to_login = True
+
         student.system_user.enabled = form.enabled.data
         student.birth_date = form.birth_date.data
         student.birth_place = form.birth_place.data
