@@ -163,14 +163,14 @@ def group_to_json_full(group):
         'studentsCount': group.students.count(),
         'lessonsDoneCount': group.lessons.filter(Lesson.date <= datetime.date.today()).count(),
         'sumNotConfirmed': group.sum_not_confirmed or 0 if can_user_write_group(g.current_user_app, group) else -1,
-        'schedule': [schedule_group_to_json(schedule_group) for schedule_group in
+        'schedule': [schedule_group_to_json_brief(schedule_group) for schedule_group in
                      group.schedule_groups
                          .join(ScheduleTime, ScheduleTime.id == ScheduleGroup.schedule_time_id)
                          .order_by(ScheduleGroup.day_of_week, coalesce(ScheduleTime.time, '25:59'), ScheduleTime.id)]
     }
 
 
-def schedule_group_to_json(schedule_group):
+def schedule_group_to_json_brief(schedule_group):
     return {
         'dayOfWeek': schedule_group.day_of_week,
         'time': schedule_group.schedule_time.time
@@ -258,4 +258,16 @@ def access_token_to_json(access_token):
         'expires': access_token.expires.strftime("%Y-%m-%d %H:%M"),
         'device': access_token.device,
         'appVersion': access_token.app_version,
+    }
+
+
+# schedule_group.group MUST be not None.
+def schedule_group_to_json(schedule_group):
+    return {
+        'id': schedule_group.id,
+        'dayOfWeek': schedule_group.day_of_week,
+        'time': schedule_group.schedule_time.time,
+        'groupId': schedule_group.group_id,
+        'groupName': schedule_group.group.name,
+        'teacherId': schedule_group.group.teacher_id,
     }

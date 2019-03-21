@@ -2,6 +2,7 @@ import datetime
 import uuid
 
 from flask import jsonify, request, abort, g
+from sqlalchemy.sql.functions import coalesce
 
 from app import db
 from app.api_1_1_0 import api_1_1_0
@@ -13,13 +14,14 @@ from app.api_1_1_0.decorators import access_token_required, check_master_or_teac
 from app.api_1_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
     student_to_json_full, group_to_json_full, group_to_json_brief, student_in_group_to_json, lesson_to_json, \
     attending_to_json, payment_to_json, system_user_to_last_seen_info_json, system_user_access_tokens_to_json, \
-    sort_groups, developer_to_json, bot_to_json
+    sort_groups, developer_to_json, bot_to_json, schedule_group_to_json
 from app.api_1_1_0.utils import create_json_list, create_attendings_for_all_students, token_to_hash, \
     create_payments_for_all_students
 from app.init_model import actual_app_build_code, bot_login_dump_creator
 from app.main.dump_utils import db_to_dump
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
-    attending_states, AccessToken, Payment, SystemRole, last_seen_android, last_seen_registration, Developer, Bot
+    attending_states, AccessToken, Payment, SystemRole, last_seen_android, last_seen_registration, Developer, Bot, \
+    ScheduleGroup, ScheduleTime
 from app.utils import can_user_write_group
 
 
@@ -365,3 +367,15 @@ def access_tokens():
 @check_bot_access_token_with_logins([bot_login_dump_creator])
 def dump():
     return jsonify(db_to_dump())
+
+
+@api_1_1_0.route('schedule')
+@access_token_required()
+@check_master_or_teacher_access_token
+def schedule():
+    schedule_groups = ScheduleGroup.query \
+        .join(ScheduleTime, ScheduleTime.id == ScheduleGroup.schedule_time_id) \
+        .filter(ScheduleGroup.group_id.isnot(None)) \
+        .order_by(ScheduleGroup.day_of_week, coalesce(ScheduleTime.time, '25:59'), ScheduleTime.id) \
+        .all()
+    return jsonify([schedule_group_to_json(g) for g in schedule_groups])
