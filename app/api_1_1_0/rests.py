@@ -378,4 +378,7 @@ def schedule():
         .filter(ScheduleGroup.group_id.isnot(None)) \
         .order_by(ScheduleGroup.day_of_week, coalesce(ScheduleTime.time, '25:59'), ScheduleTime.id) \
         .all()
-    return jsonify([schedule_group_to_json(g) for g in schedule_groups])
+
+    response = jsonify([schedule_group_to_json(g) for g in schedule_groups])
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    return response
