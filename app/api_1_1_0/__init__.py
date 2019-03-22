@@ -25,3 +25,9 @@ def after_request(response):
         if app_instance.config['DEVELOPER_READ_ONLY']:
             db.session.rollback()
     return response
+
+
+@api_1_1_0.after_request
+def after_request(response):
+    response.headers['Content-Type'] = 'application/json; charset=utf-8'
+    return response
