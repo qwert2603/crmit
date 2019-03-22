@@ -373,10 +373,18 @@ def dump():
 @access_token_required()
 @check_master_or_teacher_access_token
 def schedule():
+    teacher_id = request.args.get('teacherId', type=int, default=0)
+
     schedule_groups = ScheduleGroup.query \
         .join(ScheduleTime, ScheduleTime.id == ScheduleGroup.schedule_time_id) \
         .filter(ScheduleGroup.group_id.isnot(None)) \
-        .order_by(ScheduleGroup.day_of_week, coalesce(ScheduleTime.time, '25:59'), ScheduleTime.id) \
-        .all()
+        .order_by(ScheduleGroup.day_of_week, coalesce(ScheduleTime.time, '25:59'), ScheduleTime.id)
+
+    if teacher_id != 0:
+        schedule_groups = schedule_groups \
+            .join(Group, Group.id == ScheduleGroup.group_id) \
+            .filter(Group.teacher_id == teacher_id)
+
+    schedule_groups = schedule_groups.all()
 
     return jsonify([schedule_group_to_json(g) for g in schedule_groups])
