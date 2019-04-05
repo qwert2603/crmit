@@ -6,9 +6,9 @@ from sqlalchemy.sql.functions import coalesce
 
 from app import db
 from app.api_1_1_0 import api_1_1_0
-from app.api_1_1_0.consts import access_token_expires_days, account_type_master, \
-    account_type_teacher, login_error_reason_student_account_is_not_supported, login_error_reason_account_disabled, \
-    login_error_reason_wrong_login_or_password, account_type_bot, account_type_developer
+from app.api_1_1_0.consts import access_token_expires_days, login_error_reason_student_account_is_not_supported, \
+    login_error_reason_account_disabled, \
+    login_error_reason_wrong_login_or_password
 from app.api_1_1_0.decorators import access_token_required, check_master_or_teacher_access_token, \
     check_bot_access_token_with_logins, check_developer_access_token
 from app.api_1_1_0.json_utils import section_to_json, teacher_to_json, master_to_json, student_to_json_brief, \
@@ -16,7 +16,7 @@ from app.api_1_1_0.json_utils import section_to_json, teacher_to_json, master_to
     attending_to_json, payment_to_json, system_user_to_last_seen_info_json, system_user_access_tokens_to_json, \
     sort_groups, developer_to_json, bot_to_json, schedule_group_to_json
 from app.api_1_1_0.utils import create_json_list, create_attendings_for_all_students, token_to_hash, \
-    create_payments_for_all_students
+    create_payments_for_all_students, get_account_type
 from app.init_model import actual_app_build_code, bot_login_dump_creator
 from app.main.dump_utils import db_to_dump
 from app.models import Section, Teacher, Master, Student, SystemUser, Group, Lesson, Attending, StudentInGroup, \
@@ -308,19 +308,15 @@ def login():
     g.current_user_app.last_seen = datetime.datetime.utcnow()
     g.current_user_app.last_seen_where = last_seen_android
 
-    account_type = ''
+    account_type = get_account_type(user)
     details_id = 0
     if user.is_developer:
-        account_type = account_type_developer
         details_id = user.developer.id
     elif user.is_master:
-        account_type = account_type_master
         details_id = user.master.id
     elif user.is_teacher:
-        account_type = account_type_teacher
         details_id = user.teacher.id
     elif user.is_bot:
-        account_type = account_type_bot
         details_id = user.bot.id
     else:
         abort(400)
