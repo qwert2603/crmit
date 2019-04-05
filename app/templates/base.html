@@ -108,15 +108,6 @@
             <span style="color: gray">вы действуете как {{ current_user.login }} ({{ current_user.system_role.name }})</span>
         {% endif %}
 
-        {% if current_user.is_authenticated and not current_user.is_student %}
-            <span style="font-size: 16px">
-                <span style="color: red">Android-приложение</span>
-                <span style="color: fuchsia">версии 1.1.0 и ниже больше не поддерживается!</span>
-                <span style="color: green">Новая версия</span>
-                <span style="color: blue">доступна в Google Play</span>
-            </span>
-        {% endif %}
-
         {% block page_content %}{% endblock %}
     </div>
 {% endblock %}
