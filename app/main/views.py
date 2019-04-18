@@ -1,4 +1,7 @@
-from flask import render_template, jsonify
+import datetime
+import os
+
+from flask import render_template, jsonify, request
 from flask_login import login_required
 
 from app.decorators import check_master, check_developer
@@ -220,3 +223,15 @@ def check_db_integrity_notifications_and_messages():
 def visit_stats():
     pages = PageVisit.query.order_by(PageVisit.visits_count.desc(), PageVisit.page_name).all()
     return render_template("visit_stats.html", pages=pages)
+
+
+@main.route('/upload_logs', methods=['POST'])
+def upload_logs():
+    now_string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    dir = 'logs'
+    os.makedirs(dir, exist_ok=True)
+    filename = '{}/{}.txt'.format(dir, now_string)
+    write_file = open(filename, 'w')
+    write_file.write(request.json.get("logs"))
+    write_file.close()
+    return 'ok'
