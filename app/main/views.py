@@ -229,14 +229,28 @@ def visit_stats():
 def upload_logs():
     try:
         now_string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-        dir = 'logs'
-        os.makedirs(dir, exist_ok=True)
+        logs_dir = 'logs'
+        os.makedirs(logs_dir, exist_ok=True)
         device_uuid = request.json.get("deviceUuid")
-        filename = '{}/{}_{}.txt'.format(dir, device_uuid, now_string)
+        filename = '{}/{}_{}.txt'.format(logs_dir, device_uuid, now_string)
         import codecs
         write_file = codecs.open(filename, 'w', "utf-8")
         write_file.write(request.json.get("logs"))
         write_file.close()
+
+        from os import listdir
+        log_files = listdir(logs_dir)
+        if len(log_files) >= 100:
+            log_zips_dir = "log_zips"
+            os.makedirs(log_zips_dir, exist_ok=True)
+            import zipfile
+            logs_zip = zipfile.ZipFile('{}/{}.zip'.format(log_zips_dir, now_string), 'w')
+            for log_file in log_files:
+                log_file_path = "{}/{}".format(logs_dir, log_file)
+                logs_zip.write(log_file_path)
+                os.remove(log_file_path)
+            logs_zip.close()
+
         return 'ok'
     except Exception as e:
         return str(e), 404
