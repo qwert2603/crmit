@@ -230,7 +230,8 @@ def upload_logs():
     now_string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     dir = 'logs'
     os.makedirs(dir, exist_ok=True)
-    filename = '{}/{}.txt'.format(dir, now_string)
+    device_uuid = request.json.get("deviceUuid")
+    filename = '{}/{}_{}.txt'.format(dir, device_uuid, now_string)
     write_file = open(filename, 'w')
     write_file.write(request.json.get("logs"))
     write_file.close()
