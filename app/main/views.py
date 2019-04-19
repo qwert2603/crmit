@@ -233,7 +233,8 @@ def upload_logs():
         os.makedirs(dir, exist_ok=True)
         device_uuid = request.json.get("deviceUuid")
         filename = '{}/{}_{}.txt'.format(dir, device_uuid, now_string)
-        write_file = open(filename, 'w')
+        import codecs
+        write_file = codecs.open(filename, 'w', "utf-8")
         write_file.write(request.json.get("logs"))
         write_file.close()
         return 'ok'
