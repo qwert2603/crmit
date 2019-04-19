@@ -244,7 +244,7 @@ def upload_logs():
             log_zips_dir = "log_zips"
             os.makedirs(log_zips_dir, exist_ok=True)
             import zipfile
-            logs_zip = zipfile.ZipFile('{}/{}.zip'.format(log_zips_dir, now_string), 'w')
+            logs_zip = zipfile.ZipFile('{}/{}.zip'.format(log_zips_dir, now_string), 'w', zipfile.ZIP_DEFLATED)
             for log_file in log_files:
                 log_file_path = "{}/{}".format(logs_dir, log_file)
                 logs_zip.write(log_file_path)
