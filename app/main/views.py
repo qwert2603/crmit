@@ -228,14 +228,15 @@ def visit_stats():
 @main.route('/upload_logs', methods=['POST'])
 def upload_logs():
     try:
-        now_string = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        logs = request.json.get("logs")
+        now_string = logs[1:24]  # datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         logs_dir = 'logs'
         os.makedirs(logs_dir, exist_ok=True)
         device_uuid = request.json.get("deviceUuid")
         filename = '{}/{}_{}.txt'.format(logs_dir, device_uuid, now_string)
         import codecs
         write_file = codecs.open(filename, 'w', "utf-8")
-        write_file.write(request.json.get("logs"))
+        write_file.write(logs)
         write_file.close()
 
         from os import listdir
