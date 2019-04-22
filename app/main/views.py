@@ -229,29 +229,31 @@ def visit_stats():
 def upload_logs():
     try:
         logs = request.json.get("logs")
-        now_string = logs[1:24]  # datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         logs_dir = 'logs'
         os.makedirs(logs_dir, exist_ok=True)
         device_uuid = request.json.get("deviceUuid")
-        filename = '{}/{}_{}.txt'.format(logs_dir, device_uuid, now_string)
+        filename = '{}/{}.txt'.format(logs_dir, device_uuid)
         import codecs
-        write_file = codecs.open(filename, 'w', "utf-8")
+        write_file = codecs.open(filename, 'a', "utf-8")
         write_file.write(logs)
         write_file.close()
 
-        from os import listdir
-        log_files = listdir(logs_dir)
-        if len(log_files) >= 100:
+        if request.json.get("zipNow") or os.path.getsize(filename) >= 10 * 1024 * 1024:
+            read_file = codecs.open(filename, 'r', "utf-8")
+            read_file.readline()  # skip first line (it's empty).
+            readline = read_file.readline(32)
+            first_log_time = readline[:23]
+            read_file.close()
+
             log_zips_dir = "log_zips"
             os.makedirs(log_zips_dir, exist_ok=True)
+
             import zipfile
-            logs_zip = zipfile.ZipFile('{}/{}.zip'.format(log_zips_dir, now_string), 'w', zipfile.ZIP_DEFLATED)
-            for log_file in log_files:
-                log_file_path = "{}/{}".format(logs_dir, log_file)
-                logs_zip.write(log_file_path)
-                os.remove(log_file_path)
+            logs_zip = zipfile.ZipFile('{}/{}.zip'.format(log_zips_dir, device_uuid), 'a', zipfile.ZIP_DEFLATED)
+            logs_zip.write(filename, '{}_{}.txt'.format(device_uuid, first_log_time))
             logs_zip.close()
+            os.remove(filename)
 
         return 'ok'
     except Exception as e:
-        return str(e), 404
+        return str(e), 409
