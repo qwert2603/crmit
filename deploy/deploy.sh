@@ -13,6 +13,7 @@ wget "https://github.com/qwert2603/crmit/archive/$1.tar.gz"
 tar -xvf $1.tar.gz
 rm $1.tar.gz
 
+# настройка переадресации запросов в Flask-приложение
 rm -rf ../docs/*
 mv ./crmit-$1/.htaccess ./../docs/.htaccess
 
