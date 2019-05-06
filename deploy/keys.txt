@@ -1,6 +1,6 @@
 # param_secret_key
-qwert2
+секретный_ключ_для_авторизации_на_сайте
 # param_db_password
-asdfg2
+пароль_базы_данных
 # param_access_token_salt
-zxcvb2
+соль_для_хеширования_токетов_доступа_в_мобильном_приложении
