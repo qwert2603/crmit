@@ -25,9 +25,6 @@ rm -rf app_holder.py credentials.txt make_crmit_dump.py tests/
 rm -rf start_dev.py start_prod_default.py start_prod_wsgi.py
 
 
-# todo: script for publishing to hosting
-
-
 
 # run server via ssh and keep it alive.
 kristallp@kristallp:~/crm.cmit22.ru/cgi$ nohup ./start_prod_wsgi.py &
