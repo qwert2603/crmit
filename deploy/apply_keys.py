@@ -16,7 +16,8 @@ config_file_read.close()
 config_file_content = config_file_content \
     .replace('<param_secret_key>', secret_key) \
     .replace('<param_db_password>', db_password) \
-    .replace('<param_access_token_salt>', access_token_salt)
+    .replace('<param_access_token_salt>', access_token_salt) \
+    .replace("'default': DevConfig", "'default': ProdConfig")
 
 config_file_write = open(path_to_config, 'w')
 config_file_write.write(config_file_content)
