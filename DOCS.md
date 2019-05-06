@@ -63,7 +63,7 @@ export FLASK_APP=start_dev.py
 Запускаем python в контексте Flask-приложения:
 
 ```
-venv/bin/python ~/.local/bin/flask shell
+venv/bin/python3 venv/bin/flask shell
 ```
 
 Создаем руководителя, преподавателя, ученика, разработчика и бота:
