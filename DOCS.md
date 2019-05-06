@@ -1,3 +1,55 @@
+# Развертывание на хостинге
+
+Развертывание производится в папке `crm.cmit22.ru/cgi`.
+
+Для работы на хостинге нужно создать виртуальное окружение Python (`venv` -- папка с виртуальным окружением):
+
+```
+virtualenv -p python3 venv
+```
+
+После этого нужно установить требуемые зависимости:
+
+```
+venv/bin/pip3 install -r requiments.txt
+```
+
+Также может потребоваться установить зависимости для MySQL:
+
+```
+venv/bin/pip3 install mysql-connector-python
+venv/bin/pip3 install mysql-python
+```
+
+Для переадресации запросов в Flask-приложение нужно создать файл `crm.cmit22.ru/docs/.htaccess`. Содержимое файла находится [здесь](https://github.com/qwert2603/crmit/blob/master/.htaccess).
+
+## Создание схемы БД
+
+Обновляем схему БД до последней миграции (миграции БД находятся в [папке](https://github.com/qwert2603/crmit/tree/master/migrations/versions)).
+
+```
+venv/bin/python ~/.local/bin/flask db upgrade
+```
+
+## Создание базовых сущностей в БД
+
+Запускаем python в контексте Flask-приложения 
+
+```
+venv/bin/python ~/.local/bin/flask shell
+```
+
+Создаем руководителя, преподавателя, ученика, разработчика и бота:
+
+```
+from app.init_model import create_stub_models
+create_stub_models()
+```
+
+## Обновление версии на хостинге
+
+Текст.
+
 # Системные роли
 
 Кроме системных ролей руководителя, преподавателя и ученика в CRM ЦМИТ также есть роли разработчика и бота.
