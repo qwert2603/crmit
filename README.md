@@ -3,6 +3,9 @@
 Для запуска проекта необходимо скопировать представленный код в папку на веб-сервере.
 Для работы программного обеспечения на сервере должен быть установлен интерпретатор Python3, установлены все [необходимые библиотеки](https://github.com/qwert2603/crmit/blob/master/requiments.txt) и настроена база данных.
 
+# [Документация](https://github.com/qwert2603/crmit/blob/master/DOCS.md)
+
+
     CRMIT. CRM for CMIT.
     Copyright (C) 2018  Alexander Zhdanov
 
