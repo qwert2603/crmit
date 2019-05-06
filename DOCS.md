@@ -80,6 +80,12 @@ venv/bin/pip3 install mysql-python
 
 ## Создание или обновление схемы БД
 
+Указываем Flask-приложение:
+
+```
+export FLASK_APP=start_dev.py
+```
+
 Обновляем схему БД до последней миграции (миграции БД находятся в [папке](https://github.com/qwert2603/crmit/tree/master/migrations/versions)). При выполнении следующей команды на хостинге создается требуемая схема БД с учетом всех миграций:
 
 ```
@@ -87,6 +93,12 @@ venv/bin/python ~/.local/bin/flask db upgrade
 ```
 
 ## Создание базовых сущностей в БД
+
+Указываем Flask-приложение:
+
+```
+export FLASK_APP=start_dev.py
+```
 
 Запускаем python в контексте Flask-приложения 
 
