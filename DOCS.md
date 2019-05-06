@@ -1,4 +1,4 @@
-# Развертывание на хостинге
+# Развертывание на хостинге и установка зависимостей
 
 Развертывание производится в папке `crm.cmit22.ru/cgi`.
 
@@ -23,9 +23,9 @@ venv/bin/pip3 install mysql-python
 
 Для переадресации запросов в Flask-приложение нужно создать файл `crm.cmit22.ru/docs/.htaccess`. Содержимое файла находится [здесь](https://github.com/qwert2603/crmit/blob/master/.htaccess).
 
-## Создание схемы БД
+## Создание/обновление схемы БД
 
-Обновляем схему БД до последней миграции (миграции БД находятся в [папке](https://github.com/qwert2603/crmit/tree/master/migrations/versions)).
+Обновляем схему БД до последней миграции (миграции БД находятся в [папке](https://github.com/qwert2603/crmit/tree/master/migrations/versions)). При выполенении следующей команды на хостинге создается требуемая схема БД:
 
 ```
 venv/bin/python ~/.local/bin/flask db upgrade
@@ -48,7 +48,43 @@ create_stub_models()
 
 ## Обновление версии на хостинге
 
-Текст.
+Есть 2 конфигурации сайта ([config.py](https://github.com/qwert2603/crmit/blob/master/config.py)):
+
+* **DevConfig** используется для разработки и тестирования
+* **ProdConfig** используется на хостинге
+
+Перед обновлением сайта на хостинге **нужно сохранить** параметры `SECRET_KEY` и `ACCESS_TOKEN_SALT` из `ProdConfig`, так как они будут стерты при обновлении версии.
+
+Теперь удаляем старую версию:
+
+```
+rm -rf app/ comms.txt config.py migrations/ __pycache__/ README.md requiments.txt
+rm -rf app_holder.py credentials.txt make_crmit_dump.py tests/
+rm -rf start_dev.py start_prod_default.py start_prod_wsgi.py
+```
+
+Распаковываем новую версию:
+
+```
+tar -xvf crmit_0_8.tar.gz
+```
+
+Указываем параметры `SECRET_KEY` и `ACCESS_TOKEN_SALT` в `ProdConfig`, которые были сохранены ранее.
+
+Теперь нужно изменить конфигурацию по умолчанию на `ProdConfig`. Для этого в конце файла ([config.py](https://github.com/qwert2603/crmit/blob/master/config.py)) нужно указать `'default': ProdConfig`:
+
+```
+config = {
+    'dev': DevConfig,
+    'prod': ProdConfig,
+
+    'default': ProdConfig
+}
+```
+
+Если новая версия содержит изменения в схеме БД, то нужно обновить схему БД на хостинге (см. выше).
+
+Если новая версия содержит новые зависимости, то нужно установить их на хостинге (см. выше).
 
 # Системные роли
 
