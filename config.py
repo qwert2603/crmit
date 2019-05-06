@@ -34,8 +34,8 @@ class DevConfig(Config):
 
 
 class ProdConfig(Config):
-    SECRET_KEY = '<param_secret_key>'  # todo
-    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://kristallp_crm:<param_db_password>@kristallp.mysql/kristallp_crm'  # todo
+    SECRET_KEY = '<param_secret_key>'
+    SQLALCHEMY_DATABASE_URI = 'mysql+mysqlconnector://kristallp_crm:<param_db_password>@kristallp.mysql/kristallp_crm'
     DB_TYPE = DB_TYPE_MYSQL
     MAIL_SERVER = 'smtp.gmail.com'
     MAIL_PORT = 465
@@ -44,7 +44,7 @@ class ProdConfig(Config):
     MAIL_PASSWORD = '<pws>'  # todo
     MAIL_DEFAULT_SENDER = 'natalykanatkina@gmail.com'
     VK_ACCESS_TOKEN = '<token>'  # todo
-    ACCESS_TOKEN_SALT = '<param_access_token_salt>'.encode('utf-8')  # todo
+    ACCESS_TOKEN_SALT = '<param_access_token_salt>'.encode('utf-8')
     DEVELOPER_READ_ONLY = True
     JSON_AS_ASCII = False
 
