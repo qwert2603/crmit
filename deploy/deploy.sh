@@ -1,4 +1,5 @@
 cd ..
+rm ../docs/.htaccess
 mkdir tmp
 mv cgi/venv tmp
 rm -rf cgi/*
@@ -18,3 +19,9 @@ rm -r crmit-$1/
 
 cd ../deploy
 python3 apply_keys.py
+
+cd ../cgi
+venv/bin/pip3 install -r requiments.txt
+
+export FLASK_APP=start_dev.py
+venv/bin/python3 venv/bin/flask db upgrade

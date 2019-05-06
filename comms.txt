@@ -10,8 +10,8 @@ flask db migrate
 flask db upgrade
 
 
-venv/bin/python ~/.local/bin/flask shell
-venv/bin/python ~/.local/bin/flask db upgrade
+venv/bin/python3 venv/bin/flask shell
+venv/bin/python3 venv/bin/flask db upgrade
 venv/bin/pip3 install mysql-connector-python
 venv/bin/pip3 install mysql-python
 venv/bin/pip3 install -r requiments.txt
