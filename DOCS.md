@@ -1,98 +1,41 @@
 # Развертывание на хостинге
 
-Развертывание производится в папке `crm.cmit22.ru/cgi`.
+## Создание виртуального окружения
 
-Для работы на хостинге нужно создать виртуальное окружение Python (`venv` -- папка с виртуальным окружением):
+Перед началом развертывания нужно создать виртуальное окружение Python, которое находится в папке `crm.cmit22.ru/cgi/venv`.
+
+Если папки `venv` нет, то переходим в папку `crm.cmit22.ru/cgi` и создаем виртуальное окружение с помощью следующей команды:
 
 ```
 virtualenv -p python3 venv
 ```
 
-## Обновление версии на хостинге
+## Развертывание сайта
 
-Есть 2 конфигурации сайта ([config.py](https://github.com/qwert2603/crmit/blob/master/config.py)):
+Переходим в папку `crm.cmit22.ru` и создаем в ней папку `deploy`.
 
-* **DevConfig** используется для разработки и тестирования
-* **ProdConfig** используется на хостинге
+В папке `deploy` создаем 3 файла: 
+- [`apply_keys.py`](https://github.com/qwert2603/crmit/blob/master/deploy/apply_keys.py)
+- [`deploy.sh`](https://github.com/qwert2603/crmit/blob/master/deploy/deploy.sh)
+- [`keys.txt`](https://github.com/qwert2603/crmit/blob/master/deploy/keys.txt)
 
-Перед обновлением сайта на хостинге **нужно сохранить** параметры `SECRET_KEY` и `ACCESS_TOKEN_SALT` из `ProdConfig`, так как они будут стерты при обновлении версии.
+В файле `keys.txt` указываются секретные ключи, с помощью которых производится авторизация на сайте и в мобильном приложении. Эти ключи должны храниться в секрете. При изменении ключей всем пользователям потребуется повторно авторизоваться на сайте и в мобильном приложении.
 
-Теперь удаляем старую версию:
+Также в файле `keys.txt` указывается пароль БД.
 
-```
-rm -rf app/ comms.txt config.py migrations/ __pycache__/ README.md requiments.txt
-rm -rf app_holder.py credentials.txt make_crmit_dump.py tests/
-rm -rf start_dev.py start_prod_default.py start_prod_wsgi.py
-```
-
-Распаковываем новую версию (архив.tar.gz можно скачать в разделе [releases](https://github.com/qwert2603/crmit/releases)):
+Устанавливаем права на выполнение файла `deploy.sh`
 
 ```
-tar -xvf crmit_0_8.tar.gz
+chmod 755 deploy.sh
 ```
 
-Указываем параметры `SECRET_KEY` и `ACCESS_TOKEN_SALT` в `ProdConfig`, которые были сохранены ранее. Если они не были сохранены, потому что сайт развертывается впервые, или по другой причине, то нужно указать в этих параметрах секретные ключи. При работе сайта они используются в процессе авторизации и проверки авторизованного пользователя, поэтому они должны быть надежными и не должны меняться при обновлении сайта (для этого они и сохранялись в процессе обновления сайта). При изменении секретных ключей всем пользователям потребуется авторизовываться заново на сайте и в мобильном приложении.
-
-Пример секретных ключей при развертывании сайта впервые:
+Выполняем скрипт развертывания:
 
 ```
-class ProdConfig(Config):
-    SECRET_KEY = 'something_private'
-    ...
-    ACCESS_TOKEN_SALT = 'something_private'.encode('utf-8')
-    ...
+./deploy.sh x.y.z
 ```
 
-Также нужно указать пароль БД в параметре `SQLALCHEMY_DATABASE_URI` в `ProdConfig`. Нужно заменить `<psw>` на пароль без ковычек.
-
-
-Теперь нужно изменить конфигурацию по умолчанию на `ProdConfig`. Для этого в конце файла ([config.py](https://github.com/qwert2603/crmit/blob/master/config.py)) нужно указать `'default': ProdConfig`:
-
-```
-config = {
-    'dev': DevConfig,
-    'prod': ProdConfig,
-
-    'default': ProdConfig
-}
-```
-
-Если новая версия содержит изменения в схеме БД, то нужно обновить схему БД на хостинге.
-
-Если новая версия содержит новые зависимости, то нужно установить их на хостинге.
-
-## Установка зависимостей
-
-После этого нужно установить требуемые зависимости:
-
-```
-venv/bin/pip3 install -r requiments.txt
-```
-
-Также может потребоваться установить зависимости для MySQL:
-
-```
-venv/bin/pip3 install mysql-connector-python
-venv/bin/pip3 install mysql-python
-```
-
-## Настройка переадресации
-
-Для переадресации запросов в Flask-приложение нужно создать файл `crm.cmit22.ru/docs/.htaccess`. Содержимое файла находится [здесь](https://github.com/qwert2603/crmit/blob/master/.htaccess).
-
-## Создание или обновление схемы БД
-
-Указываем Flask-приложение:
-
-```
-export FLASK_APP=start_dev.py
-```
-
-Обновляем схему БД до последней миграции (миграции БД находятся в [папке](https://github.com/qwert2603/crmit/tree/master/migrations/versions)). При выполнении следующей команды на хостинге создается требуемая схема БД с учетом всех миграций:
-
-```
-venv/bin/python ~/.local/bin/flask db upgrade
-```
+`x.y.z` нужно заменить на номер последней версии из раздела [`releases`](https://github.com/qwert2603/crmit/releases).
 
 ## Создание базовых сущностей в БД
 
