@@ -66,12 +66,14 @@ export FLASK_APP=start_dev.py
 venv/bin/python3 venv/bin/flask shell
 ```
 
-Создаем руководителя, преподавателя, ученика, разработчика и бота:
+В запущенном интерпретаторе python создаем руководителя, преподавателя, ученика, разработчика и бота:
 
 ```
 from app.init_model import create_stub_models
 create_stub_models()
 ```
+
+Чтобы выйти из интерпретатора нужно нажать Ctrl+Z.
 
 # Системные роли
 
