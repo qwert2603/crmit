@@ -43,6 +43,8 @@ class ProdConfig(Config):
     ...
 ```
 
+Также нужно указать пароль БД в параметре `SQLALCHEMY_DATABASE_URI` в `ProdConfig`. Нужно заменить `<psw>` на пароль без ковычек.
+
 
 Теперь нужно изменить конфигурацию по умолчанию на `ProdConfig`. Для этого в конце файла ([config.py](https://github.com/qwert2603/crmit/blob/master/config.py)) нужно указать `'default': ProdConfig`:
 
