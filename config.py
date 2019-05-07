@@ -53,5 +53,6 @@ config = {
     'dev': DevConfig,
     'prod': ProdConfig,
 
+    # 'default' will be rewritten to ProdConfig while deploy.
     'default': DevConfig
 }

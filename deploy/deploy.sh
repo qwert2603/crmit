@@ -8,17 +8,18 @@ mv tmp/* cgi
 rm -r tmp
 
 # скачиваем новую версию и распаковываем ее
+version=$1
 cd cgi
-wget "https://github.com/qwert2603/crmit/archive/$1.tar.gz"
-tar -xvf $1.tar.gz
-rm $1.tar.gz
+wget "https://github.com/qwert2603/crmit/archive/$version.tar.gz"
+tar -xvf $version.tar.gz
+rm $version.tar.gz
 
 # настройка переадресации запросов в Flask-приложение
 rm -rf ../docs/*
-mv ./crmit-$1/.htaccess ./../docs/.htaccess
+mv ./crmit-$version/.htaccess ./../docs/.htaccess
 
-mv crmit-$1/* .
-rm -r crmit-$1/
+mv crmit-$version/* .
+rm -r crmit-$version/
 
 # применяем ключи из файла keys.txt
 cd ../deploy
