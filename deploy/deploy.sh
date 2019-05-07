@@ -1,6 +1,6 @@
 # удаляем все, кроме виртуального окружения python
 cd ..
-rm ../docs/.htaccess
+rm docs/.htaccess
 mkdir tmp
 mv cgi/venv tmp
 rm -rf cgi/*
