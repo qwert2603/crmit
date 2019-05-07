@@ -4,53 +4,69 @@ from app import db
 from app.models import Payment, StudentInGroup, Group
 
 
-# todo: return class.
-def payments_dicts(group):
-    values = dict()
-    confirmed = dict()
-    cash = dict()
-    comments = dict()
-    confirmed_count_months = dict()
-    confirmed_count_students = dict()
-    non_zero_count_months = dict()
-    non_zero_count_students = dict()
+class PaymentsInGroupInfo:
+    def __init__(self):
+        # key in dicts is student_in_group_id.
+        self.values = dict()
+        self.confirmed = dict()
+        self.cash = dict()
+        self.comments = dict()
+        self.confirmed_count_students = dict()
+        self.non_zero_count_students = dict()
+
+        # key in dicts is month_number.
+        self.confirmed_count_months = dict()
+        self.non_zero_count_months = dict()
+
+
+def payments_info(group: Group) -> PaymentsInGroupInfo:
+    result = PaymentsInGroupInfo()
+
     students_in_group = group.students_in_group.all()
     for s in students_in_group:
-        confirmed_count_students[s.id] = 0
-        non_zero_count_students[s.id] = 0
+        result.confirmed_count_students[s.id] = 0
+        result.non_zero_count_students[s.id] = 0
     for m in range(group.start_month, group.end_month + 1):
-        in_month_dicts = payments_in_month_dicts(group.id, m)
-        values[m] = in_month_dicts[0]
-        confirmed[m] = in_month_dicts[1]
-        cash[m] = in_month_dicts[2]
-        comments[m] = in_month_dicts[3]
-        confirmed_count_months[m] = 0
-        non_zero_count_months[m] = 0
+        in_month_dicts = payments_in_month_info(group.id, m)
+        result.values[m] = in_month_dicts.values
+        result.confirmed[m] = in_month_dicts.confirmed
+        result.cash[m] = in_month_dicts.cash
+        result.comments[m] = in_month_dicts.comments
+        result.confirmed_count_months[m] = 0
+        result.non_zero_count_months[m] = 0
         for s in students_in_group:
-            if confirmed.get(m, dict()).get(s.id):
-                confirmed_count_students[s.id] += 1
-                confirmed_count_months[m] += 1
-            if confirmed.get(m, dict()).get(s.id) or values.get(m, dict()).get(s.id, 0) > 0:
-                non_zero_count_students[s.id] += 1
-                non_zero_count_months[m] += 1
-    return [values, confirmed, cash, comments, confirmed_count_months, confirmed_count_students,
-            non_zero_count_months, non_zero_count_students]
+            if result.confirmed.get(m, dict()).get(s.id):
+                result.confirmed_count_students[s.id] += 1
+                result.confirmed_count_months[m] += 1
+            if result.confirmed.get(m, dict()).get(s.id) or result.values.get(m, dict()).get(s.id, 0) > 0:
+                result.non_zero_count_students[s.id] += 1
+                result.non_zero_count_months[m] += 1
+    return result
 
 
-def payments_in_month_dicts(group_id, month_number):
+class PaymentsInGroupInMonthInfo:
+    def __init__(self):
+        # key in dicts is student_in_group_id.
+        self.values = dict()
+        self.confirmed = dict()
+        self.cash = dict()
+        self.comments = dict()
+
+
+def payments_in_month_info(group_id: int, month_number: int) -> PaymentsInGroupInMonthInfo:
+    print(group_id, month_number)
+    result = PaymentsInGroupInMonthInfo()
+
     ps = Payment.query \
         .join(StudentInGroup, StudentInGroup.id == Payment.student_in_group_id) \
         .filter(StudentInGroup.group_id == group_id, Payment.month == month_number)
-    values = dict()
-    confirmed = dict()
-    cash = dict()
-    comments = dict()
+
     for p in ps:
-        values[p.student_in_group_id] = p.value
-        confirmed[p.student_in_group_id] = p.confirmed
-        cash[p.student_in_group_id] = p.cash
-        comments[p.student_in_group_id] = p.comment
-    return [values, confirmed, cash, comments]
+        result.values[p.student_in_group_id] = p.value
+        result.confirmed[p.student_in_group_id] = p.confirmed
+        result.cash[p.student_in_group_id] = p.cash
+        result.comments[p.student_in_group_id] = p.comment
+    return result
 
 
 def get_sum_not_confirmed_by_group(teacher_id):

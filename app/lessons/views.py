@@ -10,7 +10,7 @@ from app.lessons import lessons
 from app.lessons.utils import lessons_lists, dates_of_lessons_dict, empty_past_lessons, fill_group_by_schedule
 from app.models import Lesson, Group, Payment, StudentInGroup, Attending, Teacher, Student, ScheduleGroup, \
     attending_was_not
-from app.payments.utils import payments_in_month_dicts
+from app.payments.utils import payments_in_month_info
 from app.utils import get_month_name, parse_date_or_none, number_of_month_for_date, start_date_of_month, \
     end_date_of_month, can_user_write_group, days_of_week_names, parse_int_or_none, redirect_back_or_home
 
@@ -98,12 +98,12 @@ def lessons_in_month(group_id, month_number):
                     db.session.add(Attending(lesson=l, student=student_in_group.student, state=new_state))
         flash('посещения и оплата в группе {} за {} сохранены.'.format(group.name, month_name))
         return redirect(url_for('lessons.lessons_in_month', group_id=group_id, month_number=month_number))
-    pd = payments_in_month_dicts(group_id, month_number)
+    pd = payments_in_month_info(group_id, month_number)
     ll = lessons_lists(group_id, month_number)
     return render_template('lessons/lessons_in_month.html', group=group, month_number=month_number,
-                           month_name=month_name, students_in_group=students_in_group, payments=pd[0], confirmed=pd[1],
-                           cash=pd[2], comments=pd[3], lessons=ll[0], attendings_states=ll[1],
-                           write_mode=can_user_write_group(current_user, group))
+                           month_name=month_name, students_in_group=students_in_group, payments=pd.values,
+                           confirmed=pd.confirmed, cash=pd.cash, comments=pd.comments, lessons=ll[0],
+                           attendings_states=ll[1], write_mode=can_user_write_group(current_user, group))
 
 
 @lessons.route('/create/<int:group_id>', methods=['GET', 'POST'])

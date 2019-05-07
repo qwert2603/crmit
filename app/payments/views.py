@@ -5,7 +5,7 @@ from app import db
 from app.decorators import check_access_group_write
 from app.models import Group, Payment
 from app.payments import payments
-from app.payments.utils import payments_dicts, get_sum_not_confirmed_teacher, get_sum_not_confirmed_by_group
+from app.payments.utils import payments_info, get_sum_not_confirmed_teacher, get_sum_not_confirmed_by_group
 
 
 @payments.route('/group/<int:group_id>', methods=['GET', 'POST'])
@@ -40,7 +40,7 @@ def payments_in_group(group_id):
                                            cash=is_cash, confirmed=can_confirm and is_confirmed, comment=comment))
         flash('оплата в группе {} сохранена.'.format(group.name))
         return redirect(url_for('payments.payments_in_group', group_id=group_id))
-    pd = payments_dicts(group)
+    pd = payments_info(group)
     total_payments = 0
     confirmed_payments = 0
     non_zero_payments = 0
@@ -48,8 +48,8 @@ def payments_in_group(group_id):
     for month_number in range(group.start_month, group.end_month + 1):
         students_count = group.students_in_group_in_month(month_number).count()
         total_payments += students_count
-        confirmed_payments += pd[4][month_number]
-        non_zero_payments += pd[6][month_number]
+        confirmed_payments += pd.confirmed_count_months[month_number]
+        non_zero_payments += pd.non_zero_count_months[month_number]
         students_in_month[month_number] = students_count
     if current_user.is_teacher:
         sum_not_confirmed_by_group = get_sum_not_confirmed_by_group(current_user.teacher.id)
@@ -59,9 +59,12 @@ def payments_in_group(group_id):
         sum_not_confirmed_all = None
     students_in_group = group.students_in_group_by_fio.all()
     return render_template('payments/payments_in_group.html', group=group, students_in_group=students_in_group,
-                           payments=pd[0], confirmed=pd[1], cash=pd[2], comments=pd[3], confirmed_count_months=pd[4],
-                           confirmed_count_students=pd[5], non_zero_count_months=pd[6], non_zero_count_students=pd[7],
-                           total_payments=total_payments, confirmed_payments=confirmed_payments,
-                           non_zero_payments=non_zero_payments, students_in_month=students_in_month,
-                           can_confirm=can_confirm, sum_not_confirmed_by_group=sum_not_confirmed_by_group,
+                           payments=pd.values, confirmed=pd.confirmed, cash=pd.cash, comments=pd.comments,
+                           confirmed_count_months=pd.confirmed_count_months,
+                           confirmed_count_students=pd.confirmed_count_students,
+                           non_zero_count_months=pd.non_zero_count_months,
+                           non_zero_count_students=pd.non_zero_count_students, total_payments=total_payments,
+                           confirmed_payments=confirmed_payments, non_zero_payments=non_zero_payments,
+                           students_in_month=students_in_month, can_confirm=can_confirm,
+                           sum_not_confirmed_by_group=sum_not_confirmed_by_group,
                            sum_not_confirmed_all=sum_not_confirmed_all)
