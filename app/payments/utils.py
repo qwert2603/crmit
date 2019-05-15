@@ -54,7 +54,6 @@ class PaymentsInGroupInMonthInfo:
 
 
 def payments_in_month_info(group_id: int, month_number: int) -> PaymentsInGroupInMonthInfo:
-    print(group_id, month_number)
     result = PaymentsInGroupInMonthInfo()
 
     ps = Payment.query \
