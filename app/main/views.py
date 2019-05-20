@@ -1,4 +1,4 @@
-import datetime
+import codecs
 import os
 
 from flask import render_template, jsonify, request
@@ -228,17 +228,10 @@ def visit_stats():
 @main.route('/upload_logs', methods=['POST'])
 def upload_logs():
     try:
-        logs = request.json.get("logs")
         logs_dir = 'logs'
-        os.makedirs(logs_dir, exist_ok=True)
-        device_uuid = request.json.get("deviceUuid")
-        filename = '{}/{}.txt'.format(logs_dir, device_uuid)
-        import codecs
-        write_file = codecs.open(filename, 'a', "utf-8")
-        write_file.write(logs)
-        write_file.close()
 
-        if request.json.get("zipNow") or os.path.getsize(filename) >= 10 * 1024 * 1024:
+        def make_zip(device_uuid):
+            filename = '{}/{}.txt'.format(logs_dir, device_uuid)
             read_file = codecs.open(filename, 'r', "utf-8")
             read_file.readline()  # skip first line (it's empty).
             readline = read_file.readline(32)
@@ -253,6 +246,22 @@ def upload_logs():
             logs_zip.write(filename, '{}_{}.txt'.format(device_uuid, first_log_time))
             logs_zip.close()
             os.remove(filename)
+
+        if request.json.get("zipNow"):
+            for file in os.listdir(logs_dir):
+                make_zip(file[:-4])  # remove '.txt' extension from filename.
+            return 'ok'
+
+        logs = request.json.get("logs")
+        os.makedirs(logs_dir, exist_ok=True)
+        device_uuid = request.json.get("deviceUuid")
+        filename = '{}/{}.txt'.format(logs_dir, device_uuid)
+        write_file = codecs.open(filename, 'a', "utf-8")
+        write_file.write(logs)
+        write_file.close()
+
+        if os.path.getsize(filename) >= 1 * 1024 * 1024:
+            make_zip(device_uuid)
 
         return 'ok'
     except Exception as e:
