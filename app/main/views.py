@@ -9,7 +9,7 @@ from app.init_model import role_master_name, role_teacher_name, role_student_nam
 from app.main import main
 from app.main.dump_utils import db_to_dump
 from app.models import Group, attending_states, Master, Teacher, Student, SystemUser, SystemRole, StudentInGroup, \
-    Attending, Bot, Developer, PageVisit, Notification, receiver_type_student_in_group, receiver_type_group, Message, \
+    Attending, Bot, Developer, Notification, receiver_type_student_in_group, receiver_type_group, Message, \
     MessageDetails, Parent, notification_types_list
 from app.utils import start_date_of_month, end_date_of_month, get_month_name
 
@@ -215,14 +215,6 @@ def check_db_integrity_notifications_and_messages():
                 problems.append('на детали о сообщений id={} ссылаются сообщения между разными юзерами'.format(md.id))
 
     return render_template('check_db_integrity__notifications_and_messages.html', problems=problems)
-
-
-@main.route('/visit_stats')
-@login_required
-@check_developer
-def visit_stats():
-    pages = PageVisit.query.order_by(PageVisit.visits_count.desc(), PageVisit.page_name).all()
-    return render_template("visit_stats.html", pages=pages)
 
 
 @main.route('/upload_logs', methods=['POST'])

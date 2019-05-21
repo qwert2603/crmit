@@ -685,13 +685,6 @@ class AccessToken(db.Model):
     app_version = db.Column(db.Text, nullable=False)
 
 
-class PageVisit(db.Model):
-    __tablename__ = 'page_visits'
-    id = db.Column(db.Integer, primary_key=True)
-    page_name = db.Column(db.String(255), nullable=False, index=True, unique=True)
-    visits_count = db.Column(db.Integer, nullable=False)
-
-
 class MessageDetails(db.Model):
     __tablename__ = 'message_details'
     id = db.Column(db.Integer, primary_key=True)

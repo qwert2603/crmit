@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect
+from flask import Flask, redirect
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_moment import Moment
@@ -14,7 +14,7 @@ login_manager = LoginManager()
 login_manager.session_protection = 'strong'
 login_manager.login_view = 'users.login'
 
-from app.models import AnonUser, SystemUser, PageVisit
+from app.models import AnonUser, SystemUser
 
 login_manager.anonymous_user = AnonUser
 
@@ -85,17 +85,5 @@ def create_app(config_name):
 
     from app.api_1_1_0 import api_1_1_0 as api_1_1_0_blueprint
     app.register_blueprint(api_1_1_0_blueprint, url_prefix='/api/v1.1.0')
-
-    @app.after_request
-    def after_request(response):
-        endpoint = request.endpoint
-        if endpoint is None: return response
-
-        page_visit = PageVisit.query.filter(PageVisit.page_name == endpoint).first()
-        if page_visit is not None:
-            page_visit.visits_count = page_visit.visits_count + 1
-        else:
-            db.session.add(PageVisit(page_name=endpoint, visits_count=1))
-        return response
 
     return app
