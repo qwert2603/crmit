@@ -311,7 +311,7 @@ def login():
     account_type = get_account_type(user)
     details_id = 0
     if user.is_developer:
-        details_id = user.developer.id
+        abort(400)
     elif user.is_master:
         details_id = user.master.id
     elif user.is_teacher:
