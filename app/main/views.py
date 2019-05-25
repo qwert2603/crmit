@@ -111,7 +111,7 @@ def check_db_integrity():
         notification_types_overflow <<= 1
     for parent in Parent.query.all():
         if parent.notification_types < 0 or parent.notification_types >= notification_types_overflow:
-            problems.append('у родителя id={} неверные типы уведомлений'.format(parent.id))
+            problems.append('у родителя id={} неверные типы уведомлений: {}'.format(parent.id, parent.notification_types))
 
     return render_template('check_db_integrity.html', problems=problems)
 
