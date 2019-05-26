@@ -217,7 +217,7 @@ def check_db_integrity_notifications_and_messages():
     return render_template('check_db_integrity__notifications_and_messages.html', problems=problems)
 
 
-@main.route('/upload_logs', methods=['POST'])
+@main.route('/upload_logs', methods=['GET', 'POST'])
 def upload_logs():
     try:
         logs_dir = 'logs'
@@ -239,7 +239,7 @@ def upload_logs():
             logs_zip.close()
             os.remove(filename)
 
-        if request.json.get("zipNow"):
+        if request.args.get("zipNow") or request.json.get("zipNow"):
             for file in os.listdir(logs_dir):
                 make_zip(file[:-4])  # remove '.txt' extension from filename.
             return 'ok'
