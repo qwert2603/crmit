@@ -13,7 +13,7 @@ default_citizenship_id = 1
 
 bot_login_dump_creator = 'dump_creator'
 
-actual_app_build_code = 7
+actual_app_build_code = 9
 
 
 def create_system_roles():
